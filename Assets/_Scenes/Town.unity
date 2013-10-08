@@ -129,7 +129,7 @@ GameObject:
   - 4: {fileID: 460156275}
   - 114: {fileID: 460156276}
   m_Layer: 8
-  m_Name: Background
+  m_Name: ShopButtonBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -173,9 +173,10 @@ GameObject:
   m_Component:
   - 4: {fileID: 467230982}
   - 65: {fileID: 467230985}
-  - 114: {fileID: 467230984}
   - 114: {fileID: 467230983}
   - 114: {fileID: 467230986}
+  - 114: {fileID: 467230987}
+  - 114: {fileID: 467230988}
   m_Layer: 8
   m_Name: ShopButton
   m_TagString: Untagged
@@ -211,21 +212,6 @@ MonoBehaviour:
   trigger: 0
   volume: 1
   pitch: 1
---- !u!114 &467230984
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 467230981}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4271d0dec29cc9845a75627e88f762af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 460156276}
-  normalSprite: Bright
-  hoverSprite: Bright
-  pressedSprite: Smooth
 --- !u!65 &467230985
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -250,6 +236,38 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: Shop
+--- !u!114 &467230987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 467230981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15cc9c62605319f4a9b20b15918913fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tweenTarget: {fileID: 460156274}
+  hover: {r: 1, g: .900709987, b: .345588207, a: 1}
+  pressed: {r: .5, g: .5, b: .5, a: 1}
+  duration: .200000003
+--- !u!114 &467230988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 467230981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35a096bcfb49b9c409c3875999a2cda9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startsSelected: 0
+  selectOnClick: {fileID: 467230988}
+  selectOnUp: {fileID: 1454036744}
+  selectOnDown: {fileID: 0}
+  selectOnLeft: {fileID: 0}
+  selectOnRight: {fileID: 0}
 --- !u!1 &620583169
 GameObject:
   m_ObjectHideFlags: 0
@@ -401,9 +419,10 @@ GameObject:
   m_Component:
   - 4: {fileID: 1454036738}
   - 65: {fileID: 1454036741}
-  - 114: {fileID: 1454036740}
   - 114: {fileID: 1454036739}
   - 114: {fileID: 1454036742}
+  - 114: {fileID: 1454036743}
+  - 114: {fileID: 1454036744}
   m_Layer: 8
   m_Name: ArenaButton
   m_TagString: Untagged
@@ -439,21 +458,6 @@ MonoBehaviour:
   trigger: 0
   volume: 1
   pitch: 1
---- !u!114 &1454036740
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1454036737}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4271d0dec29cc9845a75627e88f762af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 2028497033}
-  normalSprite: Bright
-  hoverSprite: Bright
-  pressedSprite: Smooth
 --- !u!65 &1454036741
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -478,6 +482,38 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: Arena
+--- !u!114 &1454036743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1454036737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15cc9c62605319f4a9b20b15918913fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tweenTarget: {fileID: 2028497031}
+  hover: {r: 1, g: .900709987, b: .345588207, a: 1}
+  pressed: {r: .5, g: .5, b: .5, a: 1}
+  duration: .200000003
+--- !u!114 &1454036744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1454036737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35a096bcfb49b9c409c3875999a2cda9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startsSelected: 1
+  selectOnClick: {fileID: 1454036744}
+  selectOnUp: {fileID: 0}
+  selectOnDown: {fileID: 467230988}
+  selectOnLeft: {fileID: 0}
+  selectOnRight: {fileID: 0}
 --- !u!1 &1473935274
 GameObject:
   m_ObjectHideFlags: 0
@@ -541,7 +577,7 @@ GameObject:
   - 4: {fileID: 2028497032}
   - 114: {fileID: 2028497033}
   m_Layer: 8
-  m_Name: Background
+  m_Name: ArenaButtonBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
