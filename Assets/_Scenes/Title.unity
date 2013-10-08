@@ -157,12 +157,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 162308418}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2ffd0aec5471424592562d2e39cade8, type: 3}
+  m_Script: {fileID: 11500000, guid: 122e1f8e5367a6a479881626576a47ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EditorClassIdentifier: 
-  m_EditorClassIdentifier: 
-  sceneName: 546f776e
+  sceneName: Town
 --- !u!114 &162308424
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -292,7 +290,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mMat: {fileID: 2100000, guid: e7ef61ebb5c25394c8706a7ea658349f, type: 2}
-  mColor: {r: .83088237, g: .770209372, b: .281033754, a: 1}
+  mColor: {r: .823529422, g: .760784328, b: .282352954, a: 1}
   mPivot: 4
   mDepth: 0
   mAtlas: {fileID: 11400000, guid: f95e07e3d350bf748b0c42b453a69d2e, type: 2}
