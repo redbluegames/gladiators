@@ -6,14 +6,17 @@ public class Fighter : MonoBehaviour
 	public float movespeed;
 	public float sprintspeed;
 	public float swingRange;
-	public float swingCooldown;
+	public float swingWindup;
 	public float swingTime;
+	public float swingWindDown;
 	
 	Vector3 moveDirection;
 	float gravity = -20.0f;
 	float verticalSpeed = 0.0f;
-	float damping = 10.0f;
+	float damping = 5.0f;
 	CollisionFlags collisionFlags;
+
+	// Character state
 	bool isSwinging;
 	
 	// Timers
@@ -26,7 +29,7 @@ public class Fighter : MonoBehaviour
 	void Start ()
 	{
 		moveDirection = transform.TransformDirection (Vector3.forward);
-		lastSwingTime = Time.time - swingCooldown;
+		lastSwingTime = Time.time - (swingWindup + swingTime + swingWindDown);
 	}
 
 	void Update ()
@@ -43,7 +46,7 @@ public class Fighter : MonoBehaviour
 	void ResolveActions ()
 	{
 		if (isSwinging) {
-			FinishSwing ();
+			FinishSwingIfAble ();
 		}
 	}
 	
@@ -78,24 +81,25 @@ public class Fighter : MonoBehaviour
 	 */
 	void Move (Vector3 direction, float speed)
 	{
-		if (direction != Vector3.zero) {
-			moveDirection = Vector3.RotateTowards (moveDirection, direction, Mathf.Infinity, 1000);
-			moveDirection = moveDirection.normalized;
-		}
-
 		// Get movement vector
-		Vector3 movement = (moveDirection * speed) + new Vector3 (0.0f, verticalSpeed, 0.0f);
+		Vector3 movement = (direction.normalized * speed) + new Vector3 (0.0f, verticalSpeed, 0.0f);
 		movement *= Time.deltaTime;
 
 		// Apply movement vector
 		CharacterController biped = GetComponent<CharacterController> ();
 		collisionFlags = biped.Move (movement);
+		
+		// Rotate to face the direction of movement immediately
+		if (direction != Vector3.zero) {
+			transform.rotation = Quaternion.Slerp (transform.rotation, 
+				Quaternion.LookRotation(movement), Time.deltaTime * damping);
+		}
 	}
 	
 	/*
 	 * Walk the fighter in a given direction.
 	 */
-	public void TryWalk (Vector3 direction)
+	public void Walk (Vector3 direction)
 	{
 		Move (direction, movespeed);
 	}
@@ -103,7 +107,7 @@ public class Fighter : MonoBehaviour
 	/*
 	 * Sprint the fighter in a given direction.
 	 */
-	public void TrySprint (Vector3 direction)
+	public void Sprint (Vector3 direction)
 	{
 		Move (direction, sprintspeed);
 	}
@@ -112,10 +116,10 @@ public class Fighter : MonoBehaviour
 	 * Check that enough time has passed after character swung to call the
 	 * swing "complete". Once it is, restore the character state to normal.
 	 */
-	void FinishSwing ()
+	void FinishSwingIfAble ()
 	{
-		float swingCompleteTimeStamp = lastSwingTime + swingTime;
-		if (Time.time > swingCompleteTimeStamp) {
+		float swingCompleteTimeStamp = lastSwingTime + (swingWindup + swingTime + swingWindDown);
+		if (Time.time >= swingCompleteTimeStamp) {
 			isSwinging = false;
 			ChangeColor (Color.black);
 		}
@@ -125,23 +129,19 @@ public class Fighter : MonoBehaviour
 	 * Try to make the character swing its weapon. If it's in the process
 	 * of swinging or swing is on cooldown, it won't do anything.
 	 */
-	public void TrySwingWeapon ()
+	public void SwingWeapon ()
 	{
-		// Only allow swing if fighter waited long enough between swings and
-		// player is not already swinging.
-		float swingReadyTimeStamp = lastSwingTime + swingCooldown;
-		if (!isSwinging && Time.time > swingReadyTimeStamp) {
+		if (!isSwinging) { 
 			ChangeColor (Color.red);
 			lastSwingTime = Time.time;
 			isSwinging = true;
 		}
-
 	}
 	
 	/*
 	 * Have the fighter look at a given position.
 	 */
-	public void TryLookAt (Vector3 targetPosition)
+	public void LookAt (Vector3 targetPosition)
 	{
 		Quaternion targetRotation = Quaternion.LookRotation (targetPosition - transform.position);
 		transform.rotation = Quaternion.Slerp (transform.rotation, targetRotation, Time.deltaTime * damping);

@@ -148,6 +148,7 @@ GameObject:
   - 23: {fileID: 759099191}
   - 143: {fileID: 759099192}
   - 114: {fileID: 759099195}
+  - 114: {fileID: 759099196}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -206,7 +207,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1435692220}
   m_Father: {fileID: 0}
 --- !u!114 &759099195
 MonoBehaviour:
@@ -220,8 +222,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 370a8738e2f234cc8aec79957fdc6bee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &759099196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 759099190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a87441b3bc1fba479154c5969fba067, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   movespeed: 6
   sprintspeed: 12
+  swingRange: 0
+  swingWindup: 0
+  swingTime: 0
+  swingWindDown: 0
 --- !u!1001 &1127994824
 Prefab:
   m_ObjectHideFlags: 0
@@ -260,6 +277,10 @@ Prefab:
     - target: {fileID: 100000, guid: 5edab22bf36c84117b3244c88d1628c4, type: 2}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 5edab22bf36c84117b3244c88d1628c4, type: 2}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5edab22bf36c84117b3244c88d1628c4, type: 2}
@@ -551,7 +572,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!23 &1334059707
 Renderer:
   m_ObjectHideFlags: 0
@@ -617,8 +638,9 @@ MonoBehaviour:
   movespeed: 3
   sprintspeed: 6
   swingRange: 2
-  swingCooldown: 5
+  swingWindup: 0
   swingTime: 2
+  swingWindDown: 0
 --- !u!114 &1334059712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -754,6 +776,72 @@ MonoBehaviour:
   xRotation: 90
   yRotation: 0
   zRotation: 0
+--- !u!1 &1435692216
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1435692220}
+  - 33: {fileID: 1435692219}
+  - 65: {fileID: 1435692218}
+  - 23: {fileID: 1435692217}
+  m_Layer: 0
+  m_Name: Cube
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!23 &1435692217
+Renderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1435692216}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_LightmapIndex: 255
+  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
+  m_Materials:
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_LightProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+--- !u!65 &1435692218
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1435692216}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!33 &1435692219
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1435692216}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1435692220
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1435692216}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: .475863934, z: .5}
+  m_LocalScale: {x: .334407896, y: .439365864, z: .210831434}
+  m_Children: []
+  m_Father: {fileID: 759099194}
 --- !u!1001 &1833083010
 Prefab:
   m_ObjectHideFlags: 0
@@ -825,7 +913,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1896404157
 Transform:
   m_ObjectHideFlags: 0
@@ -864,8 +952,9 @@ MonoBehaviour:
   movespeed: 3
   sprintspeed: 6
   swingRange: 2
-  swingCooldown: 5
+  swingWindup: 0
   swingTime: 2
+  swingWindDown: 0
 --- !u!143 &1896404160
 CharacterController:
   m_ObjectHideFlags: 0
@@ -924,7 +1013,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1965658958
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -951,8 +1040,9 @@ MonoBehaviour:
   movespeed: 3
   sprintspeed: 6
   swingRange: 2
-  swingCooldown: 5
+  swingWindup: 0
   swingTime: 2
+  swingWindDown: 0
 --- !u!143 &1965658960
 CharacterController:
   m_ObjectHideFlags: 0
