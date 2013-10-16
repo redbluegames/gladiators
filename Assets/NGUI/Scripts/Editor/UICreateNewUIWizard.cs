@@ -111,7 +111,7 @@ public class UICreateNewUIWizard : EditorWindow
 				if (layer != 0 && c.cullingMask != mask) c.cullingMask = (c.cullingMask & (~mask));
 
 				// Only consider this object if it's active
-				if (c.enabled && c.gameObject.active) clearColor = false;
+				if (c.enabled && c.gameObject.activeInHierarchy) clearColor = false;
 
 				// If this camera has an audio listener, we won't need to add one
 				if (c.GetComponent<AudioListener>() != null) audioListener = false;

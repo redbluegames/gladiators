@@ -80,7 +80,7 @@ public class UIDragObject : IgnoreTimeScale
 
 	void OnPress (bool pressed)
 	{
-		if (enabled && gameObject.active && target != null)
+		if (enabled && gameObject.activeInHierarchy && target != null)
 		{
 			mPressed = pressed;
 
@@ -119,7 +119,7 @@ public class UIDragObject : IgnoreTimeScale
 
 	void OnDrag (Vector2 delta)
 	{
-		if (enabled && gameObject.active && target != null)
+		if (enabled && gameObject.activeInHierarchy && target != null)
 		{
 			UICamera.currentTouch.clickNotification = UICamera.ClickNotification.BasedOnDelta;
 
@@ -223,7 +223,7 @@ public class UIDragObject : IgnoreTimeScale
 
 	void OnScroll (float delta)
 	{
-		if (enabled && gameObject.active)
+		if (enabled && gameObject.activeInHierarchy)
 		{
 			if (Mathf.Sign(mScroll) != Mathf.Sign(delta)) mScroll = 0f;
 			mScroll += delta * scrollWheelFactor;

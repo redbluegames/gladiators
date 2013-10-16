@@ -468,7 +468,7 @@ public class UIDraggablePanel : IgnoreTimeScale
 
 	public void Press (bool pressed)
 	{
-		if (enabled && gameObject.active)
+		if (enabled && gameObject.activeInHierarchy)
 		{
 			mTouches += (pressed ? 1 : -1);
 			mCalculatedBounds = false;
@@ -504,7 +504,7 @@ public class UIDraggablePanel : IgnoreTimeScale
 
 	public void Drag (Vector2 delta)
 	{
-		if (enabled && gameObject.active && mShouldMove)
+		if (enabled && gameObject.activeInHierarchy && mShouldMove)
 		{
 			UICamera.currentTouch.clickNotification = UICamera.ClickNotification.BasedOnDelta;
 
@@ -547,7 +547,7 @@ public class UIDraggablePanel : IgnoreTimeScale
 
 	public void Scroll (float delta)
 	{
-		if (enabled && gameObject.active)
+		if (enabled && gameObject.activeInHierarchy)
 		{
 			mShouldMove = shouldMove;
 			if (Mathf.Sign(mScroll) != Mathf.Sign(delta)) mScroll = 0f;

@@ -18,7 +18,7 @@ public class UIButtonKeys : MonoBehaviour
 
 	void Start ()
 	{
-		if (startsSelected && (UICamera.selectedObject == null || !UICamera.selectedObject.active))
+		if (startsSelected && (UICamera.selectedObject == null || !UICamera.selectedObject.activeSelf))
 		{
 			UICamera.selectedObject = gameObject;
 		}
@@ -26,7 +26,7 @@ public class UIButtonKeys : MonoBehaviour
 
 	void OnKey (KeyCode key)
 	{
-		if (enabled && gameObject.active)
+		if (enabled && gameObject.activeSelf)
 		{
 			switch (key)
 			{
