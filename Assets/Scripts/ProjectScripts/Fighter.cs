@@ -5,30 +5,51 @@ public class Fighter : MonoBehaviour
 {
 	public float movespeed;
 	public float sprintspeed;
-	public float attackRange;
+	public float swingRange;
+	public float swingCooldown;
+	public float swingTime;
+	
 	Vector3 moveDirection;
 	float gravity = -20.0f;
 	float verticalSpeed = 0.0f;
 	float damping = 10.0f;
 	CollisionFlags collisionFlags;
+	bool isSwinging;
+	
+	// Timers
+	float lastSwingTime;
 
 	void Awake ()
 	{
-		moveDirection = transform.TransformDirection (Vector3.forward);
 	}
 
 	void Start ()
 	{
+		moveDirection = transform.TransformDirection (Vector3.forward);
+		lastSwingTime = Time.time - swingCooldown;
 	}
 
 	void Update ()
 	{
 		ApplyGravity ();
+		ResolveActions ();
 		TryDebugs ();
 	}
 
 	void LateUpdate ()
 	{
+	}
+	
+	void ResolveActions ()
+	{
+		if (isSwinging) {
+			FinishSwing ();
+		}
+	}
+	
+	void ChangeColor (Color color)
+	{
+		renderer.material.color = color;
 	}
 
 	/*
@@ -74,7 +95,7 @@ public class Fighter : MonoBehaviour
 	/*
 	 * Walk the fighter in a given direction.
 	 */
-	public void Walk (Vector3 direction)
+	public void TryWalk (Vector3 direction)
 	{
 		Move (direction, movespeed);
 	}
@@ -82,15 +103,45 @@ public class Fighter : MonoBehaviour
 	/*
 	 * Sprint the fighter in a given direction.
 	 */
-	public void Sprint (Vector3 direction)
+	public void TrySprint (Vector3 direction)
 	{
 		Move (direction, sprintspeed);
 	}
 	
 	/*
+	 * Check that enough time has passed after character swung to call the
+	 * swing "complete". Once it is, restore the character state to normal.
+	 */
+	void FinishSwing ()
+	{
+		float swingCompleteTimeStamp = lastSwingTime + swingTime;
+		if (Time.time > swingCompleteTimeStamp) {
+			isSwinging = false;
+			ChangeColor (Color.black);
+		}
+	}
+	
+	/*
+	 * Try to make the character swing its weapon. If it's in the process
+	 * of swinging or swing is on cooldown, it won't do anything.
+	 */
+	public void TrySwingWeapon ()
+	{
+		// Only allow swing if fighter waited long enough between swings and
+		// player is not already swinging.
+		float swingReadyTimeStamp = lastSwingTime + swingCooldown;
+		if (!isSwinging && Time.time > swingReadyTimeStamp) {
+			ChangeColor (Color.red);
+			lastSwingTime = Time.time;
+			isSwinging = true;
+		}
+
+	}
+	
+	/*
 	 * Have the fighter look at a given position.
 	 */
-	public void LookAt (Vector3 targetPosition)
+	public void TryLookAt (Vector3 targetPosition)
 	{
 		Quaternion targetRotation = Quaternion.LookRotation (targetPosition - transform.position);
 		transform.rotation = Quaternion.Slerp (transform.rotation, targetRotation, Time.deltaTime * damping);

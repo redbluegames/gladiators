@@ -307,7 +307,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 59fb5423fddfe944cb0276efcec9bd72, type: 2}
+  - {fileID: 2100000, guid: dfb29907514f22a42875cf0b8dfcf47f, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -373,7 +373,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 59fb5423fddfe944cb0276efcec9bd72, type: 2}
+  - {fileID: 2100000, guid: dfb29907514f22a42875cf0b8dfcf47f, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -428,7 +428,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 59fb5423fddfe944cb0276efcec9bd72, type: 2}
+  - {fileID: 2100000, guid: dfb29907514f22a42875cf0b8dfcf47f, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -544,8 +544,9 @@ GameObject:
   - 143: {fileID: 1334059708}
   - 114: {fileID: 1334059711}
   - 114: {fileID: 1334059712}
+  - 114: {fileID: 1334059713}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Enemy0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -563,7 +564,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 59fb5423fddfe944cb0276efcec9bd72, type: 2}
+  - {fileID: 2100000, guid: dfb29907514f22a42875cf0b8dfcf47f, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -615,7 +616,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movespeed: 3
   sprintspeed: 6
-  attackRange: 2
+  swingRange: 2
+  swingCooldown: 5
+  swingTime: 2
 --- !u!114 &1334059712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -628,6 +631,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+--- !u!114 &1334059713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1334059706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1943148467, guid: df3bcee53a7496146b6c1c1f9ffd7b12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showInPanelTool: 1
+  generateNormals: 0
+  depthPass: 0
+  widgetsAreStatic: 0
+  mDebugInfo: 1
+  mClipping: 0
+  mClipRange: {x: 0, y: 0, z: 0, w: 0}
+  mClipSoftness: {x: 40, y: 40}
 --- !u!1 &1335224285
 GameObject:
   m_ObjectHideFlags: 0
@@ -798,7 +820,7 @@ GameObject:
   - 114: {fileID: 1896404159}
   - 114: {fileID: 1896404158}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Enemy1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -841,7 +863,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movespeed: 3
   sprintspeed: 6
-  attackRange: 2
+  swingRange: 2
+  swingCooldown: 5
+  swingTime: 2
 --- !u!143 &1896404160
 CharacterController:
   m_ObjectHideFlags: 0
@@ -868,7 +892,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 59fb5423fddfe944cb0276efcec9bd72, type: 2}
+  - {fileID: 2100000, guid: dfb29907514f22a42875cf0b8dfcf47f, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -895,7 +919,7 @@ GameObject:
   - 114: {fileID: 1965658959}
   - 114: {fileID: 1965658958}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Enemy2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -926,7 +950,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movespeed: 3
   sprintspeed: 6
-  attackRange: 2
+  swingRange: 2
+  swingCooldown: 5
+  swingTime: 2
 --- !u!143 &1965658960
 CharacterController:
   m_ObjectHideFlags: 0
@@ -953,7 +979,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 59fb5423fddfe944cb0276efcec9bd72, type: 2}
+  - {fileID: 2100000, guid: dfb29907514f22a42875cf0b8dfcf47f, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0

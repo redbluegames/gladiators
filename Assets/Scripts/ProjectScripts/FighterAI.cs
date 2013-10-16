@@ -11,7 +11,7 @@ public class FighterAI : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		Think ();
 	}
 	
@@ -19,7 +19,7 @@ public class FighterAI : MonoBehaviour {
 	 * Return whether or not the assigned target is now in range of an attack.
 	 */
 	bool targetInRange () {
-		return Vector3.Distance(transform.position, target.position) <= character.attackRange;
+		return Vector3.Distance(transform.position, target.position) <= character.swingRange;
 	}
 	
 	/*
@@ -32,13 +32,15 @@ public class FighterAI : MonoBehaviour {
 			return;
 		}
 		// Approach the target if necessary
-		character.LookAt (target.position);
+		character.TryLookAt (target.position);
 		if (!targetInRange ()) {
 			Vector3 moveDirection = target.position - transform.position;
-			character.Walk (moveDirection);
+			character.TryWalk (moveDirection);
 		}
 		// Attack if in range
-		
+		else {
+			character.TrySwingWeapon ();
+		}
 	}
 	
 	/*
