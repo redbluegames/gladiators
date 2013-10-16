@@ -88,13 +88,13 @@ public class UIPanelTool : EditorWindow
 
 			if (state)
 			{
-				child.gameObject.active = true;
+				child.gameObject.SetActive(true);
 				SetActiveState(child, true);
 			}
 			else
 			{
 				SetActiveState(child, false);
-				child.gameObject.active = false;
+				child.gameObject.SetActive(false);
 			}
 			EditorUtility.SetDirty(child.gameObject);
 		}
@@ -108,13 +108,13 @@ public class UIPanelTool : EditorWindow
 	{
 		if (state)
 		{
-			panel.gameObject.active = true;
+			panel.gameObject.SetActive(true);
 			SetActiveState(panel.transform, true);
 		}
 		else
 		{
 			SetActiveState(panel.transform, false);
-			panel.gameObject.active = false;
+			panel.gameObject.SetActive(false);
 		}
 		EditorUtility.SetDirty(panel.gameObject);
 	}
@@ -141,14 +141,14 @@ public class UIPanelTool : EditorWindow
 				Entry ent = new Entry();
 				ent.panel = panel;
 				ent.widgets = GetWidgets(panel);
-				ent.isEnabled = panel.enabled && panel.gameObject.active;
+				ent.isEnabled = panel.enabled && panel.gameObject.activeInHierarchy;
 				ent.widgetsEnabled = ent.isEnabled;
 
 				if (ent.widgetsEnabled)
 				{
 					foreach (UIWidget w in ent.widgets)
 					{
-						if (!w.gameObject.active)
+						if (!w.gameObject.activeInHierarchy)
 						{
 							allEnabled = false;
 							ent.widgetsEnabled = false;

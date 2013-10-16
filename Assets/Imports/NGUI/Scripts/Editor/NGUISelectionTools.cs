@@ -35,7 +35,7 @@ public class NGUISelectionTools
 		if (HasValidTransform())
 		{
 			GameObject[] gos = Selection.gameObjects;
-			bool val = !Selection.activeGameObject.active;
+			bool val = !Selection.activeGameObject.activeInHierarchy;
 			foreach (GameObject go in gos) NGUITools.SetActive(go, val);
 		}
 	}
