@@ -24,14 +24,18 @@ public class Fighter : MonoBehaviour
 	
 	// Timers
 	float lastSwingTime;
+	
+	// Cache our fighter's transform
+	Transform myTransform;
 
 	void Awake ()
 	{
+		myTransform = transform;
 	}
 
 	void Start ()
 	{
-		moveDirection = transform.TransformDirection (Vector3.forward);
+		moveDirection = myTransform.TransformDirection (Vector3.forward);
 		lastSwingTime = Time.time - (swingWindup + swingTime + swingWindDown);
 	}
 
@@ -109,7 +113,7 @@ public class Fighter : MonoBehaviour
 			if (target != null) {
 				LockOnTarget (target);
 			} else {
-				transform.rotation = Quaternion.Slerp (transform.rotation, 
+				myTransform.rotation = Quaternion.Slerp (myTransform.rotation, 
 						Quaternion.LookRotation(movement), Time.deltaTime * damping);
 			}
 		}
@@ -171,7 +175,7 @@ public class Fighter : MonoBehaviour
 	public void LockOnTarget (Transform newTarget)
 	{
 		target = newTarget;
-		transform.LookAt (target);
+		myTransform.LookAt (target);
 	}
 	
 	/*
@@ -207,6 +211,6 @@ public class Fighter : MonoBehaviour
 
 	public void SnapToPoint (Transform point)
 	{
-		transform.position = point.transform.position;
+		myTransform.position = point.transform.position;
 	}
 }

@@ -6,7 +6,7 @@ public class PlayerController : MonoBehaviour
 	public int PlayerIndex { get; private set; }
 	public InputDevice playerDevice { get; private set; }
 	
-	Fighter fighter;
+	public Fighter fighter;
 	bool isPlayerBound;
 	int curTarget;
 
