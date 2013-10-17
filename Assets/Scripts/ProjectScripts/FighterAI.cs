@@ -4,7 +4,6 @@ using System.Collections;
 public class FighterAI : MonoBehaviour
 {
 	Fighter fighter;
-	public Transform target;
 	
 	void Awake ()
 	{
@@ -22,6 +21,7 @@ public class FighterAI : MonoBehaviour
 	 */
 	bool targetInRange ()
 	{
+		Transform target = fighter.GetTarget ();
 		return Vector3.Distance (transform.position, target.position) <= fighter.swingRange;
 	}
 	
@@ -31,19 +31,17 @@ public class FighterAI : MonoBehaviour
 	void Think ()
 	{
 		FindTarget ();
+		Transform fighterTarget = fighter.GetTarget ();
 		// Fall back to patrol if we have no target.
-		if (target == null) {
+		if (fighterTarget == null) {
 			return;
 		}
-
-		// Always look at the target
-		fighter.LookAt (target.position);
-
+		
 		// Attack if in range, otherwise walk to them
 		if (targetInRange ()) {
 			fighter.SwingWeapon ();
 		} else {
-			Vector3 moveDirection = target.position - transform.position;
+			Vector3 moveDirection = fighterTarget.position - transform.position;
 			fighter.Walk (moveDirection);
 		}
 	}
@@ -54,8 +52,8 @@ public class FighterAI : MonoBehaviour
 	 */
 	void FindTarget ()
 	{
-		if (target == null) {
-			target = GameObject.FindGameObjectWithTag (Tags.PLAYER).transform;
+		if (fighter.GetTarget () == null) {
+			fighter.LockOnTarget (GameObject.FindGameObjectWithTag (Tags.PLAYER).transform);
 		}
 	}
 }

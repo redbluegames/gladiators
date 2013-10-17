@@ -33,7 +33,7 @@ GameObject:
   - 114: {fileID: 11400000}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -134,7 +134,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c747de3b6628f5244a1888fef4da4a6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -148,6 +147,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movespeed: 3
   sprintspeed: 6
+  target: {fileID: 0}
   swingRange: 2
   swingWindup: 0
   swingTime: 2

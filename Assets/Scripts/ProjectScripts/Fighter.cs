@@ -5,6 +5,9 @@ public class Fighter : MonoBehaviour
 {
 	public float movespeed;
 	public float sprintspeed;
+	public Transform target;
+	
+	// Attacks
 	public float swingRange;
 	public float swingWindup;
 	public float swingTime;
@@ -36,6 +39,7 @@ public class Fighter : MonoBehaviour
 	{
 		ApplyGravity ();
 		ResolveActions ();
+		UpdateLockOn ();
 		TryDebugs ();
 	}
 
@@ -43,16 +47,27 @@ public class Fighter : MonoBehaviour
 	{
 	}
 	
+	/*
+	 * Ensure locked on characters always face their targets, even when the other
+	 * entity moves (lock on is enforced during move as well).
+	 */
+	void UpdateLockOn ()
+	{
+		if (target != null) {
+			LockOnTarget (target);
+		}
+	}
+	
+	/*
+	 * Any pending actions that need to finish up go here. For example, swinging
+	 * a sword starts but later ends in this method, restoring the character state to ready
+	 * to swing.
+	 */
 	void ResolveActions ()
 	{
 		if (isSwinging) {
 			FinishSwingIfAble ();
 		}
-	}
-	
-	void ChangeColor (Color color)
-	{
-		renderer.material.color = color;
 	}
 
 	/*
@@ -89,10 +104,14 @@ public class Fighter : MonoBehaviour
 		CharacterController biped = GetComponent<CharacterController> ();
 		collisionFlags = biped.Move (movement);
 		
-		// Rotate to face the direction of movement immediately
+		// Rotate to face the direction of movement immediately, if lockFacing isn't set
 		if (direction != Vector3.zero) {
-			transform.rotation = Quaternion.Slerp (transform.rotation, 
-				Quaternion.LookRotation(movement), Time.deltaTime * damping);
+			if (target != null) {
+				LockOnTarget (target);
+			} else {
+				transform.rotation = Quaternion.Slerp (transform.rotation, 
+						Quaternion.LookRotation(movement), Time.deltaTime * damping);
+			}
 		}
 	}
 	
@@ -110,6 +129,14 @@ public class Fighter : MonoBehaviour
 	public void Sprint (Vector3 direction)
 	{
 		Move (direction, sprintspeed);
+	}
+	
+	/*
+	 * Walk the fighter in a given direction, facing the current target.
+	 */
+	public void ZTargetMove (Vector3 direction)
+	{
+		Move (direction, movespeed);
 	}
 	
 	/*
@@ -139,12 +166,28 @@ public class Fighter : MonoBehaviour
 	}
 	
 	/*
-	 * Have the fighter look at a given position.
+	 * Set the Fighter target to the provided Transform and start staring it down.
 	 */
-	public void LookAt (Vector3 targetPosition)
+	public void LockOnTarget (Transform newTarget)
 	{
-		Quaternion targetRotation = Quaternion.LookRotation (targetPosition - transform.position);
-		transform.rotation = Quaternion.Slerp (transform.rotation, targetRotation, Time.deltaTime * damping);
+		target = newTarget;
+		transform.LookAt (target);
+	}
+	
+	/*
+	 * Set the target transform to null, effectively losing it.
+	 */
+	public void LoseTarget ()
+	{
+		target = null;
+	}
+	
+	/*
+	 * Return the fighter's current target Transform.
+	 */
+	public Transform GetTarget ()
+	{
+		return target;
 	}
 
 	/*
@@ -152,6 +195,14 @@ public class Fighter : MonoBehaviour
 	 */
 	void TryDebugs ()
 	{
+	}
+
+	/*
+	 * Debug method to change the fighter color.
+	 */
+	void ChangeColor (Color color)
+	{
+		renderer.material.color = color;
 	}
 
 	public void SnapToPoint (Transform point)
