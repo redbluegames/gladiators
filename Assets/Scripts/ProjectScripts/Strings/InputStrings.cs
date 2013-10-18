@@ -7,4 +7,5 @@ public static class InputStrings
     public static string VERTICAL = "Vertical";
 	public static string SPRINT = "Sprint";
 	public static string TARGET = "Target";
+	public static string FIRE = "Fire1";
 }
