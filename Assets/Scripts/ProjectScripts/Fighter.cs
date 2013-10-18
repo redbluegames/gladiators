@@ -9,15 +9,37 @@ public class Fighter : MonoBehaviour
 	public float swingWindup;
 	public float swingTime;
 	public float swingWindDown;
-	
+
+	public AnimationClip swing;
+	public AnimationClip idle;
+	public AnimationClip windUp;
+	public AnimationClip windDown;
+
+	public Color nativeColor;
+
+	// Character state
+	enum CharacterState
+	{
+		Idle = 0,
+		Attacking
+	}
+	CharacterState _characterState;
+
+	// Store the stage of the attack
+	enum AttackState
+	{
+		None = 0,
+		WindUp,
+		Swing,
+		WindDown
+	}
+	AttackState _attackState;
+
 	Vector3 moveDirection;
 	float gravity = -20.0f;
 	float verticalSpeed = 0.0f;
-	float damping = 5.0f;
+	float damping = 10.0f;
 	CollisionFlags collisionFlags;
-
-	// Character state
-	bool isSwinging;
 	
 	// Timers
 	float lastSwingTime;
@@ -37,16 +59,49 @@ public class Fighter : MonoBehaviour
 		ApplyGravity ();
 		ResolveActions ();
 		TryDebugs ();
+
+		// Animation sector
+		if(_characterState == CharacterState.Idle)
+		{
+			ChangeColor (nativeColor);
+			animation.Play (idle.name, PlayMode.StopAll);
+		}
+		else if (_characterState == CharacterState.Attacking)
+		{
+			if(_attackState == AttackState.WindUp)
+			{
+				ChangeColor (Color.yellow);
+				animation.CrossFade(windUp.name, swingWindup);
+			}
+			else if (_attackState == AttackState.Swing)
+			{
+				ChangeColor (Color.red);
+				animation.Play (swing.name, PlayMode. StopAll);
+			}
+			else if (_attackState == AttackState.WindDown)
+			{
+				ChangeColor (Color.magenta);
+				animation.Play (windDown.name, PlayMode.StopAll);
+			}
+		}
 	}
 
 	void LateUpdate ()
 	{
 	}
-	
+
+	/*
+	 * Return true if the character is in any of the attack states
+	 */
+	bool IsAttacking()
+	{
+		return _characterState == CharacterState.Attacking;
+	}
+
 	void ResolveActions ()
 	{
-		if (isSwinging) {
-			FinishSwingIfAble ();
+		if (IsAttacking()) {
+			UpdateAttackState ();
 		}
 	}
 	
@@ -116,12 +171,26 @@ public class Fighter : MonoBehaviour
 	 * Check that enough time has passed after character swung to call the
 	 * swing "complete". Once it is, restore the character state to normal.
 	 */
-	void FinishSwingIfAble ()
+	void UpdateAttackState ()
 	{
-		float swingCompleteTimeStamp = lastSwingTime + (swingWindup + swingTime + swingWindDown);
-		if (Time.time >= swingCompleteTimeStamp) {
-			isSwinging = false;
-			ChangeColor (Color.black);
+		float attackCompleteTime = lastSwingTime + swingWindup + swingTime + swingWindDown;
+		float swingCompleteTime = lastSwingTime + swingWindup + swingTime;
+		float windupCompleteTime = lastSwingTime + swingWindup;
+		if (Time.time >= attackCompleteTime) {
+			_characterState = CharacterState.Idle;
+			_attackState = AttackState.None;
+		}
+		else if (Time.time >= swingCompleteTime)
+		{
+			_attackState = AttackState.WindDown;
+		}
+		else if (Time.time >= windupCompleteTime)
+		{
+			_attackState = AttackState.Swing;
+		}
+		else
+		{
+			_attackState = AttackState.WindUp;
 		}
 	}
 	
@@ -131,10 +200,15 @@ public class Fighter : MonoBehaviour
 	 */
 	public void SwingWeapon ()
 	{
-		if (!isSwinging) { 
-			ChangeColor (Color.red);
+		if (!IsAttacking ()) {
+			_characterState = CharacterState.Attacking;
+			_attackState = AttackState.WindUp;
 			lastSwingTime = Time.time;
-			isSwinging = true;
+			swingTime = swing.length;
+			float WINDUP_TIME = 0.5f;
+			swingWindup = WINDUP_TIME;
+			float WINDDOWN_TIME = 0.2f;
+			swingWindDown = WINDDOWN_TIME;
 		}
 	}
 	

@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
 		}
 		
 		TryMove ();
+		TryAttack();
 		TryDebugs ();
 	}
 
@@ -49,6 +50,15 @@ public class PlayerController : MonoBehaviour
 		
 		Vector3 direction = new Vector3 (horizontal, 0.0f, vertical);
 		fighter.Walk (direction);
+	}
+
+	void TryAttack()
+	{
+		bool isAttack = RBInput.GetButtonDownForPlayer(InputStrings.ATTACK, PlayerIndex, playerDevice);
+		if(isAttack)
+		{
+			fighter.SwingWeapon();
+		}
 	}
 
 	/*
