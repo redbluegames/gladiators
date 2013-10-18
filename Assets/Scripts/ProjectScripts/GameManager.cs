@@ -7,10 +7,10 @@ using System.Collections;
  *
  * This is our "god class" for handling managers and game-global variables.
  **/
-public class Manager : Singleton<Manager>
+public class GameManager : Singleton<GameManager>
 {
 	// guarantee this will be always a singleton only - can't use the constructor!
-	protected Manager ()
+	protected GameManager ()
 	{
 	}
 	
@@ -18,10 +18,10 @@ public class Manager : Singleton<Manager>
  
 	void Awake ()
 	{
-//		arena = Instance.GetComponent<Arena> ();
+		arena = Instance.GetComponent<Arena> ();
 		if (arena == null) {
 			Debug.Log ("Adding Arena Component to Manager since it wasn't attached via the Editor.");
-//			arena = gameObject.AddComponent<Arena> ();
+			arena = gameObject.AddComponent<Arena> ();
 		}
 	}
 }
