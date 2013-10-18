@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour
 		
 		TryMove ();
 		TrySwitchTarget ();
+		TryAttack();
 		TryDebugs ();
 	}
 
@@ -83,6 +84,15 @@ public class PlayerController : MonoBehaviour
 			HighlightArrow (true);
 			fighter.LockOnTarget (enemies[curTarget].transform);
 			curTarget++;
+		}
+	}
+
+	void TryAttack()
+	{
+		bool isAttack = RBInput.GetButtonDownForPlayer(InputStrings.FIRE, PlayerIndex, playerDevice);
+		if(isAttack)
+		{
+			fighter.SwingWeapon();
 		}
 	}
 
