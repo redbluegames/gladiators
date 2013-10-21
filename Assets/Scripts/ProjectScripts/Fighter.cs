@@ -4,7 +4,7 @@ using System.Collections;
 public class Fighter : MonoBehaviour
 {
 	public IController controller;
-	public float movespeed;
+	public float movespeed; //TODO Rename me runspeed;
 	public float sprintspeed;
 	public Transform target;
 	
@@ -18,6 +18,9 @@ public class Fighter : MonoBehaviour
 	public AnimationClip windUp;
 	public AnimationClip windDown;
 	public Color nativeColor;
+	
+	// Attack attributes
+	public float sprintStamPerSec = 30.0f;
 
 	// Character state
 	enum CharacterState
@@ -40,7 +43,6 @@ public class Fighter : MonoBehaviour
 	}
 	AttackState attackState;
 	
-	Vector3 moveDirection;
 	float gravity = -20.0f;
 	float verticalSpeed = 0.0f;
 	float damping = 10.0f;
@@ -55,12 +57,13 @@ public class Fighter : MonoBehaviour
 	void Awake ()
 	{
 		myTransform = transform;
+		// TODO make this check for controller == null, otherwise
+		// it always overrides the one chosen in the editor.
 		controller = GetComponent<IController> ();
 	}
 
 	void Start ()
 	{
-		moveDirection = myTransform.TransformDirection (Vector3.forward);
 		lastSwingTime = Time.time - (swingWindup + swingTime + swingWindDown);
 	}
 
@@ -176,11 +179,20 @@ public class Fighter : MonoBehaviour
 	}
 	
 	/*
-	 * Sprint the fighter in a given direction.
+	 * Sprint the fighter in a given direction. If fighter is out of stamina, just run.
 	 */
 	public void Sprint (Vector3 direction)
 	{
-		Move (direction, sprintspeed);
+		Stamina stam = GetComponent<Stamina> ();
+		if (stam == null) {
+			Debug.LogWarning (string.Format ("Object %s tried to sprint without stamina attached.", gameObject.name));
+		}
+		if (stam.HasStamina ()) {
+			stam.UseStaminaOverTime (sprintStamPerSec);
+			Move (direction, sprintspeed);
+		} else {
+			Move (direction, movespeed);
+		}
 	}
 	
 	/*

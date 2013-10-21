@@ -45,7 +45,11 @@ public class PlayerController : IController
 		vertical = RBInput.GetAxisRawForPlayer (InputStrings.VERTICAL, PlayerIndex, playerDevice);
 		
 		Vector3 direction = new Vector3 (horizontal, 0.0f, vertical);
-		fighter.Run (direction);
+		if (RBInput.GetButtonForPlayer (InputStrings.SPRINT, PlayerIndex, playerDevice)) {
+			fighter.Sprint (direction);
+		} else {
+			fighter.Run (direction);
+		}
 	}
 	
 	/*
