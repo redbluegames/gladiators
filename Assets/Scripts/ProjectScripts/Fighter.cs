@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Fighter : MonoBehaviour
 {
+	public IController controller;
 	public float movespeed;
 	public float sprintspeed;
 	public Transform target;
@@ -12,21 +13,22 @@ public class Fighter : MonoBehaviour
 	public float swingWindup;
 	public float swingTime;
 	public float swingWindDown;
-
 	public AnimationClip swing;
 	public AnimationClip idle;
 	public AnimationClip windUp;
 	public AnimationClip windDown;
-
 	public Color nativeColor;
 
 	// Character state
 	enum CharacterState
 	{
 		Idle = 0,
-		Attacking
+		Attacking,
+		Moving,
+		Dodging,
+		Blocking
 	}
-	CharacterState _characterState;
+	CharacterState characterState;
 
 	// Store the stage of the attack
 	enum AttackState
@@ -36,8 +38,8 @@ public class Fighter : MonoBehaviour
 		Swing,
 		WindDown
 	}
-	AttackState _attackState;
-
+	AttackState attackState;
+	
 	Vector3 moveDirection;
 	float gravity = -20.0f;
 	float verticalSpeed = 0.0f;
@@ -53,6 +55,7 @@ public class Fighter : MonoBehaviour
 	void Awake ()
 	{
 		myTransform = transform;
+		controller = GetComponent<IController> ();
 	}
 
 	void Start ()
@@ -64,40 +67,30 @@ public class Fighter : MonoBehaviour
 	void Update ()
 	{
 		ApplyGravity ();
-		ResolveActions ();
+		ConsumeUnresolvedActions ();
 		UpdateLockOn ();
+
+		controller.Think ();
 		TryDebugs ();
 
 		// Animation sector
-		if(_characterState == CharacterState.Idle)
-		{
+		if (characterState == CharacterState.Idle) {
 			ChangeColor (nativeColor);
 			animation.Play (idle.name, PlayMode.StopAll);
-		}
-		else if (_characterState == CharacterState.Attacking)
-		{
-			if(_attackState == AttackState.WindUp)
-			{
+		} else if (characterState == CharacterState.Attacking) {
+			if (attackState == AttackState.WindUp) {
 				ChangeColor (Color.yellow);
-				animation.CrossFade(windUp.name, swingWindup);
-			}
-			else if (_attackState == AttackState.Swing)
-			{
+				animation.CrossFade (windUp.name, swingWindup);
+			} else if (attackState == AttackState.Swing) {
 				ChangeColor (Color.red);
 				animation.Play (swing.name, PlayMode. StopAll);
-			}
-			else if (_attackState == AttackState.WindDown)
-			{
+			} else if (attackState == AttackState.WindDown) {
 				ChangeColor (Color.magenta);
 				animation.Play (windDown.name, PlayMode.StopAll);
 			}
 		}
 	}
 
-	void LateUpdate ()
-	{
-	}
-	
 	/*
 	 * Ensure locked on characters always face their targets, even when the other
 	 * entity moves (lock on is enforced during move as well).
@@ -112,9 +105,9 @@ public class Fighter : MonoBehaviour
 	/*
 	 * Return true if the character is in any of the attack states
 	 */
-	bool IsAttacking()
+	bool IsAttacking ()
 	{
-		return _characterState == CharacterState.Attacking;
+		return characterState == CharacterState.Attacking;
 	}
 
 	/*
@@ -122,9 +115,9 @@ public class Fighter : MonoBehaviour
 	 * a sword starts but later ends in this method, restoring the character state to ready
 	 * to swing.
 	 */
-	void ResolveActions ()
+	void ConsumeUnresolvedActions ()
 	{
-		if (IsAttacking()) {
+		if (IsAttacking ()) {
 			UpdateAttackState ();
 		}
 	}
@@ -169,7 +162,7 @@ public class Fighter : MonoBehaviour
 				LockOnTarget (target);
 			} else {
 				myTransform.rotation = Quaternion.Slerp (myTransform.rotation, 
-						Quaternion.LookRotation(movement), Time.deltaTime * damping);
+						Quaternion.LookRotation (movement), Time.deltaTime * damping);
 			}
 		}
 	}
@@ -177,7 +170,7 @@ public class Fighter : MonoBehaviour
 	/*
 	 * Walk the fighter in a given direction.
 	 */
-	public void Walk (Vector3 direction)
+	public void Run (Vector3 direction)
 	{
 		Move (direction, movespeed);
 	}
@@ -191,14 +184,6 @@ public class Fighter : MonoBehaviour
 	}
 	
 	/*
-	 * Walk the fighter in a given direction, facing the current target.
-	 */
-	public void ZTargetMove (Vector3 direction)
-	{
-		Move (direction, movespeed);
-	}
-	
-	/*
 	 * Check that enough time has passed after character swung to call the
 	 * swing "complete". Once it is, restore the character state to normal.
 	 */
@@ -208,20 +193,14 @@ public class Fighter : MonoBehaviour
 		float swingCompleteTime = lastSwingTime + swingWindup + swingTime;
 		float windupCompleteTime = lastSwingTime + swingWindup;
 		if (Time.time >= attackCompleteTime) {
-			_characterState = CharacterState.Idle;
-			_attackState = AttackState.None;
-		}
-		else if (Time.time >= swingCompleteTime)
-		{
-			_attackState = AttackState.WindDown;
-		}
-		else if (Time.time >= windupCompleteTime)
-		{
-			_attackState = AttackState.Swing;
-		}
-		else
-		{
-			_attackState = AttackState.WindUp;
+			characterState = CharacterState.Idle;
+			attackState = AttackState.None;
+		} else if (Time.time >= swingCompleteTime) {
+			attackState = AttackState.WindDown;
+		} else if (Time.time >= windupCompleteTime) {
+			attackState = AttackState.Swing;
+		} else {
+			attackState = AttackState.WindUp;
 		}
 	}
 	
@@ -232,8 +211,8 @@ public class Fighter : MonoBehaviour
 	public void SwingWeapon ()
 	{
 		if (!IsAttacking ()) {
-			_characterState = CharacterState.Attacking;
-			_attackState = AttackState.WindUp;
+			characterState = CharacterState.Attacking;
+			attackState = AttackState.WindUp;
 			lastSwingTime = Time.time;
 			swingTime = swing.length;
 			float WINDUP_TIME = 0.5f;

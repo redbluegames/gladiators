@@ -1,19 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FighterAI : MonoBehaviour
+public class FighterAI : IController
 {
 	Fighter fighter;
 	
 	void Awake ()
 	{
 		fighter = gameObject.GetComponent<Fighter> ();
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-		Think ();
 	}
 	
 	/*
@@ -28,7 +22,7 @@ public class FighterAI : MonoBehaviour
 	/*
 	 * Decide what the character should do.
 	 */
-	void Think ()
+	public override void Think ()
 	{
 		FindTarget ();
 		Transform fighterTarget = fighter.GetTarget ();
@@ -42,7 +36,7 @@ public class FighterAI : MonoBehaviour
 			fighter.SwingWeapon ();
 		} else {
 			Vector3 moveDirection = fighterTarget.position - transform.position;
-			fighter.Walk (moveDirection);
+			fighter.Run (moveDirection);
 		}
 	}
 	

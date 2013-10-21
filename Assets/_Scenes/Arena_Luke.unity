@@ -175,7 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d33c6354b54fb847b16b36e1391868d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mMat: {fileID: 0}
+  mMat: {fileID: 2100000, guid: e7ef61ebb5c25394c8706a7ea658349f, type: 2}
   mColor: {r: .683823526, g: 0, b: 0, a: 1}
   mPivot: 3
   mDepth: 1
@@ -272,6 +272,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 197433043}
+  - 114: {fileID: 197433044}
   m_Layer: 0
   m_Name: EnemySpawn
   m_TagString: Untagged
@@ -290,6 +291,19 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+--- !u!114 &197433044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 197433042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cc869b9a5caf4fa996ce6f40ea31adc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gizmoSize: .5
+  gizmoColor: {r: 1, g: .921568632, b: .0156862754, a: 1}
 --- !u!1 &319552696
 GameObject:
   m_ObjectHideFlags: 0
@@ -527,6 +541,10 @@ Prefab:
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11400004, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
+      propertyPath: controller
+      value: 
+      objectReference: {fileID: 759099195}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
   m_RootGameObject: {fileID: 759099190}
@@ -571,6 +589,10 @@ Prefab:
       propertyPath: spawnPoint
       value: 
       objectReference: {fileID: 197433043}
+    - target: {fileID: 11400000, guid: 9b4c39fcf2f7a2347bba736d69dd0224, type: 2}
+      propertyPath: waveTimeAllowed
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9b4c39fcf2f7a2347bba736d69dd0224, type: 2}
   m_RootGameObject: {fileID: 1390360874}
@@ -615,7 +637,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9d0b5f3bbe925a408bd595c79d0bf63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mMat: {fileID: 0}
+  mMat: {fileID: 2100000, guid: e7ef61ebb5c25394c8706a7ea658349f, type: 2}
   mColor: {r: 1, g: 1, b: 1, a: 1}
   mPivot: 4
   mDepth: 0
@@ -733,6 +755,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a87441b3bc1fba479154c5969fba067, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controller: {fileID: 759099195}
   movespeed: 6
   sprintspeed: 12
   target: {fileID: 0}
@@ -818,7 +841,7 @@ Transform:
   m_GameObject: {fileID: 809596043}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: .300000012, y: .300000012, z: .300000012}
   m_Children:
   - {fileID: 1435692220}
   - {fileID: 1075687867}
@@ -1288,7 +1311,7 @@ MonoBehaviour:
   curWave: 0
   spawnPoint: {fileID: 197433043}
   spawnRange: 10
-  waveTimeAllowed: 60
+  waveTimeAllowed: 5
   waveTimeLeft: 0
   enemyPrefab: {fileID: 100002, guid: 05ec9b1a5891b9945a3d6bff4ef2d534, type: 2}
   waveComp: 020000000400000006000000080000000a0000000c0000000e000000100000001200000014000000
@@ -1472,7 +1495,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d33c6354b54fb847b16b36e1391868d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mMat: {fileID: 0}
+  mMat: {fileID: 2100000, guid: e7ef61ebb5c25394c8706a7ea658349f, type: 2}
   mColor: {r: .161764681, g: .161764681, b: .161764681, a: 1}
   mPivot: 3
   mDepth: 0
@@ -1518,7 +1541,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d33c6354b54fb847b16b36e1391868d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mMat: {fileID: 0}
+  mMat: {fileID: 2100000, guid: e7ef61ebb5c25394c8706a7ea658349f, type: 2}
   mColor: {r: .161764681, g: .161764681, b: .161764681, a: 1}
   mPivot: 3
   mDepth: 0
@@ -1564,7 +1587,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9d0b5f3bbe925a408bd595c79d0bf63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mMat: {fileID: 0}
+  mMat: {fileID: 2100000, guid: e7ef61ebb5c25394c8706a7ea658349f, type: 2}
   mColor: {r: 1, g: 1, b: 1, a: 1}
   mPivot: 4
   mDepth: 1
@@ -1653,7 +1676,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d33c6354b54fb847b16b36e1391868d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mMat: {fileID: 0}
+  mMat: {fileID: 2100000, guid: e7ef61ebb5c25394c8706a7ea658349f, type: 2}
   mColor: {r: .052586209, g: .448529422, b: 0, a: 1}
   mPivot: 3
   mDepth: 1

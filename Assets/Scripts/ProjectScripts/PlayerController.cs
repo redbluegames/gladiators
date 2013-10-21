@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : IController
 {
 	public int PlayerIndex { get; private set; }
 	public InputDevice playerDevice { get; private set; }
@@ -20,11 +20,7 @@ public class PlayerController : MonoBehaviour
 		BindPlayer(0, InputDevices.GetAllInputDevices()[(int)InputDevices.ControllerTypes.Keyboard]);
 	}
 
-	void Start ()
-	{
-	}
-
-	void Update ()
+	public override void Think ()
 	{
 		if(!isPlayerBound)
 		{
@@ -37,10 +33,6 @@ public class PlayerController : MonoBehaviour
 		TryDebugs ();
 	}
 
-	private void LateUpdate ()
-	{
-	}
-	
 	/*
 	 * Apply movement in the Player's desired directions according to the various speed
 	 * and movement variables.
@@ -53,11 +45,7 @@ public class PlayerController : MonoBehaviour
 		vertical = RBInput.GetAxisRawForPlayer (InputStrings.VERTICAL, PlayerIndex, playerDevice);
 		
 		Vector3 direction = new Vector3 (horizontal, 0.0f, vertical);
-		if (fighter.GetTarget () != null) {
-			fighter.ZTargetMove (direction);
-		} else {
-			fighter.Walk (direction);
-		}
+		fighter.Run (direction);
 	}
 	
 	/*
