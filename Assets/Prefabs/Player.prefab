@@ -142,6 +142,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &100016
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400016}
+  - 114: {fileID: 11400008}
+  - 114: {fileID: 11400010}
+  m_Layer: 0
+  m_Name: AttackCaster
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &400000
 Transform:
   m_ObjectHideFlags: 1
@@ -223,7 +240,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 400016}
   m_Father: {fileID: 400014}
 --- !u!4 &400014
 Transform:
@@ -237,6 +255,17 @@ Transform:
   m_Children:
   - {fileID: 400012}
   m_Father: {fileID: 400000}
+--- !u!4 &400016
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100016}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: .899999976, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 400012}
 --- !u!23 &2300000
 Renderer:
   m_ObjectHideFlags: 1
@@ -469,6 +498,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxStamina: 100
   curStamina: 100
+  cooldown: 3
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -492,6 +522,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a87441b3bc1fba479154c5969fba067, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controller: {fileID: 0}
   movespeed: 6
   sprintspeed: 12
   target: {fileID: 0}
@@ -504,6 +535,7 @@ MonoBehaviour:
   windUp: {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
   windDown: {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
   nativeColor: {r: .204476625, g: .437436044, b: .897058845, a: 0}
+  sprintStamPerSec: 30
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -517,6 +549,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   curHealth: 100
+--- !u!114 &11400008
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cc869b9a5caf4fa996ce6f40ea31adc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gizmoSize: .800000012
+  gizmoColor: {r: 1, g: .921568632, b: .0156862754, a: 1}
+--- !u!114 &11400010
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4beb60af8491475cb05ed6aef868a42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: .800000012
+  hitLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  debugShowCasts: 0
+  debugShowHits: 0
 --- !u!143 &14300000
 CharacterController:
   m_ObjectHideFlags: 1
