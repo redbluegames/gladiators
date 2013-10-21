@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /*
  * Handles casting between this object and it's position in the previous frame. It then
@@ -14,6 +15,9 @@ public class AttackCast : MonoBehaviour
 	// Track last position of this game object
 	Vector3 lastFramePosition;
 
+	// A list of hit game objects so that we only report one OnHit per object
+	List<GameObject> ignoreObjects = new List<GameObject>();
+
 	// The radius for this attack sphere
 	public float radius;
 
@@ -27,7 +31,13 @@ public class AttackCast : MonoBehaviour
 	void OnEnable ()
 	{
 		// TODO: Could support cast to source position, like I did in Ben10
+
+		// Reinitialize previous position
 		lastFramePosition = transform.position;
+
+		// Clear previously hit objects so that we can re-hit them
+		ignoreObjects.Clear ();
+		ignoreObjects.Add (transform.root.gameObject);
 	}
 
 	// Update is called once per frame
@@ -102,6 +112,9 @@ public class AttackCast : MonoBehaviour
 		debugLastPosition.SetActive (debugShowCasts);
 	}
 
+	/*
+	 * Send Hits to hit objects, from a Raycast hit array.
+	 */
 	void ReportHits (RaycastHit[] hits)
 	{
 		foreach (RaycastHit hit in hits) {
@@ -109,6 +122,9 @@ public class AttackCast : MonoBehaviour
 		}
 	}
 
+	/*
+	 * Send Hits to hit objects, from an array of colliders
+	 */
 	void ReportHits (Collider[] colliders)
 	{
 		foreach (Collider collider in colliders) {
@@ -116,16 +132,28 @@ public class AttackCast : MonoBehaviour
 		}
 	}
 
+	/*
+	 * Perform the OnHit function for all hit colliders
+	 */
 	void OnHit (RaycastHit hit)
 	{
+		// Throw out iIgnored objects
+		if (ignoreObjects.Contains(hit.collider.transform.root.gameObject)) {
+			return;
+		}
+
 		if (debugShowHits) {
 			Debug.DrawRay (hit.point, hit.normal, Color.red, 0.5f);
 		}
 		OnHit (hit.collider);
 	}
 
+	/*
+	 * Do the OnHit for a specific collider
+	 */
 	void OnHit (Collider hitCollider)
 	{
+		ignoreObjects.Add (hitCollider.gameObject);
 		Debug.Log ("Hit! Object: " + hitCollider.name);
 	}
 }
