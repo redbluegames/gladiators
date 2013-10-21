@@ -39,16 +39,18 @@ public class Fighter : MonoBehaviour
 		WindDown
 	}
 	AttackState attackState;
-	
 	Vector3 moveDirection;
 	float gravity = -20.0f;
 	float verticalSpeed = 0.0f;
 	float damping = 10.0f;
 	CollisionFlags collisionFlags;
-	
+
 	// Timers
 	float lastSwingTime;
-	
+
+	// Link to the attack spherecast object
+	GameObject attackCaster;
+
 	// Cache our fighter's transform
 	Transform myTransform;
 
@@ -56,6 +58,11 @@ public class Fighter : MonoBehaviour
 	{
 		myTransform = transform;
 		controller = GetComponent<IController> ();
+
+		attackCaster = GameObject.Find (ObjectNames.ATTACK_CASTER);
+		if (attackCaster != null) {
+			attackCaster.SetActive (false);
+		}
 	}
 
 	void Start ()
@@ -197,13 +204,22 @@ public class Fighter : MonoBehaviour
 			attackState = AttackState.None;
 		} else if (Time.time >= swingCompleteTime) {
 			attackState = AttackState.WindDown;
+			SetAttackActive(false);
 		} else if (Time.time >= windupCompleteTime) {
 			attackState = AttackState.Swing;
+			SetAttackActive(true);
 		} else {
 			attackState = AttackState.WindUp;
 		}
 	}
-	
+
+	void SetAttackActive(bool isActive)
+	{
+		if(attackCaster != null)
+		{
+			attackCaster.SetActive (isActive);
+		}
+	}
 	/*
 	 * Try to make the character swing its weapon. If it's in the process
 	 * of swinging or swing is on cooldown, it won't do anything.
