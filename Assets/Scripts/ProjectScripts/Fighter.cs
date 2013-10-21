@@ -188,7 +188,7 @@ public class Fighter : MonoBehaviour
 			Debug.LogWarning (string.Format ("Object %s tried to sprint without stamina attached.", gameObject.name));
 		}
 		if (stam.HasStamina ()) {
-			stam.UseStaminaOverTime (sprintStamPerSec);
+			stam.UseStamina (sprintStamPerSec * Time.deltaTime);
 			Move (direction, sprintspeed);
 		} else {
 			Move (direction, movespeed);
