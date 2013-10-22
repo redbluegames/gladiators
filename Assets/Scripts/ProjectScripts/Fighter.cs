@@ -7,6 +7,8 @@ public class Fighter : MonoBehaviour
 	public float movespeed; //TODO Rename me runspeed;
 	public float sprintspeed;
 	public Transform target;
+	public Stamina stamina;
+	public Health health;
 	
 	// Attacks
 	public float swingRange;
@@ -18,6 +20,12 @@ public class Fighter : MonoBehaviour
 	public AnimationClip windUp;
 	public AnimationClip windDown;
 	public Color nativeColor;
+	
+	// Dodge
+	float dodgeSpeed = 20.0f;
+	float dodgeTime = 0.25f;
+	float dodgeStamina = 20.0f;
+	Vector3 dodgeDirection;
 	
 	// Attack attributes
 	public float sprintStamPerSec = 30.0f;
@@ -50,6 +58,7 @@ public class Fighter : MonoBehaviour
 	
 	// Timers
 	float lastSwingTime;
+	float lastDodgeTime;
 	
 	// Cache our fighter's transform
 	Transform myTransform;
@@ -60,6 +69,8 @@ public class Fighter : MonoBehaviour
 		// TODO make this check for controller == null, otherwise
 		// it always overrides the one chosen in the editor.
 		controller = GetComponent<IController> ();
+		stamina = GetComponent<Stamina> ();
+		health = GetComponent<Health> ();
 	}
 
 	void Start ()
@@ -77,10 +88,10 @@ public class Fighter : MonoBehaviour
 		TryDebugs ();
 
 		// Animation sector
-		if (characterState == CharacterState.Idle) {
+		if (IsIdle () || IsMoving ()) {
 			ChangeColor (nativeColor);
 			animation.Play (idle.name, PlayMode.StopAll);
-		} else if (characterState == CharacterState.Attacking) {
+		} else if (IsAttacking ()) {
 			if (attackState == AttackState.WindUp) {
 				ChangeColor (Color.yellow);
 				animation.CrossFade (windUp.name, swingWindup);
@@ -112,6 +123,30 @@ public class Fighter : MonoBehaviour
 	{
 		return characterState == CharacterState.Attacking;
 	}
+	
+	/*
+	 * Return true if the character is in any of the idle states.
+	 */
+	bool IsIdle ()
+	{
+		return characterState == CharacterState.Idle;
+	}
+	
+	/*
+	 * Return true if the character is in dodging state.
+	 */
+	bool IsDodging ()
+	{
+		return characterState == CharacterState.Dodging;
+	}
+	
+	/*
+	 * Return true if the character is moving (sprinting or running).
+	 */
+	bool IsMoving ()
+	{
+		return characterState == CharacterState.Moving;
+	}
 
 	/*
 	 * Any pending actions that need to finish up go here. For example, swinging
@@ -122,6 +157,8 @@ public class Fighter : MonoBehaviour
 	{
 		if (IsAttacking ()) {
 			UpdateAttackState ();
+		} else if (IsDodging ()) {
+			UpdateDodgeState ();
 		}
 	}
 
@@ -175,7 +212,10 @@ public class Fighter : MonoBehaviour
 	 */
 	public void Run (Vector3 direction)
 	{
-		Move (direction, movespeed);
+		if (IsIdle () || IsMoving ()) {
+			characterState = CharacterState.Moving;
+			Move (direction, movespeed);
+		}
 	}
 	
 	/*
@@ -183,15 +223,15 @@ public class Fighter : MonoBehaviour
 	 */
 	public void Sprint (Vector3 direction)
 	{
-		Stamina stam = GetComponent<Stamina> ();
-		if (stam == null) {
-			Debug.LogWarning (string.Format ("Object %s tried to sprint without stamina attached.", gameObject.name));
-		}
-		if (stam.HasStamina ()) {
-			stam.UseStamina (sprintStamPerSec * Time.deltaTime);
-			Move (direction, sprintspeed);
-		} else {
-			Move (direction, movespeed);
+		if (IsIdle () || IsMoving ()) {
+			characterState = CharacterState.Moving;
+			CheckForStamina ();
+			if (stamina.HasStamina ()) {
+				stamina.UseStamina (sprintStamPerSec * Time.deltaTime);
+				Move (direction, sprintspeed);
+			} else {
+				Move (direction, movespeed);
+			}
 		}
 	}
 	
@@ -222,7 +262,7 @@ public class Fighter : MonoBehaviour
 	 */
 	public void SwingWeapon ()
 	{
-		if (!IsAttacking ()) {
+		if (!IsAttacking () && !IsDodging ()) {
 			characterState = CharacterState.Attacking;
 			attackState = AttackState.WindUp;
 			lastSwingTime = Time.time;
@@ -231,6 +271,36 @@ public class Fighter : MonoBehaviour
 			swingWindup = WINDUP_TIME;
 			float WINDDOWN_TIME = 0.2f;
 			swingWindDown = WINDDOWN_TIME;
+		}
+	}
+	
+	/*
+	 * Resolve the dodge roll once it's complete.
+	 */
+	void UpdateDodgeState ()
+	{
+		if (Time.time - lastDodgeTime >= dodgeTime) {
+			characterState = CharacterState.Idle;
+		} else {
+			Dodge (dodgeDirection);
+		}
+	}
+	
+	/*
+	 * Cause fighter to dodge in a given direction. Requires stamina.
+	 */
+	public void Dodge (Vector3 direction)
+	{
+		CheckForStamina ();
+		if (stamina.HasStamina () && (IsMoving () || IsIdle ())) {
+			dodgeDirection = direction;
+			characterState = CharacterState.Dodging;
+			lastDodgeTime = Time.time;
+		}
+		if (IsDodging ()) {
+			float dodgeStamPerSec = dodgeStamina / dodgeTime;
+			stamina.UseStamina (dodgeStamPerSec * Time.deltaTime);
+			Move (dodgeDirection, dodgeSpeed);
 		}
 	}
 	
@@ -257,6 +327,18 @@ public class Fighter : MonoBehaviour
 	public Transform GetTarget ()
 	{
 		return target;
+	}
+	
+	/*
+	 * Null-protect stamina related skills in case an entity uses an ability without
+	 * attaching a stamina script.
+	 */
+	void CheckForStamina ()
+	{
+		if (stamina == null) {
+			Debug.LogWarning (string.Format ("Object %s used stamina ability without attaching Stamina script.", 
+				gameObject.name));
+		}
 	}
 
 	/*
