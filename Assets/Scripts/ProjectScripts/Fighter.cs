@@ -232,9 +232,10 @@ public class Fighter : MonoBehaviour
 	public void Sprint (Vector3 direction)
 	{
 		if (IsIdle () || IsMoving ()) {
-			characterState = CharacterState.Moving;
 			CheckForStamina ();
 			if (stamina.HasStamina ()) {
+				characterState = CharacterState.Moving;
+				LoseTarget ();
 				stamina.UseStamina (sprintStamPerSec * Time.deltaTime);
 				Move (direction, sprintspeed);
 			} else {
