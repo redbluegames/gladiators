@@ -4,6 +4,7 @@ using System.Collections;
 public class PlayerController : IController
 {
 	public int PlayerIndex { get; private set; }
+
 	public InputDevice playerDevice { get; private set; }
 	
 	public Fighter fighter;
@@ -17,19 +18,19 @@ public class PlayerController : IController
 		curTarget = 0;
 		HighlightArrow (false);
 
-		BindPlayer(0, InputDevices.GetAllInputDevices()[(int)InputDevices.ControllerTypes.Keyboard]);
+		BindPlayer (0, InputDevices.GetAllInputDevices () [(int)InputDevices.ControllerTypes.Keyboard]);
 	}
 
 	public override void Think ()
 	{
-		if(!isPlayerBound)
-		{
+		if (!isPlayerBound) {
 			return;
 		}
 		
 		TryMove ();
+		TryDodge ();
 		TrySwitchTarget ();
-		TryAttack();
+		TryAttack ();
 		TryDebugs ();
 	}
 
@@ -74,18 +75,32 @@ public class PlayerController : IController
 			
 			// Select the next target
 			HighlightArrow (true);
-			fighter.LockOnTarget (enemies[curTarget].transform);
+			fighter.LockOnTarget (enemies [curTarget].transform);
 			curTarget++;
 		}
 	}
 
-	void TryAttack()
+	void TryAttack ()
 	{
-		bool isAttack = RBInput.GetButtonDownForPlayer(InputStrings.FIRE, PlayerIndex, playerDevice);
-		if(isAttack)
-		{
-			fighter.SwingWeapon();
+		bool isAttack = RBInput.GetButtonDownForPlayer (InputStrings.FIRE, PlayerIndex, playerDevice);
+		if (isAttack) {
+			fighter.SwingWeapon ();
 		}
+	}
+	
+	void TryDodge ()
+	{
+		// Get input values
+		float horizontal = 0.0f, vertical = 0.0f;
+		horizontal = RBInput.GetAxisRawForPlayer (InputStrings.HORIZONTAL, PlayerIndex, playerDevice);
+		vertical = RBInput.GetAxisRawForPlayer (InputStrings.VERTICAL, PlayerIndex, playerDevice);
+		
+		// If player isn't standing still and hits dodge button, let's dodge!
+		if (RBInput.GetButtonDownForPlayer (InputStrings.DODGE, PlayerIndex, playerDevice) &&
+			(horizontal != 0 || vertical != 0)) {
+			fighter.Dodge (new Vector3(horizontal, 0.0f, vertical));
+		}
+		
 	}
 
 	/*
