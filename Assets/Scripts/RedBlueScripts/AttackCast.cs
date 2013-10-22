@@ -161,6 +161,12 @@ public class AttackCast : MonoBehaviour
 		{
 			hitFighter.TakeHit();
 		}
+
+		Fighter myFighter = (Fighter) transform.root.gameObject.GetComponent<Fighter>();
+		if(myFighter != null)
+		{
+			myFighter.AttackHit ();
+		}
 		Debug.Log ("Hit! Object: " + hitGameObject.name);
 	}
 }

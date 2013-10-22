@@ -4,6 +4,7 @@ using System.Collections;
 public class PlayerController : IController
 {
 	public int PlayerIndex { get; private set; }
+
 	public InputDevice playerDevice { get; private set; }
 	
 	public Fighter fighter;
@@ -17,20 +18,34 @@ public class PlayerController : IController
 		curTarget = 0;
 		HighlightArrow (false);
 
-		BindPlayer(0, InputDevices.GetAllInputDevices()[(int)InputDevices.ControllerTypes.Keyboard]);
+		BindPlayer (0, InputDevices.GetAllInputDevices () [(int)InputDevices.ControllerTypes.Keyboard]);
 	}
 
 	public override void Think ()
 	{
-		if(!isPlayerBound)
-		{
+		if (!isPlayerBound) {
 			return;
 		}
-		
-		TryMove ();
-		TrySwitchTarget ();
-		TryAttack();
-		TryDebugs ();
+
+		TryPause ();
+		if(!GameManager.Instance.IsPaused)
+		{
+			TryMove ();
+			TrySwitchTarget ();
+			TryAttack ();
+			TryDebugs ();
+		}
+	}
+
+	void TryPause ()
+	{
+		if (Input.GetKeyDown (KeyCode.Return)) {
+			if (GameManager.Instance.IsPaused) {
+				GameManager.Instance.RequestUnpause ();
+			} else {
+				GameManager.Instance.RequestPause ();
+			}
+		}
 	}
 
 	/*
@@ -74,17 +89,16 @@ public class PlayerController : IController
 			
 			// Select the next target
 			HighlightArrow (true);
-			fighter.LockOnTarget (enemies[curTarget].transform);
+			fighter.LockOnTarget (enemies [curTarget].transform);
 			curTarget++;
 		}
 	}
 
-	void TryAttack()
+	void TryAttack ()
 	{
-		bool isAttack = RBInput.GetButtonDownForPlayer(InputStrings.FIRE, PlayerIndex, playerDevice);
-		if(isAttack)
-		{
-			fighter.SwingWeapon();
+		bool isAttack = RBInput.GetButtonDownForPlayer (InputStrings.FIRE, PlayerIndex, playerDevice);
+		if (isAttack) {
+			fighter.SwingWeapon ();
 		}
 	}
 

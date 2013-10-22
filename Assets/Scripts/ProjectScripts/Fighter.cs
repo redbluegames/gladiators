@@ -50,8 +50,8 @@ public class Fighter : MonoBehaviour
 	CollisionFlags collisionFlags;
 
 	// Timers
-	float lastSwingTime;
-	float lastHitTime;
+	float lastSwingTime = Mathf.NegativeInfinity;
+	float lastHitTime = Mathf.NegativeInfinity;
 
 	// Link to the attack spherecast object
 	GameObject attackCaster;
@@ -91,17 +91,17 @@ public class Fighter : MonoBehaviour
 
 		// Animation sector
 		if (characterState == CharacterState.Idle) {
-			ChangeNormalColor (nativeColor);
+			ChangeDesiredColor (nativeColor);
 			animation.Play (idle.name, PlayMode.StopAll);
 		} else if (characterState == CharacterState.Attacking) {
 			if (attackState == AttackState.WindUp) {
-				ChangeNormalColor (Color.yellow);
+				ChangeDesiredColor (Color.yellow);
 				animation.CrossFade (windUp.name, swingWindup);
 			} else if (attackState == AttackState.Swing) {
-				ChangeNormalColor (Color.red);
+				ChangeDesiredColor (Color.red);
 				animation.Play (swing.name, PlayMode. StopAll);
 			} else if (attackState == AttackState.WindDown) {
-				ChangeNormalColor (Color.magenta);
+				ChangeDesiredColor (Color.magenta);
 				animation.Play (windDown.name, PlayMode.StopAll);
 			}
 		}
@@ -174,14 +174,14 @@ public class Fighter : MonoBehaviour
 		CharacterController biped = GetComponent<CharacterController> ();
 		collisionFlags = biped.Move (movement);
 		
-		// Rotate to face the direction of movement immediately, if lockFacing isn't set
-		if (direction != Vector3.zero) {
-			if (target != null) {
-				LockOnTarget (target);
-			} else {
-				myTransform.rotation = Quaternion.Slerp (myTransform.rotation, 
-						Quaternion.LookRotation (movement), Time.deltaTime * damping);
-			}
+		// Rotate to face the direction of XZ movement immediately, if lockFacing isn't set
+		Vector3 movementXZ = new Vector3(movement.x, 0.0f, movement.z);
+		if (target != null) {
+			LockOnTarget (target);
+		}
+		else if (movementXZ != Vector3.zero) {
+			myTransform.rotation = Quaternion.Slerp (myTransform.rotation,
+					Quaternion.LookRotation (movementXZ), Time.deltaTime * damping);
 		}
 	}
 	
@@ -264,7 +264,10 @@ public class Fighter : MonoBehaviour
 	public void LockOnTarget (Transform newTarget)
 	{
 		target = newTarget;
-		myTransform.LookAt (target);
+		// Look at XZ coordinate of target only
+		Vector3 lookPosition = target.position;
+		lookPosition.y = myTransform.position.y;
+		myTransform.LookAt (lookPosition);
 	}
 	
 	/*
@@ -293,7 +296,7 @@ public class Fighter : MonoBehaviour
 	/*
 	 * Debug method to change the fighter color.
 	 */
-	void ChangeNormalColor (Color color)
+	void ChangeDesiredColor (Color color)
 	{
 		desiredColor = color;
 	}
@@ -321,5 +324,10 @@ public class Fighter : MonoBehaviour
 	public void TakeHit()
 	{
 		lastHitTime = Time.time;
+	}
+
+	public void AttackHit()
+	{
+		GameManager.Instance.FreezeGame(0.067f);
 	}
 }
