@@ -20,6 +20,7 @@ public class Fighter : MonoBehaviour
 	public AnimationClip windUp;
 	public AnimationClip windDown;
 	public Color nativeColor;
+	public TrailRenderer swingTrail;
 	
 	// Dodge
 	float dodgeSpeed = 20.0f;
@@ -83,6 +84,9 @@ public class Fighter : MonoBehaviour
 		}
 		stamina = GetComponent<Stamina> ();
 		health = GetComponent<Health> ();
+		if (swingTrail == null) {
+			swingTrail = GetComponentInChildren<TrailRenderer> ();
+		}
 	}
 
 	void Start ()
@@ -103,12 +107,18 @@ public class Fighter : MonoBehaviour
 		if (IsIdle () || IsMoving ()) {
 			ChangeDesiredColor (nativeColor);
 			animation.Play (idle.name, PlayMode.StopAll);
+			if (swingTrail != null) {
+				swingTrail.renderer.enabled = false;
+			}
 		} else if (IsAttacking ()) {
 			if (attackState == AttackState.WindUp) {
 				ChangeDesiredColor (Color.yellow);
 				animation.CrossFade (windUp.name, swingWindup);
 			} else if (attackState == AttackState.Swing) {
 				ChangeDesiredColor (Color.red);
+				if (swingTrail != null) {
+					swingTrail.renderer.enabled = true;
+				}
 				animation.Play (swing.name, PlayMode. StopAll);
 			} else if (attackState == AttackState.WindDown) {
 				ChangeDesiredColor (Color.magenta);
