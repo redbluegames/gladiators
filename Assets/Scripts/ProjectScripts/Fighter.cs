@@ -232,10 +232,10 @@ public class Fighter : MonoBehaviour
 	public void Sprint (Vector3 direction)
 	{
 		if (IsIdle () || IsMoving ()) {
+			LoseTarget ();
 			CheckForStamina ();
 			if (stamina.HasStamina ()) {
 				characterState = CharacterState.Moving;
-				LoseTarget ();
 				stamina.UseStamina (sprintStamPerSec * Time.deltaTime);
 				Move (direction, sprintspeed);
 			} else {
@@ -337,6 +337,8 @@ public class Fighter : MonoBehaviour
 	public void LoseTarget ()
 	{
 		target = null;
+		PlayerController player = (PlayerController) controller;
+		player.ResetTargetIndex ();
 	}
 	
 	/*

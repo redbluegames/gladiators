@@ -4,10 +4,12 @@ using System.Collections;
 public class FighterAI : IController
 {
 	Fighter fighter;
+	int curTarget;
 	
 	void Awake ()
 	{
 		fighter = gameObject.GetComponent<Fighter> ();
+		curTarget = 0;
 	}
 	
 	/*
@@ -39,7 +41,7 @@ public class FighterAI : IController
 			fighter.Run (moveDirection);
 		}
 	}
-	
+
 	/*
 	 * For now, finding a target is as simple as setting it to the only player
 	 * in the game.

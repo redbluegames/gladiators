@@ -15,10 +15,15 @@ public class PlayerController : IController
 	{
 		fighter = gameObject.GetComponent<Fighter> ();
 		isPlayerBound = false;
-		curTarget = 0;
+		ResetTargetIndex ();
 		HighlightArrow (false);
 
 		BindPlayer (0, InputDevices.GetAllInputDevices () [(int)InputDevices.ControllerTypes.Keyboard]);
+	}
+	
+	void Update ()
+	{
+		HighlightArrow (fighter.target != null);
 	}
 
 	public override void Think ()
@@ -32,6 +37,17 @@ public class PlayerController : IController
 		TrySwitchTarget ();
 		TryAttack ();
 		TryDebugs ();
+	}
+
+	/*
+	 * Use to forget the current target. Usually the Fighter should keep track of
+	 * what the target is and the controller should keep track of what the player or
+	 * AI wants the target to be. This method is implemented just to allow Sprint to
+	 * reset the target to the start of the array.
+	 */
+	public void ResetTargetIndex ()
+	{
+		curTarget = 0;
 	}
 
 	/*
@@ -67,14 +83,10 @@ public class PlayerController : IController
 
 			// Toggle to nothing when user has tabbed through the targets
 			if (curTarget >= enemies.Length) {
-				curTarget = 0;
-				HighlightArrow (false);
+				ResetTargetIndex ();
 				fighter.LoseTarget ();
 				return;
 			}
-			
-			// Select the next target
-			HighlightArrow (true);
 			fighter.LockOnTarget (enemies [curTarget].transform);
 			curTarget++;
 		}
@@ -87,7 +99,7 @@ public class PlayerController : IController
 			fighter.SwingWeapon ();
 		}
 	}
-	
+
 	void TryDodge ()
 	{
 		// Get input values
@@ -117,7 +129,7 @@ public class PlayerController : IController
 		PlayerIndex = index;
 		playerDevice = device;
 	}
-	
+
 	/*
 	 * Debug method that highlights the Arrow or not. Pass in True to highlight,
 	 * False to not highlight it.
