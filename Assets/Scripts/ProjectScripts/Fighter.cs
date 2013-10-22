@@ -51,9 +51,13 @@ public class Fighter : MonoBehaviour
 
 	// Timers
 	float lastSwingTime;
+	float lastHitTime;
 
 	// Link to the attack spherecast object
 	GameObject attackCaster;
+
+	Color desiredColor;
+	Color hitColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
 	// Cache our fighter's transform
 	Transform myTransform;
@@ -87,20 +91,22 @@ public class Fighter : MonoBehaviour
 
 		// Animation sector
 		if (characterState == CharacterState.Idle) {
-			ChangeColor (nativeColor);
+			ChangeNormalColor (nativeColor);
 			animation.Play (idle.name, PlayMode.StopAll);
 		} else if (characterState == CharacterState.Attacking) {
 			if (attackState == AttackState.WindUp) {
-				ChangeColor (Color.yellow);
+				ChangeNormalColor (Color.yellow);
 				animation.CrossFade (windUp.name, swingWindup);
 			} else if (attackState == AttackState.Swing) {
-				ChangeColor (Color.red);
+				ChangeNormalColor (Color.red);
 				animation.Play (swing.name, PlayMode. StopAll);
 			} else if (attackState == AttackState.WindDown) {
-				ChangeColor (Color.magenta);
+				ChangeNormalColor (Color.magenta);
 				animation.Play (windDown.name, PlayMode.StopAll);
 			}
 		}
+
+		RenderColor ();
 	}
 
 	/*
@@ -287,13 +293,33 @@ public class Fighter : MonoBehaviour
 	/*
 	 * Debug method to change the fighter color.
 	 */
-	void ChangeColor (Color color)
+	void ChangeNormalColor (Color color)
 	{
-		renderer.material.color = color;
+		desiredColor = color;
+	}
+
+	void RenderColor()
+	{
+		Color colorToShow;
+		const float timeToShowHit = 0.1f;
+		if(Time.time >= timeToShowHit + lastHitTime)
+		{
+			colorToShow = desiredColor;
+		}
+		else {
+			colorToShow = hitColor;
+		}
+
+		renderer.material.color = colorToShow;
 	}
 
 	public void SnapToPoint (Transform point)
 	{
 		myTransform.position = point.transform.position;
+	}
+
+	public void TakeHit()
+	{
+		lastHitTime = Time.time;
 	}
 }

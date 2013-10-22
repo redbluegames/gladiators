@@ -153,7 +153,14 @@ public class AttackCast : MonoBehaviour
 	 */
 	void OnHit (Collider hitCollider)
 	{
-		ignoreObjects.Add (hitCollider.gameObject);
-		Debug.Log ("Hit! Object: " + hitCollider.name);
+		GameObject hitGameObject = hitCollider.gameObject;
+		ignoreObjects.Add (hitGameObject);
+
+		Fighter hitFighter = (Fighter) hitGameObject.GetComponent<Fighter>();
+		if(hitFighter != null)
+		{
+			hitFighter.TakeHit();
+		}
+		Debug.Log ("Hit! Object: " + hitGameObject.name);
 	}
 }
