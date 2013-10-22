@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Timer : MonoBehaviour
+public class UITimer : MonoBehaviour
 {
 	public UILabel timerText;
 	

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class HealthBar : MonoBehaviour
+public class UIHealthBar : MonoBehaviour
 {
 	public Health health;
 	public UISlider bar;

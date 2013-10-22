@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class StaminaBar : MonoBehaviour
+public class UIStaminaBar : MonoBehaviour
 {
 	public Stamina stamina;
 	public UISlider bar;
