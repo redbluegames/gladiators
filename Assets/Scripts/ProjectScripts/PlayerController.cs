@@ -31,12 +31,27 @@ public class PlayerController : IController
 		if (!isPlayerBound) {
 			return;
 		}
-		
-		TryMove ();
-		TryDodge ();
-		TrySwitchTarget ();
-		TryAttack ();
-		TryDebugs ();
+
+		TryPause ();
+		if(!GameManager.Instance.IsPaused)
+		{
+			TryMove ();
+			TryDodge ();
+			TrySwitchTarget ();
+			TryAttack ();
+			TryDebugs ();
+		}
+	}
+
+	void TryPause ()
+	{
+		if (Input.GetKeyDown (KeyCode.Return)) {
+			if (GameManager.Instance.IsPaused) {
+				GameManager.Instance.RequestUnpause ();
+			} else {
+				GameManager.Instance.RequestPause ();
+			}
+		}
 	}
 
 	/*
@@ -87,6 +102,9 @@ public class PlayerController : IController
 				fighter.LoseTarget ();
 				return;
 			}
+
+			// Select the next target
+			HighlightArrow (true);
 			fighter.LockOnTarget (enemies [curTarget].transform);
 			curTarget++;
 		}
