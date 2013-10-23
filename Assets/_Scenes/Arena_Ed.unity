@@ -300,6 +300,10 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 11100000, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
+      propertyPath: m_Animations.Array.size
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -327,6 +331,74 @@ Prefab:
     - target: {fileID: 400000, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
       propertyPath: m_LocalRotation.w
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11100000, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
+      propertyPath: m_Animations.Array.data[4]
+      value: 
+      objectReference: {fileID: 7400000, guid: c3f3af8f0c04c4aa0a0cd367a923ac0d, type: 2}
+    - target: {fileID: 2300010, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6243036c878174aa29ccb9c291c6af57, type: 2}
+    - target: {fileID: 400014, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400014, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400014, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400014, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400014, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: .75
+      objectReference: {fileID: 0}
+    - target: {fileID: 400014, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300006, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 93d8748fb6ec02a49a0650024725c113, type: 2}
+    - target: {fileID: 2300008, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 93d8748fb6ec02a49a0650024725c113, type: 2}
+    - target: {fileID: 2300004, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 93d8748fb6ec02a49a0650024725c113, type: 2}
+    - target: {fileID: 2300000, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2b5dd20848a8bcf44ab5ee601c60a900, type: 2}
+    - target: {fileID: 2300002, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 93d8748fb6ec02a49a0650024725c113, type: 2}
+    - target: {fileID: 11400004, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
+      propertyPath: attackWeak_Swing
+      value: 
+      objectReference: {fileID: 7400000, guid: c3f3af8f0c04c4aa0a0cd367a923ac0d, type: 2}
+    - target: {fileID: 400014, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400010, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
+      propertyPath: radius
+      value: .899999976
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400008, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
+      propertyPath: gizmoSize
+      value: .899999976
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
@@ -491,7 +563,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1317184299}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.628740311, y: -.339966774, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 1, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
@@ -821,10 +893,13 @@ MonoBehaviour:
   stamina: {fileID: 0}
   health: {fileID: 0}
   idle: {fileID: 7400000, guid: 72eb18d4c62b54d13b0cbcca34d47b8f, type: 2}
+  windUp: {fileID: 0}
+  windDown: {fileID: 0}
+  swingTrail: {fileID: 0}
   attackWeak_Range: 5
   attackWeak_WindupTime: .100000001
   attackWeak_WinddownTime: .100000001
-  attackWeak_Swing: {fileID: 7400000, guid: ded330501f2a04d6d8c5050f5590cd4e, type: 2}
+  attackWeak_Swing: {fileID: 7400000, guid: c3f3af8f0c04c4aa0a0cd367a923ac0d, type: 2}
   attackWeak_Windup: {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
   attackWeak_Winddown: {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
   attackWeak_Damage: -10
@@ -909,6 +984,7 @@ Animation:
   - {fileID: 7400000, guid: ded330501f2a04d6d8c5050f5590cd4e, type: 2}
   - {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
   - {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
+  - {fileID: 7400000, guid: c3f3af8f0c04c4aa0a0cd367a923ac0d, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
@@ -1146,7 +1222,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cc869b9a5caf4fa996ce6f40ea31adc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gizmoSize: .800000012
+  gizmoSize: .899999976
   gizmoColor: {r: 1, g: .921568632, b: .0156862754, a: 1}
 --- !u!114 &2115042631
 MonoBehaviour:
@@ -1160,7 +1236,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4beb60af8491475cb05ed6aef868a42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: .800000012
+  radius: .899999976
   hitLayer:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -1231,6 +1307,9 @@ MonoBehaviour:
   stamina: {fileID: 0}
   health: {fileID: 0}
   idle: {fileID: 7400000, guid: 72eb18d4c62b54d13b0cbcca34d47b8f, type: 2}
+  windUp: {fileID: 0}
+  windDown: {fileID: 0}
+  swingTrail: {fileID: 0}
   attackWeak_Range: 5
   attackWeak_WindupTime: .100000001
   attackWeak_WinddownTime: .100000001
