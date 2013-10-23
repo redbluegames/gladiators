@@ -48,8 +48,9 @@ public class AttackCast : MonoBehaviour
 	 */
 	public void Begin (Attack attack)
 	{
-		attackInfo = attack;
+		Debug.Log("BEGIN CALLED");
 		gameObject.SetActive (true);
+		attackInfo = attack;
 	}
 
 	/*
@@ -178,7 +179,7 @@ public class AttackCast : MonoBehaviour
 
 		Fighter hitFighter = (Fighter)hitGameObject.GetComponent<Fighter> ();
 		if (hitFighter != null) {
-			hitFighter.TakeHit (attackInfo.damage);
+			hitFighter.TakeHit (attackInfo);
 		}
 
 		Fighter myFighter = (Fighter)transform.root.gameObject.GetComponent<Fighter> ();

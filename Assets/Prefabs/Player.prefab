@@ -599,14 +599,15 @@ MonoBehaviour:
   windUp: {fileID: 0}
   windDown: {fileID: 0}
   swingTrail: {fileID: 0}
-  attackWeak_Range: 2
+  attackWeak_Range: 5
   attackWeak_WindupTime: .100000001
   attackWeak_WinddownTime: .100000001
   attackWeak_Swing: {fileID: 7400000, guid: ded330501f2a04d6d8c5050f5590cd4e, type: 2}
   attackWeak_Windup: {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
   attackWeak_Winddown: {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
   attackWeak_Damage: -10
-  attackStrong_Range: 2
+  attackWeak_HasKnockback: 0
+  attackStrong_Range: 5
   attackStrong_WindupTime: .5
   attackStrong_WinddownTime: .200000003
   attackStrong_Swing: {fileID: 7400000, guid: ded330501f2a04d6d8c5050f5590cd4e, type: 2}
@@ -614,6 +615,9 @@ MonoBehaviour:
   attackStrong_Winddown: {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800,
     type: 2}
   attackStrong_Damage: -50
+  attackStrong_HasKnockback: 1
+  attacks: []
+  currentAttack: {fileID: 0}
   sprintStamPerSec: 30
   nativeColor: {r: .204476625, g: .437436044, b: .897058845, a: 0}
 --- !u!114 &11400006
