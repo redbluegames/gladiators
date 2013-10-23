@@ -9,21 +9,22 @@ public class Arena : Singleton<Arena>
 	
 	// This might belong in the wave class mentioned below
 	public int waveTimeAllowed = 60;
-	public int waveTimeLeft;
+	public float waveTimeLeft;
 	float waveStartTime;
-	bool timesUp = false;
 	
 	// TODO Let's make a new class for waves that allows a wave to be composed of
 	// any number of any type of enemy;
 	public GameObject enemyPrefab;
 	public int[] waveComp = {2,4,6,8,10,12,14,16,18,20};
-	
+
+	public bool IsRunning {get; private set;}
+
 	// guarantee this will be always a singleton only - can't use the constructor!
 	protected Arena ()
 	{
 	}
-	
-	void Awake () 
+
+	void Awake ()
 	{
 		if (spawnPoint == null) {
 			Debug.LogError ("Spawn Point for Arena not set. Attach spawn point to Arena script.");
@@ -36,8 +37,12 @@ public class Arena : Singleton<Arena>
 	
 	void Update ()
 	{
-		CheckTime ();
-		if (timesUp) {
+		if(!IsRunning) {
+			return;
+		}
+
+		TickTimer ();
+		if (IsTimeUp ()) {
 			StartNextWave ();
 		}
 	}
@@ -47,16 +52,23 @@ public class Arena : Singleton<Arena>
 	 */
 	public void StartNextWave ()
 	{
-		if (curWave == waveComp.Length -1) {
-			Debug.LogWarning ("Wave composition for CurWave not defined. Skipping StartNextWave.");
+		if(waveComp.Length == 0)
+		{
+			IsRunning = false;
 			return;
 		}
 		SpawnWave ();
 		curWave++;
 		waveStartTime = Time.time;
-		timesUp = false;
+		if (curWave > waveComp.Length - 1) {
+			Debug.LogWarning ("Wave composition for CurWave not defined. Skipping StartNextWave.");
+			IsRunning = false;
+			return;
+		}
+		waveTimeLeft = waveTimeAllowed;
+		IsRunning = true;
 	}
-	
+
 	/*
 	 * Spawn the current wave of enemies into the arena at random locations around our spawn.
 	 */
@@ -73,14 +85,14 @@ public class Arena : Singleton<Arena>
 	/*
 	 * Update our timers and check if time is up.
 	 */
-	void CheckTime ()
+	void TickTimer ()
 	{
-		int timeElapsed = Mathf.FloorToInt (Time.time - waveStartTime);
-		waveTimeLeft = Mathf.CeilToInt (waveTimeAllowed - timeElapsed);
-		// TODO Is rounding up good enough precision?
-		if (waveTimeLeft == 0) {
-			timesUp = true;
-		}
+		waveTimeLeft -= Time.deltaTime;
+	}
+
+	bool IsTimeUp ()
+	{
+		return waveTimeLeft <= 0;
 	}
 	
 	/*
