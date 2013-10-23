@@ -111,6 +111,9 @@ public class Fighter : MonoBehaviour
 		health = GetComponent<Health> ();
 		if (swingTrail == null) {
 			swingTrail = GetComponentInChildren<TrailRenderer> ();
+			if (swingTrail != null) {
+				swingTrail.renderer.enabled = false;
+			}
 		}
 
 		// Initialize attacks
@@ -152,9 +155,6 @@ public class Fighter : MonoBehaviour
 		if (IsIdle () || IsMoving ()) {
 			ChangeDesiredColor (nativeColor);
 			animation.Play (idle.name, PlayMode.StopAll);
-			if (swingTrail != null) {
-				swingTrail.renderer.enabled = false;
-			}
 		} else if (IsAttacking ()) {
 			if (attackState == AttackState.WindUp) {
 				ChangeDesiredColor (Color.yellow);
@@ -166,6 +166,9 @@ public class Fighter : MonoBehaviour
 				}
 				animation.Play (currentAttack.swing.name, PlayMode. StopAll);
 			} else if (attackState == AttackState.WindDown) {
+				if (swingTrail != null) {
+					swingTrail.renderer.enabled = false;
+				}
 				ChangeDesiredColor (Color.magenta);
 				animation.Play (currentAttack.winddown.name, PlayMode.StopAll);
 			}
