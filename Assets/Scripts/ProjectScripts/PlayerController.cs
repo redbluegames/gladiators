@@ -33,8 +33,7 @@ public class PlayerController : IController
 		}
 
 		TryPause ();
-		if(!GameManager.Instance.IsPaused)
-		{
+		if (!GameManager.Instance.IsPaused) {
 			TryMove ();
 			TryDodge ();
 			TrySwitchTarget ();
@@ -114,7 +113,12 @@ public class PlayerController : IController
 	{
 		bool isAttack = RBInput.GetButtonDownForPlayer (InputStrings.FIRE, PlayerIndex, playerDevice);
 		if (isAttack) {
-			fighter.SwingWeapon ();
+			fighter.SwingWeapon (Fighter.AttackType.Weak);
+		} else {
+			bool isHeavyAttack = Input.GetKeyDown (KeyCode.Mouse1);
+			if (isHeavyAttack) {
+				fighter.SwingWeapon (Fighter.AttackType.Strong);
+			}
 		}
 	}
 
@@ -128,7 +132,7 @@ public class PlayerController : IController
 		// If player isn't standing still and hits dodge button, let's dodge!
 		if (RBInput.GetButtonDownForPlayer (InputStrings.DODGE, PlayerIndex, playerDevice) &&
 			(horizontal != 0 || vertical != 0)) {
-			fighter.Dodge (new Vector3(horizontal, 0.0f, vertical));
+			fighter.Dodge (new Vector3 (horizontal, 0.0f, vertical));
 		}
 		
 	}

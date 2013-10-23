@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 public class Fighter : MonoBehaviour
@@ -10,25 +11,44 @@ public class Fighter : MonoBehaviour
 	public Stamina stamina;
 	public Health health;
 	
-	// Attacks
-	public float swingRange;
-	public float swingWindup;
-	public float swingTime;
-	public float swingWindDown;
-	public AnimationClip swing;
+	// Animations
 	public AnimationClip idle;
-	public AnimationClip windUp;
-	public AnimationClip windDown;
-	public Color nativeColor;
-	
+
+	// TODO: Create Scriptable objects for these attacks
+	public float attackWeak_Range;
+	public float attackWeak_WindupTime;
+	public float attackWeak_WinddownTime;
+	public AnimationClip attackWeak_Swing;
+	public AnimationClip attackWeak_Windup;
+	public AnimationClip attackWeak_Winddown;
+	public int attackWeak_Damage;
+	public float attackStrong_Range;
+	public float attackStrong_WindupTime;
+	public float attackStrong_WinddownTime;
+	public AnimationClip attackStrong_Swing;
+	public AnimationClip attackStrong_Windup;
+	public AnimationClip attackStrong_Winddown;
+	public int attackStrong_Damage;
+
+	// Attacks
+	public Attack[] attacks;
+	Attack currentAttack;
+
+	public enum AttackType
+	{
+		Weak = 0,
+		Strong = 1
+	}
+
 	// Dodge
 	float dodgeSpeed = 20.0f;
 	float dodgeTime = 0.25f;
 	float dodgeStamina = 20.0f;
 	Vector3 dodgeDirection;
-	
-	// Attack attributes
 	public float sprintStamPerSec = 30.0f;
+
+	// Store expected swing time
+	float swingTime;
 
 	// Character state
 	enum CharacterState
@@ -51,6 +71,7 @@ public class Fighter : MonoBehaviour
 	}
 	AttackState attackState;
 
+	// Character control members
 	Vector3 moveDirection;
 	float gravity = -20.0f;
 	float verticalSpeed = 0.0f;
@@ -65,8 +86,10 @@ public class Fighter : MonoBehaviour
 	// Link to the attack spherecast object
 	GameObject attackCaster;
 
+	// Color management members
 	Color desiredColor;
-	Color hitColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+	Color hitColor = new Color (1.0f, 1.0f, 1.0f, 1.0f);
+	public Color nativeColor;
 
 	// Cache our fighter's transform
 	Transform myTransform;
@@ -83,11 +106,31 @@ public class Fighter : MonoBehaviour
 		}
 		stamina = GetComponent<Stamina> ();
 		health = GetComponent<Health> ();
+
+		// Initialize attacks
+		attacks = new Attack[Enum.GetNames (typeof(AttackType)).Length];
+		Attack weakAttack = (Attack)ScriptableObject.CreateInstance (typeof(Attack));
+		weakAttack.range = attackWeak_Range;
+		weakAttack.damage = attackWeak_Damage;
+		weakAttack.swing = attackWeak_Swing;
+		weakAttack.windupTime = attackWeak_WindupTime;
+		weakAttack.windup = attackWeak_Windup;
+		weakAttack.winddown = attackWeak_Winddown;
+		weakAttack.winddownTime = attackWeak_WinddownTime;
+		attacks [(int)AttackType.Weak] = weakAttack;
+		Attack strongAttack = (Attack)ScriptableObject.CreateInstance (typeof(Attack));
+		strongAttack.range = attackStrong_Range;
+		strongAttack.damage = attackStrong_Damage;
+		strongAttack.swing = attackStrong_Swing;
+		strongAttack.windupTime = attackStrong_WindupTime;
+		strongAttack.windup = attackStrong_Windup;
+		strongAttack.winddown = attackStrong_Winddown;
+		strongAttack.winddownTime = attackStrong_WinddownTime;
+		attacks [(int)AttackType.Strong] = strongAttack;
 	}
 
 	void Start ()
 	{
-		lastSwingTime = Time.time - (swingWindup + swingTime + swingWindDown);
 	}
 
 	void Update ()
@@ -106,13 +149,13 @@ public class Fighter : MonoBehaviour
 		} else if (IsAttacking ()) {
 			if (attackState == AttackState.WindUp) {
 				ChangeDesiredColor (Color.yellow);
-				animation.CrossFade (windUp.name, swingWindup);
+				animation.CrossFade (currentAttack.windup.name, currentAttack.windupTime);
 			} else if (attackState == AttackState.Swing) {
 				ChangeDesiredColor (Color.red);
-				animation.Play (swing.name, PlayMode. StopAll);
+				animation.Play (currentAttack.swing.name, PlayMode. StopAll);
 			} else if (attackState == AttackState.WindDown) {
 				ChangeDesiredColor (Color.magenta);
-				animation.Play (windDown.name, PlayMode.StopAll);
+				animation.Play (currentAttack.winddown.name, PlayMode.StopAll);
 			}
 		}
 
@@ -211,11 +254,10 @@ public class Fighter : MonoBehaviour
 		collisionFlags = biped.Move (movement);
 		
 		// Rotate to face the direction of XZ movement immediately, if lockFacing isn't set
-		Vector3 movementXZ = new Vector3(movement.x, 0.0f, movement.z);
+		Vector3 movementXZ = new Vector3 (movement.x, 0.0f, movement.z);
 		if (target != null) {
 			LockOnTarget (target);
-		}
-		else if (movementXZ != Vector3.zero) {
+		} else if (movementXZ != Vector3.zero) {
 			myTransform.rotation = Quaternion.Slerp (myTransform.rotation,
 					Quaternion.LookRotation (movementXZ), Time.deltaTime * damping);
 		}
@@ -256,45 +298,49 @@ public class Fighter : MonoBehaviour
 	 */
 	void UpdateAttackState ()
 	{
-		float attackCompleteTime = lastSwingTime + swingWindup + swingTime + swingWindDown;
-		float swingCompleteTime = lastSwingTime + swingWindup + swingTime;
-		float windupCompleteTime = lastSwingTime + swingWindup;
+		float attackCompleteTime = lastSwingTime + currentAttack.windupTime + swingTime +
+			currentAttack.winddownTime;
+		float swingCompleteTime = lastSwingTime + currentAttack.windupTime + swingTime;
+		float windupCompleteTime = lastSwingTime + currentAttack.windupTime;
 		if (Time.time >= attackCompleteTime) {
 			characterState = CharacterState.Idle;
 			attackState = AttackState.None;
+			currentAttack = null;
 		} else if (Time.time >= swingCompleteTime) {
 			attackState = AttackState.WindDown;
-			SetAttackActive(false);
+			SetAttackActive (false);
 		} else if (Time.time >= windupCompleteTime) {
 			attackState = AttackState.Swing;
-			SetAttackActive(true);
+			SetAttackActive (true);
 		} else {
 			attackState = AttackState.WindUp;
 		}
 	}
 
-	void SetAttackActive(bool isActive)
+	void SetAttackActive (bool isActive)
 	{
-		if(attackCaster != null)
-		{
-			attackCaster.SetActive (isActive);
+		if (attackCaster != null) {
+			//attackCaster.SetActive (isActive);
+			if (isActive) {
+				attackCaster.GetComponent<AttackCast> ().Begin (currentAttack);
+			} else {
+				attackCaster.GetComponent<AttackCast> ().End ();
+			}
 		}
 	}
 	/*
 	 * Try to make the character swing its weapon. If it's in the process
 	 * of swinging or swing is on cooldown, it won't do anything.
 	 */
-	public void SwingWeapon ()
+	public void SwingWeapon (AttackType attackType)
 	{
 		if (!IsAttacking () && !IsDodging ()) {
 			characterState = CharacterState.Attacking;
+
+			currentAttack = attacks [(int)attackType];
 			attackState = AttackState.WindUp;
 			lastSwingTime = Time.time;
-			swingTime = swing.length;
-			float WINDUP_TIME = 0.5f;
-			swingWindup = WINDUP_TIME;
-			float WINDDOWN_TIME = 0.2f;
-			swingWindDown = WINDDOWN_TIME;
+			swingTime = currentAttack.swing.length;
 		}
 	}
 	
@@ -346,7 +392,7 @@ public class Fighter : MonoBehaviour
 	public void LoseTarget ()
 	{
 		target = null;
-		PlayerController player = (PlayerController) controller;
+		PlayerController player = (PlayerController)controller;
 		player.ResetTargetIndex ();
 	}
 	
@@ -385,15 +431,13 @@ public class Fighter : MonoBehaviour
 		desiredColor = color;
 	}
 
-	void RenderColor()
+	void RenderColor ()
 	{
 		Color colorToShow;
 		const float timeToShowHit = 0.1f;
-		if(Time.time >= timeToShowHit + lastHitTime)
-		{
+		if (Time.time >= timeToShowHit + lastHitTime) {
 			colorToShow = desiredColor;
-		}
-		else {
+		} else {
 			colorToShow = hitColor;
 		}
 
@@ -405,13 +449,14 @@ public class Fighter : MonoBehaviour
 		myTransform.position = point.transform.position;
 	}
 
-	public void TakeHit()
+	public void TakeHit (int damage)
 	{
+		health.AdjustHealth (damage);
 		lastHitTime = Time.time;
 	}
 
-	public void AttackHit()
+	public void NotifyAttackHit ()
 	{
-		GameManager.Instance.FreezeGame(0.067f);
+		GameManager.Instance.FreezeGame (0.067f);
 	}
 }

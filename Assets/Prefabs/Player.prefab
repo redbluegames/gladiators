@@ -526,16 +526,27 @@ MonoBehaviour:
   movespeed: 6
   sprintspeed: 12
   target: {fileID: 0}
-  swingRange: 0
-  swingWindup: 0
-  swingTime: 0
-  swingWindDown: 0
-  swing: {fileID: 7400000, guid: ded330501f2a04d6d8c5050f5590cd4e, type: 2}
+  stamina: {fileID: 0}
+  health: {fileID: 0}
   idle: {fileID: 7400000, guid: 72eb18d4c62b54d13b0cbcca34d47b8f, type: 2}
-  windUp: {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
-  windDown: {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
-  nativeColor: {r: .204476625, g: .437436044, b: .897058845, a: 0}
+  attackWeak_Range: 5
+  attackWeak_WindupTime: .100000001
+  attackWeak_WinddownTime: .100000001
+  attackWeak_Swing: {fileID: 7400000, guid: ded330501f2a04d6d8c5050f5590cd4e, type: 2}
+  attackWeak_Windup: {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
+  attackWeak_Winddown: {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
+  attackWeak_Damage: -10
+  attackStrong_Range: 5
+  attackStrong_WindupTime: .5
+  attackStrong_WinddownTime: .200000003
+  attackStrong_Swing: {fileID: 7400000, guid: ded330501f2a04d6d8c5050f5590cd4e, type: 2}
+  attackStrong_Windup: {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
+  attackStrong_Winddown: {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800,
+    type: 2}
+  attackStrong_Damage: -50
+  attacks: []
   sprintStamPerSec: 30
+  nativeColor: {r: .204476625, g: .437436044, b: .897058845, a: 0}
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1

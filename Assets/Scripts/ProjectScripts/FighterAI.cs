@@ -18,7 +18,9 @@ public class FighterAI : IController
 	bool targetInRange ()
 	{
 		Transform target = fighter.GetTarget ();
-		return Vector3.Distance (transform.position, target.position) <= fighter.swingRange;
+		// TODO: Check if target is in range for a specified attack
+		float range = 5.0f;
+		return Vector3.Distance (transform.position, target.position) <= range;
 	}
 	
 	/*
@@ -35,7 +37,7 @@ public class FighterAI : IController
 		
 		// Attack if in range, otherwise walk to them
 		if (targetInRange ()) {
-			fighter.SwingWeapon ();
+			fighter.SwingWeapon (Fighter.AttackType.Weak);
 		} else {
 			Vector3 moveDirection = fighterTarget.position - transform.position;
 			fighter.Run (moveDirection);
