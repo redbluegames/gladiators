@@ -48,8 +48,9 @@ public class AttackCast : MonoBehaviour
 	 */
 	public void Begin (Attack attack)
 	{
-		attackInfo = attack;
+		Debug.Log("BEGIN CALLED");
 		gameObject.SetActive (true);
+		attackInfo = attack;
 	}
 
 	/*
@@ -165,6 +166,7 @@ public class AttackCast : MonoBehaviour
 		if (debugShowHits) {
 			Debug.DrawRay (hit.point, hit.normal, Color.red, 0.5f);
 		}
+
 		OnHit (hit.collider);
 	}
 
@@ -177,14 +179,15 @@ public class AttackCast : MonoBehaviour
 		ignoreObjects.Add (hitGameObject);
 
 		Fighter hitFighter = (Fighter)hitGameObject.GetComponent<Fighter> ();
-		if (hitFighter != null) {
-			hitFighter.TakeHit (attackInfo.damage);
-		}
-
 		Fighter myFighter = (Fighter)transform.root.gameObject.GetComponent<Fighter> ();
+
+		if (hitFighter != null) {
+			hitFighter.TakeHit (attackInfo, transform.root);
+		}
 		if (myFighter != null) {
 			myFighter.NotifyAttackHit ();
 		}
 		Debug.Log ("Hit! Object: " + hitGameObject.name);
 	}
+
 }

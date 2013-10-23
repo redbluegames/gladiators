@@ -25,6 +25,7 @@ public class Fighter : MonoBehaviour
 	public AnimationClip attackWeak_Windup;
 	public AnimationClip attackWeak_Winddown;
 	public int attackWeak_Damage;
+	public Attack.ReactionType attackWeak_ReactionType;
 	public float attackStrong_Range;
 	public float attackStrong_WindupTime;
 	public float attackStrong_WinddownTime;
@@ -32,10 +33,11 @@ public class Fighter : MonoBehaviour
 	public AnimationClip attackStrong_Windup;
 	public AnimationClip attackStrong_Winddown;
 	public int attackStrong_Damage;
+	public Attack.ReactionType attackStrong_ReactinType;
 
 	// Attacks
-	Attack[] attacks;
-	Attack currentAttack;
+	public Attack[] attacks;
+	public Attack currentAttack;
 
 	public enum AttackType
 	{
@@ -49,7 +51,14 @@ public class Fighter : MonoBehaviour
 	float dodgeStamina = 20.0f;
 	Vector3 dodgeDirection;
 	public float sprintStamPerSec = 30.0f;
-
+	
+	// Flinch
+	float flinchTime = 0.1f;
+	
+	// Knockback
+	float knockbackMoveTime = 0.1f;
+	float knockbackStunTime = 0.5f;
+	
 	// Store expected swing time
 	float swingTime;
 
@@ -60,7 +69,9 @@ public class Fighter : MonoBehaviour
 		Attacking,
 		Moving,
 		Dodging,
-		Blocking
+		Blocking,
+		Flinching,
+		Knockedback
 	}
 	CharacterState characterState;
 
@@ -85,12 +96,13 @@ public class Fighter : MonoBehaviour
 	float lastSwingTime = Mathf.NegativeInfinity;
 	float lastHitTime = Mathf.NegativeInfinity;
 	float lastDodgeTime = Mathf.NegativeInfinity;
-
+	float lastFlinchTime = Mathf.NegativeInfinity;
+	float lastKnockbackTime = Mathf.NegativeInfinity;
+	
 	// Link to the attack spherecast object
-	GameObject attackCaster;
+	AttackCast attackCaster;
 
 	// Color management members
-	Color desiredColor;
 	Color hitColor = new Color (1.0f, 1.0f, 1.0f, 1.0f);
 	public Color nativeColor;
 
@@ -103,9 +115,9 @@ public class Fighter : MonoBehaviour
 		// TODO make this check for controller == null, otherwise
 		// it always overrides the one chosen in the editor.
 		controller = GetComponent<IController> ();
-		attackCaster = GameObject.Find (ObjectNames.ATTACK_CASTER);
+		attackCaster = GetComponentInChildren<AttackCast> ();
 		if (attackCaster != null) {
-			attackCaster.SetActive (false);
+			attackCaster.gameObject.SetActive (false);
 		}
 		stamina = GetComponent<Stamina> ();
 		health = GetComponent<Health> ();
@@ -126,6 +138,7 @@ public class Fighter : MonoBehaviour
 		weakAttack.windup = attackWeak_Windup;
 		weakAttack.winddown = attackWeak_Winddown;
 		weakAttack.winddownTime = attackWeak_WinddownTime;
+		weakAttack.reactionType = attackWeak_ReactionType;
 		attacks [(int)AttackType.Weak] = weakAttack;
 		Attack strongAttack = (Attack)ScriptableObject.CreateInstance (typeof(Attack));
 		strongAttack.range = attackStrong_Range;
@@ -135,6 +148,7 @@ public class Fighter : MonoBehaviour
 		strongAttack.windup = attackStrong_Windup;
 		strongAttack.winddown = attackStrong_Winddown;
 		strongAttack.winddownTime = attackStrong_WinddownTime;
+		strongAttack.reactionType = attackStrong_ReactinType;
 		attacks [(int)AttackType.Strong] = strongAttack;
 	}
 
@@ -145,22 +159,20 @@ public class Fighter : MonoBehaviour
 	void Update ()
 	{
 		ApplyGravity ();
-		ConsumeUnresolvedActions ();
+		PerformActionInProgress ();
 		UpdateLockOn ();
 
 		controller.Think ();
 		TryDebugs ();
 
 		// Animation sector
-		if (IsIdle () || IsMoving ()) {
-			ChangeDesiredColor (nativeColor);
+		if (IsIdle () || IsMoving () || IsFlinching () || IsKnockedBack ()) {
+			// Interrupt or stop attack animation
 			animation.Play (idle.name, PlayMode.StopAll);
 		} else if (IsAttacking ()) {
 			if (attackState == AttackState.WindUp) {
-				ChangeDesiredColor (Color.yellow);
 				animation.CrossFade (currentAttack.windup.name, currentAttack.windupTime);
 			} else if (attackState == AttackState.Swing) {
-				ChangeDesiredColor (Color.red);
 				if (swingTrail != null) {
 					swingTrail.renderer.enabled = true;
 				}
@@ -169,7 +181,6 @@ public class Fighter : MonoBehaviour
 				if (swingTrail != null) {
 					swingTrail.renderer.enabled = false;
 				}
-				ChangeDesiredColor (Color.magenta);
 				animation.Play (currentAttack.winddown.name, PlayMode.StopAll);
 			}
 		}
@@ -219,18 +230,38 @@ public class Fighter : MonoBehaviour
 	{
 		return characterState == CharacterState.Moving;
 	}
+	
+	/*
+	 * Return true if the character is flinching.
+	 */
+	bool IsFlinching ()
+	{
+		return characterState == CharacterState.Flinching;
+	}
+	
+	/*
+	 * Return true if the character is knocked back.
+	 */
+	bool IsKnockedBack ()
+	{
+		return characterState == CharacterState.Knockedback;
+	}
 
 	/*
 	 * Any pending actions that need to finish up go here. For example, swinging
 	 * a sword starts but later ends in this method, restoring the character state to ready
 	 * to swing.
 	 */
-	void ConsumeUnresolvedActions ()
+	void PerformActionInProgress ()
 	{
 		if (IsAttacking ()) {
 			UpdateAttackState ();
 		} else if (IsDodging ()) {
 			UpdateDodgeState ();
+		} else if (IsFlinching ()) {
+			UpdateFlinchState ();
+		} else if (IsKnockedBack ()) {
+			UpdateKnockbackState ();
 		}
 	}
 
@@ -337,9 +368,9 @@ public class Fighter : MonoBehaviour
 		if (attackCaster != null) {
 			//attackCaster.SetActive (isActive);
 			if (isActive) {
-				attackCaster.GetComponent<AttackCast> ().Begin (currentAttack);
+				attackCaster.Begin (currentAttack);
 			} else {
-				attackCaster.GetComponent<AttackCast> ().End ();
+				attackCaster.End ();
 			}
 		}
 	}
@@ -354,7 +385,7 @@ public class Fighter : MonoBehaviour
 
 	public void SwingWeapon(Attack attack)
 	{
-		if (!IsAttacking () && !IsDodging ()) {
+		if (!IsAttacking () && !IsDodging () && !IsFlinching () && !IsKnockedBack ()) {
 			characterState = CharacterState.Attacking;
 
 			currentAttack = attack;
@@ -392,6 +423,56 @@ public class Fighter : MonoBehaviour
 			stamina.UseStamina (dodgeStamPerSec * Time.deltaTime);
 			Move (dodgeDirection, dodgeSpeed);
 		}
+	}
+	
+	/*
+	 * Use a timer to stun a character for a configurable amount of time.
+	 */
+	void UpdateFlinchState ()
+	{
+		if (Time.time - lastFlinchTime >= flinchTime) {
+			characterState = CharacterState.Idle;
+		}
+	}
+	
+	/*
+	 * Interrupt fighter attack and cause stun for configurable amount of time.
+	 * This method only puts the fighter in the flinching state and clears any
+	 * other states it might have set.
+	 */
+	public void Flinch ()
+	{
+		characterState = CharacterState.Flinching;
+		attackState = AttackState.None;
+		lastFlinchTime = Time.time;
+	}
+	
+	/*
+	 * Knockback consists of a pushback stage and stun stage. This method uses
+	 * timers for both to determine which it is in. When both timers are up,
+	 * return the fighter to Idle, allowing movement again.
+	 */
+	void UpdateKnockbackState ()
+	{
+		float timeInKnockbackState = Time.time - lastKnockbackTime;
+		if (timeInKnockbackState >= knockbackMoveTime + knockbackStunTime) {
+			characterState = CharacterState.Idle;
+		} else if (timeInKnockbackState < knockbackMoveTime){
+			Move (dodgeDirection, dodgeSpeed);
+		}
+	}
+	
+	/*
+	 * Interrupt fighter, push them back, and stun them for a second. This
+	 * method only puts the fighter in the knockedback state and clears any
+	 * other conflicting states it might have set.
+	 */
+	public void Knockback (Vector3 direction)
+	{
+		characterState = CharacterState.Knockedback;
+		attackState = AttackState.None;
+		lastKnockbackTime = Time.time;
+		dodgeDirection = direction;
 	}
 	
 	/*
@@ -450,21 +531,38 @@ public class Fighter : MonoBehaviour
 	void TryDebugs ()
 	{
 	}
-
+	
 	/*
-	 * Debug method to change the fighter color.
+	 * Render the color of the fighter, according to the state it is in.
 	 */
-	void ChangeDesiredColor (Color color)
-	{
-		desiredColor = color;
-	}
-
 	void RenderColor ()
 	{
 		Color colorToShow;
 		const float timeToShowHit = 0.1f;
 		if (Time.time >= timeToShowHit + lastHitTime) {
-			colorToShow = desiredColor;
+			switch (characterState) {
+			case CharacterState.Idle:
+				colorToShow = nativeColor;
+				break;
+			case CharacterState.Attacking:
+				colorToShow = Color.yellow;
+				break;
+			case CharacterState.Dodging:
+				colorToShow = Color.green;
+				break;
+			case CharacterState.Flinching:
+				colorToShow = Color.magenta;
+				break;
+			case CharacterState.Knockedback:
+				colorToShow = Color.blue;
+				break;
+			case CharacterState.Moving:
+				colorToShow = nativeColor;
+				break;
+			default:
+				colorToShow = nativeColor;
+				break;
+			}
 		} else {
 			colorToShow = hitColor;
 		}
@@ -476,15 +574,24 @@ public class Fighter : MonoBehaviour
 	{
 		myTransform.position = point.transform.position;
 	}
-
-	public void TakeHit (int damage)
+	
+	/*
+	 * Assign damage and perform the appropriate reaction.
+	 */
+	public void TakeHit (Attack attack, Transform attacker)
 	{
-		health.AdjustHealth (damage);
+		health.AdjustHealth (attack.damage);
 		lastHitTime = Time.time;
+		if (attack.reactionType == Attack.ReactionType.Knockback) {
+			// Knock back in the opposite direction of the attacker.
+			Knockback ((myTransform.position - attacker.position).normalized);
+		} else if (attack.reactionType == Attack.ReactionType.Flinch) {
+			Flinch ();
+		}
 	}
 
 	public void NotifyAttackHit ()
 	{
-		GameManager.Instance.FreezeGame (0.067f);
+		//GameManager.Instance.FreezeGame (0.067f);
 	}
 }

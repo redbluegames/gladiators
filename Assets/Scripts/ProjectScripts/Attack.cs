@@ -10,4 +10,13 @@ public class Attack : ScriptableObject
 	public AnimationClip windup;
 	public AnimationClip winddown;
 	public int damage;
+	public bool causeKnockback;
+	public bool causeFlinch;
+	public ReactionType reactionType;
+	
+	public enum ReactionType {
+		None,
+		Flinch,
+		Knockback
+	}
 }
