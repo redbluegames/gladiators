@@ -545,6 +545,7 @@ Animation:
   - {fileID: 7400000, guid: ded330501f2a04d6d8c5050f5590cd4e, type: 2}
   - {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
   - {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
+  - {fileID: 7400000, guid: c3f3af8f0c04c4aa0a0cd367a923ac0d, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
@@ -602,11 +603,11 @@ MonoBehaviour:
   attackWeak_Range: 5
   attackWeak_WindupTime: .100000001
   attackWeak_WinddownTime: .100000001
-  attackWeak_Swing: {fileID: 7400000, guid: ded330501f2a04d6d8c5050f5590cd4e, type: 2}
+  attackWeak_Swing: {fileID: 7400000, guid: c3f3af8f0c04c4aa0a0cd367a923ac0d, type: 2}
   attackWeak_Windup: {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
   attackWeak_Winddown: {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
   attackWeak_Damage: -10
-  attackWeak_HasKnockback: 0
+  attackWeak_ReactionType: 1
   attackStrong_Range: 5
   attackStrong_WindupTime: .5
   attackStrong_WinddownTime: .200000003
@@ -615,7 +616,7 @@ MonoBehaviour:
   attackStrong_Winddown: {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800,
     type: 2}
   attackStrong_Damage: -50
-  attackStrong_HasKnockback: 1
+  attackStrong_ReactinType: 2
   attacks: []
   currentAttack: {fileID: 0}
   sprintStamPerSec: 30
@@ -631,8 +632,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef1fb2b7514f9a14683772135e2bad13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  curHealth: 100
+  maxHealth: 10000
+  curHealth: 10000
 --- !u!114 &11400008
 MonoBehaviour:
   m_ObjectHideFlags: 1

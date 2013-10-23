@@ -25,8 +25,7 @@ public class Fighter : MonoBehaviour
 	public AnimationClip attackWeak_Windup;
 	public AnimationClip attackWeak_Winddown;
 	public int attackWeak_Damage;
-	public bool attackWeak_CauseKnockback;
-	public bool attackWeak_CauseFlinch;
+	public Attack.ReactionType attackWeak_ReactionType;
 	public float attackStrong_Range;
 	public float attackStrong_WindupTime;
 	public float attackStrong_WinddownTime;
@@ -34,8 +33,7 @@ public class Fighter : MonoBehaviour
 	public AnimationClip attackStrong_Windup;
 	public AnimationClip attackStrong_Winddown;
 	public int attackStrong_Damage;
-	public bool attackStrong_CauseKnockback;
-	public bool attackStrong_CauseFlinch;
+	public Attack.ReactionType attackStrong_ReactinType;
 
 	// Attacks
 	public Attack[] attacks;
@@ -55,10 +53,11 @@ public class Fighter : MonoBehaviour
 	public float sprintStamPerSec = 30.0f;
 	
 	// Flinch
-	float flinchTime = 1.0f;
+	float flinchTime = 0.1f;
 	
 	// Knockback
-	float knockbackTime = 2.0f;
+	float knockbackMoveTime = 0.1f;
+	float knockbackStunTime = 0.5f;
 	
 	// Store expected swing time
 	float swingTime;
@@ -139,8 +138,7 @@ public class Fighter : MonoBehaviour
 		weakAttack.windup = attackWeak_Windup;
 		weakAttack.winddown = attackWeak_Winddown;
 		weakAttack.winddownTime = attackWeak_WinddownTime;
-		weakAttack.causeKnockback = attackWeak_CauseKnockback;
-		weakAttack.causeFlinch = attackWeak_CauseFlinch;
+		weakAttack.reactionType = attackWeak_ReactionType;
 		attacks [(int)AttackType.Weak] = weakAttack;
 		Attack strongAttack = (Attack)ScriptableObject.CreateInstance (typeof(Attack));
 		strongAttack.range = attackStrong_Range;
@@ -150,8 +148,7 @@ public class Fighter : MonoBehaviour
 		strongAttack.windup = attackStrong_Windup;
 		strongAttack.winddown = attackStrong_Winddown;
 		strongAttack.winddownTime = attackStrong_WinddownTime;
-		strongAttack.causeKnockback = attackStrong_CauseKnockback;
-		strongAttack.causeFlinch = attackStrong_CauseFlinch;
+		strongAttack.reactionType = attackStrong_ReactinType;
 		attacks [(int)AttackType.Strong] = strongAttack;
 	}
 
@@ -169,7 +166,8 @@ public class Fighter : MonoBehaviour
 		TryDebugs ();
 
 		// Animation sector
-		if (IsIdle () || IsMoving ()) {
+		if (IsIdle () || IsMoving () || IsFlinching () || IsKnockedBack ()) {
+			// Interrupt or stop attack animation
 			animation.Play (idle.name, PlayMode.StopAll);
 		} else if (IsAttacking ()) {
 			if (attackState == AttackState.WindUp) {
@@ -387,7 +385,7 @@ public class Fighter : MonoBehaviour
 
 	public void SwingWeapon(Attack attack)
 	{
-		if (!IsAttacking () && !IsDodging ()) {
+		if (!IsAttacking () && !IsDodging () && !IsFlinching () && !IsKnockedBack ()) {
 			characterState = CharacterState.Attacking;
 
 			currentAttack = attack;
@@ -427,17 +425,21 @@ public class Fighter : MonoBehaviour
 		}
 	}
 	
+	/*
+	 * Use a timer to stun a character for a configurable amount of time.
+	 */
 	void UpdateFlinchState ()
 	{
 		if (Time.time - lastFlinchTime >= flinchTime) {
 			characterState = CharacterState.Idle;
-		} else {
-			Debug.Log ("Flinching");
-			dodgeDirection = Vector3.forward;
-			Move (dodgeDirection, dodgeSpeed);
 		}
 	}
 	
+	/*
+	 * Interrupt fighter attack and cause stun for configurable amount of time.
+	 * This method only puts the fighter in the flinching state and clears any
+	 * other states it might have set.
+	 */
 	public void Flinch ()
 	{
 		characterState = CharacterState.Flinching;
@@ -445,21 +447,32 @@ public class Fighter : MonoBehaviour
 		lastFlinchTime = Time.time;
 	}
 	
+	/*
+	 * Knockback consists of a pushback stage and stun stage. This method uses
+	 * timers for both to determine which it is in. When both timers are up,
+	 * return the fighter to Idle, allowing movement again.
+	 */
 	void UpdateKnockbackState ()
 	{
-		if (Time.time - lastKnockbackTime >= knockbackTime) {
+		float timeInKnockbackState = Time.time - lastKnockbackTime;
+		if (timeInKnockbackState >= knockbackMoveTime + knockbackStunTime) {
 			characterState = CharacterState.Idle;
-		} else {
-			dodgeDirection = Vector3.forward;
+		} else if (timeInKnockbackState < knockbackMoveTime){
 			Move (dodgeDirection, dodgeSpeed);
 		}
 	}
 	
-	public void Knockback ()
+	/*
+	 * Interrupt fighter, push them back, and stun them for a second. This
+	 * method only puts the fighter in the knockedback state and clears any
+	 * other conflicting states it might have set.
+	 */
+	public void Knockback (Vector3 direction)
 	{
 		characterState = CharacterState.Knockedback;
 		attackState = AttackState.None;
 		lastKnockbackTime = Time.time;
+		dodgeDirection = direction;
 	}
 	
 	/*
@@ -518,7 +531,10 @@ public class Fighter : MonoBehaviour
 	void TryDebugs ()
 	{
 	}
-
+	
+	/*
+	 * Render the color of the fighter, according to the state it is in.
+	 */
 	void RenderColor ()
 	{
 		Color colorToShow;
@@ -558,20 +574,24 @@ public class Fighter : MonoBehaviour
 	{
 		myTransform.position = point.transform.position;
 	}
-
-	public void TakeHit (Attack attack)
+	
+	/*
+	 * Assign damage and perform the appropriate reaction.
+	 */
+	public void TakeHit (Attack attack, Transform attacker)
 	{
 		health.AdjustHealth (attack.damage);
 		lastHitTime = Time.time;
-		if (attack.causeKnockback) {
-			Knockback ();
-		} else if (attack.causeFlinch) {
+		if (attack.reactionType == Attack.ReactionType.Knockback) {
+			// Knock back in the opposite direction of the attacker.
+			Knockback ((myTransform.position - attacker.position).normalized);
+		} else if (attack.reactionType == Attack.ReactionType.Flinch) {
 			Flinch ();
 		}
 	}
 
 	public void NotifyAttackHit ()
 	{
-		GameManager.Instance.FreezeGame (0.067f);
+		//GameManager.Instance.FreezeGame (0.067f);
 	}
 }

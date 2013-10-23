@@ -12,4 +12,11 @@ public class Attack : ScriptableObject
 	public int damage;
 	public bool causeKnockback;
 	public bool causeFlinch;
+	public ReactionType reactionType;
+	
+	public enum ReactionType {
+		None,
+		Flinch,
+		Knockback
+	}
 }
