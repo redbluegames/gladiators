@@ -4,12 +4,10 @@ using System.Collections;
 public class FighterAI : IController
 {
 	Fighter fighter;
-	int curTarget;
 	
 	void Awake ()
 	{
 		fighter = gameObject.GetComponent<Fighter> ();
-		curTarget = 0;
 	}
 	
 	/*
