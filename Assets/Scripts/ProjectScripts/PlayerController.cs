@@ -120,6 +120,14 @@ public class PlayerController : IController
 				fighter.SwingWeapon (Fighter.AttackType.Strong);
 			}
 		}
+		bool test = Input.GetKeyDown (KeyCode.Backspace);
+			if (test) {
+				int i = 0;
+			while (i < 1000)
+			{
+				Debug.Log ("Yes or no:" + RBRandom.PercentageChance(24.5f).ToString ());
+				i++;
+			}}
 	}
 
 	void TryDodge ()

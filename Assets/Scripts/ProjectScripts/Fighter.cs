@@ -34,7 +34,7 @@ public class Fighter : MonoBehaviour
 	public int attackStrong_Damage;
 
 	// Attacks
-	public Attack[] attacks;
+	Attack[] attacks;
 	Attack currentAttack;
 
 	public enum AttackType
@@ -191,7 +191,7 @@ public class Fighter : MonoBehaviour
 	/*
 	 * Return true if the character is in any of the attack states
 	 */
-	bool IsAttacking ()
+	public bool IsAttacking ()
 	{
 		return characterState == CharacterState.Attacking;
 	}
@@ -349,10 +349,15 @@ public class Fighter : MonoBehaviour
 	 */
 	public void SwingWeapon (AttackType attackType)
 	{
+		SwingWeapon (attacks [(int)attackType]);
+	}
+
+	public void SwingWeapon(Attack attack)
+	{
 		if (!IsAttacking () && !IsDodging ()) {
 			characterState = CharacterState.Attacking;
 
-			currentAttack = attacks [(int)attackType];
+			currentAttack = attack;
 			attackState = AttackState.WindUp;
 			lastSwingTime = Time.time;
 			swingTime = currentAttack.swing.length;
@@ -417,6 +422,14 @@ public class Fighter : MonoBehaviour
 	public Transform GetTarget ()
 	{
 		return target;
+	}
+
+	/*
+	 * Return a reference to the fighter's attacks
+	 */
+	public Attack[] GetAttacks()
+	{
+		return attacks;
 	}
 	
 	/*

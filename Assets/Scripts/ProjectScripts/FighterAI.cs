@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class FighterAI : IController
 {
 	Fighter fighter;
+	Attack nextAttack;
 	
 	void Awake ()
 	{
@@ -13,12 +15,11 @@ public class FighterAI : IController
 	/*
 	 * Return whether or not the assigned target is now in range of an attack.
 	 */
-	bool targetInRange ()
+	bool IsTargetInRange (Attack attack)
 	{
 		Transform target = fighter.GetTarget ();
 		// TODO: Check if target is in range for a specified attack
-		float range = 5.0f;
-		return Vector3.Distance (transform.position, target.position) <= range;
+		return Vector3.Distance (transform.position, target.position) <= attack.range;
 	}
 	
 	/*
@@ -32,14 +33,32 @@ public class FighterAI : IController
 		if (fighterTarget == null) {
 			return;
 		}
-		
-		// Attack if in range, otherwise walk to them
-		if (targetInRange ()) {
-			fighter.SwingWeapon (Fighter.AttackType.Weak);
+
+		if (fighter.IsAttacking ()) {
+			return;
+		}
+
+		if (nextAttack == null) {
+			nextAttack = GetNextAttack ();
+		}
+		// Use the attack, or else walk up to the target if not in range
+		if (nextAttack != null && IsTargetInRange (nextAttack)) {
+			fighter.SwingWeapon (nextAttack);
+			nextAttack = null;
 		} else {
 			Vector3 moveDirection = fighterTarget.position - transform.position;
 			fighter.Run (moveDirection);
 		}
+	}
+
+	/*
+	 * Determine which attack to use and return it.
+	 */
+	Attack GetNextAttack ()
+	{
+		Attack[] availableAttacks = fighter.GetAttacks ();
+		int rand = Random.Range (0, availableAttacks.Length);
+		return availableAttacks [rand];
 	}
 
 	/*
