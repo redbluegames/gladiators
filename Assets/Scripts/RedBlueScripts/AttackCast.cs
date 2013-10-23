@@ -16,7 +16,7 @@ public class AttackCast : MonoBehaviour
 	Vector3 lastFramePosition;
 
 	// A list of hit game objects so that we only report one OnHit per object
-	List<GameObject> ignoreObjects = new List<GameObject>();
+	List<GameObject> ignoreObjects = new List<GameObject> ();
 
 	// The radius for this attack sphere
 	public float radius;
@@ -28,6 +28,9 @@ public class AttackCast : MonoBehaviour
 	public bool debugShowCasts;
 	public bool debugShowHits;
 
+	// Store reference to attack that this cast is associated with
+	Attack attackInfo;
+
 	void OnEnable ()
 	{
 		// TODO: Could support cast to source position, like I did in Ben10
@@ -38,6 +41,23 @@ public class AttackCast : MonoBehaviour
 		// Clear previously hit objects so that we can re-hit them
 		ignoreObjects.Clear ();
 		ignoreObjects.Add (transform.root.gameObject);
+	}
+
+	/*
+	 * Begin the attack sweep. Must be associated with attack information.
+	 */
+	public void Begin (Attack attack)
+	{
+		attackInfo = attack;
+		gameObject.SetActive (true);
+	}
+
+	/*
+	 * End the attack sweep.
+	 */
+	public void End ()
+	{
+		gameObject.SetActive (false);
 	}
 
 	// Update is called once per frame
@@ -138,7 +158,7 @@ public class AttackCast : MonoBehaviour
 	void OnHit (RaycastHit hit)
 	{
 		// Throw out iIgnored objects
-		if (ignoreObjects.Contains(hit.collider.transform.root.gameObject)) {
+		if (ignoreObjects.Contains (hit.collider.transform.root.gameObject)) {
 			return;
 		}
 
@@ -156,16 +176,14 @@ public class AttackCast : MonoBehaviour
 		GameObject hitGameObject = hitCollider.gameObject;
 		ignoreObjects.Add (hitGameObject);
 
-		Fighter hitFighter = (Fighter) hitGameObject.GetComponent<Fighter>();
-		if(hitFighter != null)
-		{
-			hitFighter.TakeHit();
+		Fighter hitFighter = (Fighter)hitGameObject.GetComponent<Fighter> ();
+		if (hitFighter != null) {
+			hitFighter.TakeHit (attackInfo.damage);
 		}
 
-		Fighter myFighter = (Fighter) transform.root.gameObject.GetComponent<Fighter>();
-		if(myFighter != null)
-		{
-			myFighter.AttackHit ();
+		Fighter myFighter = (Fighter)transform.root.gameObject.GetComponent<Fighter> ();
+		if (myFighter != null) {
+			myFighter.NotifyAttackHit ();
 		}
 		Debug.Log ("Hit! Object: " + hitGameObject.name);
 	}

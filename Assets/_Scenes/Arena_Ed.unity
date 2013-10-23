@@ -491,7 +491,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1317184299}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -.628740311, y: -.339966774, z: 0}
   m_LocalScale: {x: 2, y: 1, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
@@ -818,18 +818,27 @@ MonoBehaviour:
   movespeed: 6
   sprintspeed: 12
   target: {fileID: 0}
-  swingRange: 0
-  swingWindup: 0
-  swingTime: 0
-  swingWindDown: 0
-  swing: {fileID: 7400000, guid: ded330501f2a04d6d8c5050f5590cd4e, type: 2}
+  stamina: {fileID: 0}
+  health: {fileID: 0}
   idle: {fileID: 7400000, guid: 72eb18d4c62b54d13b0cbcca34d47b8f, type: 2}
-  windUp: {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
-  windDown: {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
-  nativeColor: {r: .204476625, g: .437436044, b: .897058845, a: 0}
+  attackWeak_Range: 5
+  attackWeak_WindupTime: .100000001
+  attackWeak_WinddownTime: .100000001
+  attackWeak_Swing: {fileID: 7400000, guid: ded330501f2a04d6d8c5050f5590cd4e, type: 2}
+  attackWeak_Windup: {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
+  attackWeak_Winddown: {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
+  attackWeak_Damage: -10
+  attackStrong_Range: 5
+  attackStrong_WindupTime: .5
+  attackStrong_WinddownTime: .200000003
+  attackStrong_Swing: {fileID: 7400000, guid: ded330501f2a04d6d8c5050f5590cd4e, type: 2}
+  attackStrong_Windup: {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
+  attackStrong_Winddown: {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800,
+    type: 2}
+  attackStrong_Damage: -50
+  attacks: []
   sprintStamPerSec: 30
-  lastSuccessfulAttackTime: 0
-  realTime: 0
+  nativeColor: {r: .204476625, g: .437436044, b: .897058845, a: 0}
 --- !u!114 &1524968264
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1219,18 +1228,26 @@ MonoBehaviour:
   movespeed: 3
   sprintspeed: 6
   target: {fileID: 0}
-  swingRange: 2
-  swingWindup: 0
-  swingTime: 2
-  swingWindDown: 0
-  swing: {fileID: 7400000, guid: ded330501f2a04d6d8c5050f5590cd4e, type: 2}
+  stamina: {fileID: 0}
+  health: {fileID: 0}
   idle: {fileID: 7400000, guid: 72eb18d4c62b54d13b0cbcca34d47b8f, type: 2}
-  windUp: {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
-  windDown: {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
-  nativeColor: {r: 0, g: 0, b: 0, a: 0}
+  attackWeak_Range: 5
+  attackWeak_WindupTime: .100000001
+  attackWeak_WinddownTime: .100000001
+  attackWeak_Swing: {fileID: 7400000, guid: ded330501f2a04d6d8c5050f5590cd4e, type: 2}
+  attackWeak_Windup: {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
+  attackWeak_Winddown: {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
+  attackWeak_Damage: 0
+  attackStrong_Range: 0
+  attackStrong_WindupTime: 0
+  attackStrong_WinddownTime: 0
+  attackStrong_Swing: {fileID: 0}
+  attackStrong_Windup: {fileID: 0}
+  attackStrong_Winddown: {fileID: 0}
+  attackStrong_Damage: 0
+  attacks: []
   sprintStamPerSec: 30
-  lastSuccessfulAttackTime: 0
-  realTime: 0
+  nativeColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!143 &2115119318
 CharacterController:
   m_ObjectHideFlags: 0
