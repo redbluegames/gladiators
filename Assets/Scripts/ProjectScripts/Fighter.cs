@@ -514,6 +514,10 @@ public class Fighter : MonoBehaviour
 		currentMoveReactionDuration = duration;
 	}
 	
+	/*
+	 * When fighter is blocked, they get knocked back. For now this is identical
+	 * to the knockback method.
+	 */
 	void UpdateKnockbackByBlockState ()
 	{
 		float timeInKnockbackState = Time.time - lastKnockbackTime;
@@ -524,6 +528,9 @@ public class Fighter : MonoBehaviour
 		}
 	}
 	
+	/*
+	 * Set the fighter state to begin a knockback after getting blocked.
+	 */
 	void ReceiveKnockbackByBlock (Vector3 direction, float duration)
 	{
 		characterState = CharacterState.KnockedbackByBlock;
@@ -533,6 +540,9 @@ public class Fighter : MonoBehaviour
 		currentMoveReactionDuration = duration;
 	}
 	
+	/*
+	 * Pull the player out of flinching block state once the duration is up.
+	 */
 	void UpdateBlockingFlinchState ()
 	{
 		if (Time.time - lastFlinchTime >= currentFlinchDuration) {
@@ -540,6 +550,9 @@ public class Fighter : MonoBehaviour
 		}
 	}
 	
+	/*
+	 * Successful blocks cause a flinch of a provided duration.
+	 */
 	void ReceiveBlockingFlinch (float duration)
 	{
 		characterState = CharacterState.BlockingFlinch;
@@ -547,6 +560,9 @@ public class Fighter : MonoBehaviour
 		currentFlinchDuration = duration;
 	}
 	
+	/*
+	 * Set the fighter in Blocking state. Play animations and sounds.
+	 */
 	public void Block ()
 	{
 		if (IsIdle () || IsMoving () || IsAttacking ()) {
@@ -555,6 +571,9 @@ public class Fighter : MonoBehaviour
 		}
 	}
 	
+	/*
+	 * Set the fighter back to non-blocking state.
+	 */
 	public void UnBlock ()
 	{
 		characterState = CharacterState.Idle;
