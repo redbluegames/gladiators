@@ -180,7 +180,7 @@ public class Fighter : MonoBehaviour
 		TryDebugs ();
 
 		// Animation sector
-		if (IsFlinching () || IsKnockedBack () || IsKnockedBackByBlock()) {
+		if (IsFlinching () || IsInMoveReaction ()) {
 			// Interrupt or stop attack animation
 			animation.Play (attackIdle.name, PlayMode.StopAll);
 		} else if (IsAttacking ()) {
@@ -272,11 +272,19 @@ public class Fighter : MonoBehaviour
 	}
 	
 	/*
-	 * Return true if the character is knocked back.
+	 * Return true if the fighter is in any flinching state.
 	 */
-	bool IsKnockedBack ()
+	bool IsInFlinchReaction ()
 	{
-		return characterState == CharacterState.Knockedback;
+		return characterState == CharacterState.Flinching || characterState == CharacterState.BlockingFlinch;
+	}
+	
+	/*
+	 * Return true if the character is in the middle of a Move Reaction (ex. knockback).
+	 */
+	bool IsInMoveReaction ()
+	{
+		return characterState == CharacterState.Knockedback || characterState == CharacterState.KnockedbackByBlock;
 	}
 	
 	/*
@@ -298,14 +306,10 @@ public class Fighter : MonoBehaviour
 			UpdateAttackState ();
 		} else if (IsDodging ()) {
 			UpdateDodgeState ();
-		} else if (IsFlinching ()) {
-			UpdateFlinchState ();
-		} else if (IsKnockedBack ()) {
-			UpdateKnockbackState ();
-		} else if (IsKnockedBackByBlock ()) {
-			UpdateKnockbackByBlockState ();
-		} else if (IsBlockFlinching ()) {
-			UpdateBlockingFlinchState ();
+		} else if (IsInFlinchReaction ()) {
+			UpdateFlinchReactionState ();
+		} else if (IsInMoveReaction ()) {
+			UpdateMoveReactionState ();
 		}
 	}
 
@@ -469,7 +473,7 @@ public class Fighter : MonoBehaviour
 	/*
 	 * Use a timer to stun a character for a configurable amount of time.
 	 */
-	void UpdateFlinchState ()
+	void UpdateFlinchReactionState ()
 	{
 		if (Time.time - lastFlinchTime >= currentFlinchDuration) {
 			characterState = CharacterState.Idle;
@@ -494,7 +498,7 @@ public class Fighter : MonoBehaviour
 	 * timers for both to determine which it is in. When both timers are up,
 	 * return the fighter to Idle, allowing movement again.
 	 */
-	void UpdateKnockbackState ()
+	void UpdateMoveReactionState ()
 	{
 		float timeInKnockbackState = Time.time - lastKnockbackTime;
 		if (timeInKnockbackState >= currentMoveReactionDuration) {
@@ -517,21 +521,7 @@ public class Fighter : MonoBehaviour
 		currentMoveReactionDirection = direction;
 		currentMoveReactionDuration = duration;
 	}
-	
-	/*
-	 * When fighter is blocked, they get knocked back. For now this is identical
-	 * to the knockback method.
-	 */
-	void UpdateKnockbackByBlockState ()
-	{
-		float timeInKnockbackState = Time.time - lastKnockbackTime;
-		if (timeInKnockbackState >= currentMoveReactionDuration) {
-			characterState = CharacterState.Idle;
-		} else if (timeInKnockbackState < (KNOCKBACK_MOVE_PORTION * currentMoveReactionDuration) ){
-			Move (currentMoveReactionDirection, dodgeSpeed);
-		}
-	}
-	
+
 	/*
 	 * Set the fighter state to begin a knockback after getting blocked.
 	 */
@@ -542,16 +532,6 @@ public class Fighter : MonoBehaviour
 		lastKnockbackTime = Time.time;
 		currentMoveReactionDirection = direction;
 		currentMoveReactionDuration = duration;
-	}
-	
-	/*
-	 * Pull the player out of flinching block state once the duration is up.
-	 */
-	void UpdateBlockingFlinchState ()
-	{
-		if (Time.time - lastFlinchTime >= currentFlinchDuration) {
-			characterState = CharacterState.Idle;
-		}
 	}
 	
 	/*
