@@ -333,8 +333,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100020}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: .36535275, y: .199430466, z: .550133228}
+  m_LocalRotation: {x: 0, y: .707106829, z: 0, w: .707106829}
+  m_LocalPosition: {x: .5, y: 0, z: .858505726}
   m_LocalScale: {x: .655950904, y: .655950904, z: .0383900516}
   m_Children: []
   m_Father: {fileID: 400022}
@@ -345,7 +345,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100022}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.75, y: 0, z: 0}
+  m_LocalPosition: {x: -1.10317779, y: 0, z: -.697000027}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400020}
@@ -627,6 +627,9 @@ Animation:
   - {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
   - {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
   - {fileID: 7400000, guid: c3f3af8f0c04c4aa0a0cd367a923ac0d, type: 2}
+  - {fileID: 7400000, guid: 624582d7c5b82c34389dc48b74ab0fc1, type: 2}
+  - {fileID: 7400000, guid: 24318a3e94365ef4b9131558114de053, type: 2}
+  - {fileID: 7400000, guid: cf01a7a463a451d4faf6e71d69349a08, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
@@ -677,9 +680,12 @@ MonoBehaviour:
   target: {fileID: 0}
   stamina: {fileID: 0}
   health: {fileID: 0}
-  idle: {fileID: 7400000, guid: 72eb18d4c62b54d13b0cbcca34d47b8f, type: 2}
-  windUp: {fileID: 0}
-  windDown: {fileID: 0}
+  attackIdle: {fileID: 7400000, guid: 72eb18d4c62b54d13b0cbcca34d47b8f, type: 2}
+  attackWindUp: {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
+  attackWindDown: {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
+  blockIdle: {fileID: 7400000, guid: 24318a3e94365ef4b9131558114de053, type: 2}
+  blockWindUp: {fileID: 7400000, guid: 624582d7c5b82c34389dc48b74ab0fc1, type: 2}
+  blockWindDown: {fileID: 7400000, guid: cf01a7a463a451d4faf6e71d69349a08, type: 2}
   swingTrail: {fileID: 0}
   attackWeak_Range: 5
   attackWeak_WindupTime: .100000001

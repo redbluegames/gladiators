@@ -12,9 +12,12 @@ public class Fighter : MonoBehaviour
 	public Health health;
 	
 	// Animations
-	public AnimationClip idle;
-	public AnimationClip windUp;
-	public AnimationClip windDown;
+	public AnimationClip attackIdle;
+	public AnimationClip attackWindUp;
+	public AnimationClip attackWindDown;
+	public AnimationClip blockIdle;
+	public AnimationClip blockWindUp;
+	public AnimationClip blockWindDown;
 	public TrailRenderer swingTrail;
 
 	// TODO: Create Scriptable objects for these attacks
@@ -179,7 +182,7 @@ public class Fighter : MonoBehaviour
 		// Animation sector
 		if (IsIdle () || IsMoving () || IsFlinching () || IsKnockedBack ()) {
 			// Interrupt or stop attack animation
-			animation.Play (idle.name, PlayMode.StopAll);
+			//animation.Play (attackIdle.name, PlayMode.StopAll);
 		} else if (IsAttacking ()) {
 			if (attackState == AttackState.WindUp) {
 				animation.CrossFade (currentAttack.windup.name, currentAttack.windupTime);
@@ -193,6 +196,7 @@ public class Fighter : MonoBehaviour
 					swingTrail.renderer.enabled = false;
 				}
 				animation.Play (currentAttack.winddown.name, PlayMode.StopAll);
+				animation.PlayQueued (attackIdle.name, QueueMode.PlayNow);
 			}
 		}
 
@@ -556,6 +560,7 @@ public class Fighter : MonoBehaviour
 	void ReceiveBlockingFlinch (float duration)
 	{
 		characterState = CharacterState.BlockingFlinch;
+		animation.Play (blockWindDown.name, PlayMode.StopAll);
 		lastFlinchTime = Time.time;
 		currentFlinchDuration = duration;
 	}
@@ -567,6 +572,8 @@ public class Fighter : MonoBehaviour
 	{
 		if (IsIdle () || IsMoving () || IsAttacking ()) {
 			SoundManager.Instance.PlayClipAtPoint (SoundManager.Instance.shield0, myTransform.position);
+			animation.Play (blockWindUp.name, PlayMode.StopAll);
+			animation.PlayQueued (blockIdle.name, QueueMode.CompleteOthers);
 			characterState = CharacterState.Blocking;
 		}
 	}
@@ -577,6 +584,7 @@ public class Fighter : MonoBehaviour
 	public void UnBlock ()
 	{
 		characterState = CharacterState.Idle;
+		animation.Play (blockWindDown.name, PlayMode.StopAll);
 		SoundManager.Instance.PlayClipAtPoint (SoundManager.Instance.shieldDown0, myTransform.position);
 	}
 	
@@ -696,8 +704,8 @@ public class Fighter : MonoBehaviour
 		if (IsBlocking ()) {
 			SoundManager.Instance.PlayClipAtPoint (SoundManager.Instance.blocked0, myTransform.position);
 			// Cause blocker to get knocked back
-			attacker.GetComponent<Fighter> ().ReceiveKnockbackByBlock ((attacker.position - myTransform.position).normalized, 0.2f);
-			ReceiveBlockingFlinch (0.1f);
+			attacker.GetComponent<Fighter> ().ReceiveKnockbackByBlock ((attacker.position - myTransform.position).normalized, 0.3f);
+			ReceiveBlockingFlinch (0.5f);
 		} else {
 			lastHitTime = Time.time;
 			health.AdjustHealth (attack.damage);
