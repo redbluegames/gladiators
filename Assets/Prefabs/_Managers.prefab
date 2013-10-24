@@ -70,6 +70,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shield0: {fileID: 8300000, guid: 2fef9763e85ac9148b142e8e6d1b7105, type: 3}
+  blocked0: {fileID: 8300000, guid: 9426813ea58fd86479986905dd31ed24, type: 3}
+  shieldDown0: {fileID: 8300000, guid: e1c1dc836aff4ad45808d4d2ad44de06, type: 3}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

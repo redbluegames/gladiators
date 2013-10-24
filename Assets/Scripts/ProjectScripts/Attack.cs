@@ -10,6 +10,8 @@ public class Attack : ScriptableObject
 	public AnimationClip windup;
 	public AnimationClip winddown;
 	public int damage;
+	public float flinchDuration;
+	public float knockbackDuration;
 	public bool causeKnockback;
 	public bool causeFlinch;
 	public ReactionType reactionType;

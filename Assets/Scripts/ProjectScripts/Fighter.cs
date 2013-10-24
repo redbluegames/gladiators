@@ -25,6 +25,8 @@ public class Fighter : MonoBehaviour
 	public AnimationClip attackWeak_Windup;
 	public AnimationClip attackWeak_Winddown;
 	public int attackWeak_Damage;
+	public float attackWeak_FlinchDuration;
+	public float attackWeak_KnockbackDuration;
 	public Attack.ReactionType attackWeak_ReactionType;
 	public float attackStrong_Range;
 	public float attackStrong_WindupTime;
@@ -33,7 +35,9 @@ public class Fighter : MonoBehaviour
 	public AnimationClip attackStrong_Windup;
 	public AnimationClip attackStrong_Winddown;
 	public int attackStrong_Damage;
-	public Attack.ReactionType attackStrong_ReactinType;
+	public float attackStrong_FlinchDuration;
+	public float attackStrong_KnockbackDuration;
+	public Attack.ReactionType attackStrong_ReactionType;
 
 	// Attacks
 	public Attack[] attacks;
@@ -49,15 +53,15 @@ public class Fighter : MonoBehaviour
 	float dodgeSpeed = 20.0f;
 	float dodgeTime = 0.25f;
 	float dodgeStamina = 20.0f;
-	Vector3 dodgeDirection;
+	Vector3 currentDodgeDirection;
 	public float sprintStamPerSec = 30.0f;
 	
-	// Flinch
-	float flinchTime = 0.1f;
-	
-	// Knockback
-	float knockbackMoveTime = 0.1f;
-	float knockbackStunTime = 0.5f;
+	// Flinch and Knockback
+	float currentFlinchDuration = 0.1f;
+	float currentMoveReactionDuration = 0.6f;
+	Vector3 currentMoveReactionDirection;
+	// How much of the knockback is the target moving?
+	const float KNOCKBACK_MOVE_PORTION = 0.35f; 
 	
 	// Store expected swing time
 	float swingTime;
@@ -71,8 +75,10 @@ public class Fighter : MonoBehaviour
 		Dodging,
 		Blocked,
 		Blocking,
+		BlockingFlinch,
 		Flinching,
-		Knockedback
+		Knockedback,
+		KnockedbackByBlock
 	}
 	CharacterState characterState;
 
@@ -140,6 +146,8 @@ public class Fighter : MonoBehaviour
 		weakAttack.winddown = attackWeak_Winddown;
 		weakAttack.winddownTime = attackWeak_WinddownTime;
 		weakAttack.reactionType = attackWeak_ReactionType;
+		weakAttack.flinchDuration = attackWeak_FlinchDuration;
+		weakAttack.knockbackDuration = attackStrong_KnockbackDuration;
 		attacks [(int)AttackType.Weak] = weakAttack;
 		Attack strongAttack = (Attack)ScriptableObject.CreateInstance (typeof(Attack));
 		strongAttack.range = attackStrong_Range;
@@ -149,7 +157,9 @@ public class Fighter : MonoBehaviour
 		strongAttack.windup = attackStrong_Windup;
 		strongAttack.winddown = attackStrong_Winddown;
 		strongAttack.winddownTime = attackStrong_WinddownTime;
-		strongAttack.reactionType = attackStrong_ReactinType;
+		strongAttack.reactionType = attackStrong_ReactionType;
+		strongAttack.flinchDuration = attackStrong_FlinchDuration;
+		strongAttack.knockbackDuration = attackStrong_KnockbackDuration;
 		attacks [(int)AttackType.Strong] = strongAttack;
 	}
 
@@ -249,11 +259,28 @@ public class Fighter : MonoBehaviour
 	}
 	
 	/*
+	 * Return true if the fighter is in the middle of a flinch
+	 * caused by performing a successful block.
+	 */
+	bool IsBlockFlinching ()
+	{
+		return characterState == CharacterState.BlockingFlinch;
+	}
+	
+	/*
 	 * Return true if the character is knocked back.
 	 */
 	bool IsKnockedBack ()
 	{
 		return characterState == CharacterState.Knockedback;
+	}
+	
+	/*
+	 * Yet another state check bool...
+	 */
+	bool IsKnockedBackByBlock ()
+	{
+		return characterState == CharacterState.KnockedbackByBlock;
 	}
 
 	/*
@@ -271,6 +298,10 @@ public class Fighter : MonoBehaviour
 			UpdateFlinchState ();
 		} else if (IsKnockedBack ()) {
 			UpdateKnockbackState ();
+		} else if (IsKnockedBackByBlock ()) {
+			UpdateKnockbackByBlockState ();
+		} else if (IsBlockFlinching ()) {
+			UpdateBlockingFlinchState ();
 		}
 	}
 
@@ -394,7 +425,7 @@ public class Fighter : MonoBehaviour
 
 	public void SwingWeapon(Attack attack)
 	{
-		if (!IsAttacking () && !IsDodging () && !IsFlinching () && !IsKnockedBack ()) {
+		if (IsIdle () || IsMoving ()) {
 			characterState = CharacterState.Attacking;
 
 			currentAttack = attack;
@@ -414,7 +445,7 @@ public class Fighter : MonoBehaviour
 		} else {
 			float dodgeStamPerSec = dodgeStamina / dodgeTime;
 			stamina.UseStamina (dodgeStamPerSec * Time.deltaTime);
-			Move (dodgeDirection, dodgeSpeed);
+			Move (currentDodgeDirection, dodgeSpeed);
 		}
 	}
 	
@@ -425,7 +456,7 @@ public class Fighter : MonoBehaviour
 	{
 		CheckForStamina ();
 		if (stamina.HasStamina () && (IsMoving () || IsIdle ())) {
-			dodgeDirection = direction;
+			currentDodgeDirection = direction;
 			characterState = CharacterState.Dodging;
 			lastDodgeTime = Time.time;
 		}
@@ -436,7 +467,7 @@ public class Fighter : MonoBehaviour
 	 */
 	void UpdateFlinchState ()
 	{
-		if (Time.time - lastFlinchTime >= flinchTime) {
+		if (Time.time - lastFlinchTime >= currentFlinchDuration) {
 			characterState = CharacterState.Idle;
 		}
 	}
@@ -446,11 +477,12 @@ public class Fighter : MonoBehaviour
 	 * This method only puts the fighter in the flinching state and clears any
 	 * other states it might have set.
 	 */
-	public void Flinch ()
+	public void ReceiveFlinch (float duration)
 	{
 		characterState = CharacterState.Flinching;
 		attackState = AttackState.None;
 		lastFlinchTime = Time.time;
+		currentFlinchDuration = duration;
 	}
 	
 	/*
@@ -461,10 +493,10 @@ public class Fighter : MonoBehaviour
 	void UpdateKnockbackState ()
 	{
 		float timeInKnockbackState = Time.time - lastKnockbackTime;
-		if (timeInKnockbackState >= knockbackMoveTime + knockbackStunTime) {
+		if (timeInKnockbackState >= currentMoveReactionDuration) {
 			characterState = CharacterState.Idle;
-		} else if (timeInKnockbackState < knockbackMoveTime){
-			Move (dodgeDirection, dodgeSpeed);
+		} else if (timeInKnockbackState < (KNOCKBACK_MOVE_PORTION * currentMoveReactionDuration) ){
+			Move (currentMoveReactionDirection, dodgeSpeed);
 		}
 	}
 	
@@ -473,20 +505,54 @@ public class Fighter : MonoBehaviour
 	 * method only puts the fighter in the knockedback state and clears any
 	 * other conflicting states it might have set.
 	 */
-	public void Knockback (Vector3 direction)
+	void ReceiveKnockback (Vector3 direction, float duration)
 	{
 		characterState = CharacterState.Knockedback;
 		attackState = AttackState.None;
 		lastKnockbackTime = Time.time;
-		dodgeDirection = direction;
+		currentMoveReactionDirection = direction;
+		currentMoveReactionDuration = duration;
+	}
+	
+	void UpdateKnockbackByBlockState ()
+	{
+		float timeInKnockbackState = Time.time - lastKnockbackTime;
+		if (timeInKnockbackState >= currentMoveReactionDuration) {
+			characterState = CharacterState.Idle;
+		} else if (timeInKnockbackState < (KNOCKBACK_MOVE_PORTION * currentMoveReactionDuration) ){
+			Move (currentMoveReactionDirection, dodgeSpeed);
+		}
+	}
+	
+	void ReceiveKnockbackByBlock (Vector3 direction, float duration)
+	{
+		characterState = CharacterState.KnockedbackByBlock;
+		attackState = AttackState.None;
+		lastKnockbackTime = Time.time;
+		currentMoveReactionDirection = direction;
+		currentMoveReactionDuration = duration;
+	}
+	
+	void UpdateBlockingFlinchState ()
+	{
+		if (Time.time - lastFlinchTime >= currentFlinchDuration) {
+			characterState = CharacterState.Idle;
+		}
+	}
+	
+	void ReceiveBlockingFlinch (float duration)
+	{
+		characterState = CharacterState.BlockingFlinch;
+		lastFlinchTime = Time.time;
+		currentFlinchDuration = duration;
 	}
 	
 	public void Block ()
 	{
-		if (!IsBlocking ()) {
+		if (IsIdle () || IsMoving () || IsAttacking ()) {
 			SoundManager.Instance.PlayClipAtPoint (SoundManager.Instance.shield0, myTransform.position);
+			characterState = CharacterState.Blocking;
 		}
-		characterState = CharacterState.Blocking;
 	}
 	
 	public void UnBlock ()
@@ -573,8 +639,14 @@ public class Fighter : MonoBehaviour
 			case CharacterState.Flinching:
 				colorToShow = Color.magenta;
 				break;
+			case CharacterState.BlockingFlinch:
+				colorToShow = Color.grey;
+				break;
 			case CharacterState.Knockedback:
 				colorToShow = Color.blue;
+				break;
+			case CharacterState.KnockedbackByBlock:
+				colorToShow = Color.grey;
 				break;
 			case CharacterState.Moving:
 				colorToShow = nativeColor;
@@ -601,18 +673,22 @@ public class Fighter : MonoBehaviour
 	 */
 	public void TakeHit (Attack attack, Transform attacker)
 	{
+		// Handle blocked hits first
 		if (IsBlocking ()) {
 			SoundManager.Instance.PlayClipAtPoint (SoundManager.Instance.blocked0, myTransform.position);
-			// Cause blocker to flinch
+			// Cause blocker to get knocked back
+			attacker.GetComponent<Fighter> ().ReceiveKnockbackByBlock ((attacker.position - myTransform.position).normalized, 0.2f);
+			ReceiveBlockingFlinch (0.1f);
 		} else {
 			lastHitTime = Time.time;
 			health.AdjustHealth (attack.damage);
 		}
+		// Handle reaction type of successful hits
 		if (attack.reactionType == Attack.ReactionType.Knockback) {
 			// Knock back in the opposite direction of the attacker.
-			Knockback ((myTransform.position - attacker.position).normalized);
+			ReceiveKnockback ((myTransform.position - attacker.position).normalized, attack.knockbackDuration);
 		} else if (attack.reactionType == Attack.ReactionType.Flinch) {
-			Flinch ();
+			ReceiveFlinch (attack.flinchDuration);
 		}
 	}
 
