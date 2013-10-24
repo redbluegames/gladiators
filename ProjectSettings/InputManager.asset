@@ -69,6 +69,22 @@ InputManager:
     axis: 0
     joyNum: 0
   - serializedVersion: 3
+    m_Name: Block_PC_P0
+    descriptiveName: Block when user holds down key.
+    descriptiveNegativeName:
+    negativeButton:
+    positiveButton: left ctrl
+    altNegativeButton:
+    altPositiveButton:
+    gravity: 1000
+    dead: .00100000005
+    sensitivity: 1000
+    snap: 0
+    invert: 0
+    type: 0
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
     m_Name: Sprint_PC_P0
     descriptiveName:
     descriptiveNegativeName:
@@ -169,7 +185,23 @@ InputManager:
     descriptiveName:
     descriptiveNegativeName:
     negativeButton:
-    positiveButton: '.'
+    positiveButton: .
+    altNegativeButton:
+    altPositiveButton:
+    gravity: 1000
+    dead: .00100000005
+    sensitivity: 1000
+    snap: 0
+    invert: 0
+    type: 0
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Block_PC_P1
+    descriptiveName:
+    descriptiveNegativeName:
+    negativeButton:
+    positiveButton: m
     altNegativeButton:
     altPositiveButton:
     gravity: 1000
@@ -291,6 +323,22 @@ InputManager:
     invert: 0
     type: 0
     axis: 0
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Block_XBox_P0
+    descriptiveName: Left trigger should cause block.
+    descriptiveNegativeName:
+    negativeButton:
+    positiveButton:
+    altNegativeButton:
+    altPositiveButton:
+    gravity: 1000
+    dead: .00100000005
+    sensitivity: 1000
+    snap: 0
+    invert: 0
+    type: 2
+    axis: 8
     joyNum: 0
   - serializedVersion: 3
     m_Name: Dodge_XBox_P0

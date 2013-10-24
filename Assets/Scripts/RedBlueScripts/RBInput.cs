@@ -13,6 +13,14 @@ public class RBInput {
 		bool keyboard = Input.GetButtonDown (ConcatPlayerIndex (buttonName, playerIndex, InputDevices.GetAllInputDevices () [(int)InputDevices.ControllerTypes.Keyboard]));
 		return xbox || keyboard;
     }
+	
+	public static bool GetButtonUpForPlayer(string buttonName, int playerIndex, InputDevice device)
+    {
+//        return Input.GetButtonUp (ConcatPlayerIndex (buttonName, playerIndex, device));
+		bool xbox = Input.GetButtonUp (ConcatPlayerIndex (buttonName, playerIndex, InputDevices.GetAllInputDevices () [(int)InputDevices.ControllerTypes.XBox]));
+		bool keyboard = Input.GetButtonUp (ConcatPlayerIndex (buttonName, playerIndex, InputDevices.GetAllInputDevices () [(int)InputDevices.ControllerTypes.Keyboard]));
+		return xbox || keyboard;
+    }
 
     public static bool GetButtonForPlayer(string buttonName, int playerIndex, InputDevice device)
     {

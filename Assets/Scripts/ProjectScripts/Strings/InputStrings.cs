@@ -8,5 +8,7 @@ public static class InputStrings
 	public static string SPRINT = "Sprint";
 	public static string TARGET = "Target";
 	public static string FIRE = "Fire1";
+	public static string FIRE2 = "Fire2";
+	public static string BLOCK = "Block";
 	public static string DODGE = "Dodge";
 }

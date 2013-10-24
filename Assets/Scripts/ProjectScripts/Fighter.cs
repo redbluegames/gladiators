@@ -69,6 +69,7 @@ public class Fighter : MonoBehaviour
 		Attacking,
 		Moving,
 		Dodging,
+		Blocked,
 		Blocking,
 		Flinching,
 		Knockedback
@@ -101,7 +102,7 @@ public class Fighter : MonoBehaviour
 	
 	// Link to the attack spherecast object
 	AttackCast attackCaster;
-
+	
 	// Color management members
 	Color hitColor = new Color (1.0f, 1.0f, 1.0f, 1.0f);
 	public Color nativeColor;
@@ -213,6 +214,14 @@ public class Fighter : MonoBehaviour
 	bool IsIdle ()
 	{
 		return characterState == CharacterState.Idle;
+	}
+	
+	/*
+	 * Return true if the character is in blocking state;
+	 */
+	public bool IsBlocking ()
+	{
+		return characterState == CharacterState.Blocking;
 	}
 	
 	/*
@@ -475,6 +484,20 @@ public class Fighter : MonoBehaviour
 		dodgeDirection = direction;
 	}
 	
+	public void Block ()
+	{
+		if (!IsBlocking ()) {
+			SoundManager.Instance.PlayClipAtPoint (SoundManager.Instance.shield0, myTransform.position);
+		}
+		characterState = CharacterState.Blocking;
+	}
+	
+	public void UnBlock ()
+	{
+		characterState = CharacterState.Idle;
+		SoundManager.Instance.PlayClipAtPoint (SoundManager.Instance.shieldDown0, myTransform.position);
+	}
+	
 	/*
 	 * Set the Fighter target to the provided Transform and start staring it down.
 	 */
@@ -576,12 +599,18 @@ public class Fighter : MonoBehaviour
 	}
 	
 	/*
-	 * Assign damage and perform the appropriate reaction.
+	 * Resolve a hit and perform the appropriate reaction. This may mean
+	 * taking damage or it may mean resolving a block. 
 	 */
 	public void TakeHit (Attack attack, Transform attacker)
 	{
-		health.AdjustHealth (attack.damage);
-		lastHitTime = Time.time;
+		if (IsBlocking ()) {
+			SoundManager.Instance.PlayClipAtPoint (SoundManager.Instance.blocked0, myTransform.position);
+			// Cause blocker to flinch
+		} else {
+			lastHitTime = Time.time;
+			health.AdjustHealth (attack.damage);
+		}
 		if (attack.reactionType == Attack.ReactionType.Knockback) {
 			// Knock back in the opposite direction of the attacker.
 			Knockback ((myTransform.position - attacker.position).normalized);

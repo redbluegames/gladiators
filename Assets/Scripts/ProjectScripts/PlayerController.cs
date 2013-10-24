@@ -38,6 +38,7 @@ public class PlayerController : IController
 			TryDodge ();
 			TrySwitchTarget ();
 			TryAttack ();
+			TryBlock ();
 			TryDebugs ();
 		}
 	}
@@ -142,7 +143,22 @@ public class PlayerController : IController
 			(horizontal != 0 || vertical != 0)) {
 			fighter.Dodge (new Vector3 (horizontal, 0.0f, vertical));
 		}
-		
+	}
+	
+	/*
+	 * Set fighter to blocking or unblocking depending on button up or down.
+	 */
+	void TryBlock ()
+	{
+		if (RBInput.GetAxisForPlayer (InputStrings.BLOCK, PlayerIndex, playerDevice) == 1 ||
+			RBInput.GetButtonForPlayer (InputStrings.BLOCK, PlayerIndex, playerDevice)) {
+			fighter.Block ();
+		} else if (RBInput.GetAxisForPlayer (InputStrings.BLOCK, PlayerIndex, playerDevice) == 0 ||
+			RBInput.GetButtonUpForPlayer (InputStrings.BLOCK, PlayerIndex, playerDevice)) {
+			if (fighter.IsBlocking ()) {
+				fighter.UnBlock ();
+			}
+		}
 	}
 
 	/*
