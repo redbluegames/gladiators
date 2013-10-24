@@ -79,6 +79,7 @@ public class Fighter : MonoBehaviour
 		Blocked,
 		Blocking,
 		BlockingFlinch,
+		BrokenBlockFlinch,
 		Flinching,
 		Knockedback,
 		KnockedbackByBlock
@@ -276,7 +277,8 @@ public class Fighter : MonoBehaviour
 	 */
 	bool IsInFlinchReaction ()
 	{
-		return characterState == CharacterState.Flinching || characterState == CharacterState.BlockingFlinch;
+		return characterState == CharacterState.Flinching || characterState == CharacterState.BlockingFlinch ||
+			characterState == CharacterState.BrokenBlockFlinch;
 	}
 	
 	/*
@@ -376,7 +378,7 @@ public class Fighter : MonoBehaviour
 		if (IsIdle () || IsMoving ()) {
 			LoseTarget ();
 			CheckForStamina ();
-			if (stamina.HasStamina ()) {
+			if (stamina.HasAnyStamina ()) {
 				characterState = CharacterState.Moving;
 				stamina.UseStamina (sprintStamPerSec * Time.deltaTime);
 				Move (direction, sprintspeed);
@@ -463,7 +465,7 @@ public class Fighter : MonoBehaviour
 	public void Dodge (Vector3 direction)
 	{
 		CheckForStamina ();
-		if (stamina.HasStamina () && (IsMoving () || IsIdle ())) {
+		if (stamina.HasAnyStamina () && (IsMoving () || IsIdle ())) {
 			currentDodgeDirection = direction;
 			characterState = CharacterState.Dodging;
 			lastDodgeTime = Time.time;
@@ -546,6 +548,17 @@ public class Fighter : MonoBehaviour
 	}
 	
 	/*
+	 * Blocks that are broken cause a big flinch.
+	 */
+	void ReceiveBrokenBlockFlinch (float duration)
+	{
+		characterState = CharacterState.BrokenBlockFlinch;
+		animation.Play (blockWindDown.name, PlayMode.StopAll);
+		lastFlinchTime = Time.time;
+		currentFlinchDuration = duration;
+	}
+	
+	/*
 	 * Set the fighter in Blocking state. Play animations and sounds.
 	 */
 	public void Block ()
@@ -617,6 +630,19 @@ public class Fighter : MonoBehaviour
 				gameObject.name));
 		}
 	}
+	
+	bool CalculateBlockSuccess (Attack attack)
+	{
+		float staminaRequired = -attack.damage;
+		CheckForStamina ();
+		if (stamina.HasStamina (staminaRequired)) {
+			stamina.UseStamina (staminaRequired);
+			return true;
+		} else {
+			stamina.UseStamina (staminaRequired);
+			return false;
+		}
+	}
 
 	/*
 	 * Reads input and handles action for all debug functions
@@ -648,6 +674,9 @@ public class Fighter : MonoBehaviour
 				break;
 			case CharacterState.BlockingFlinch:
 				colorToShow = Color.grey;
+				break;
+			case CharacterState.BrokenBlockFlinch:
+				colorToShow = Color.red;
 				break;
 			case CharacterState.Knockedback:
 				colorToShow = Color.blue;
@@ -682,10 +711,15 @@ public class Fighter : MonoBehaviour
 	{
 		// Handle blocked hits first
 		if (IsBlocking ()) {
-			SoundManager.Instance.PlayClipAtPoint (SoundManager.Instance.blocked0, myTransform.position);
-			// Cause blocker to get knocked back
-			attacker.GetComponent<Fighter> ().ReceiveKnockbackByBlock ((attacker.position - myTransform.position).normalized, 0.3f);
-			ReceiveBlockingFlinch (0.5f);
+			if (CalculateBlockSuccess (attack)) {
+				SoundManager.Instance.PlayClipAtPoint (SoundManager.Instance.blocked0, myTransform.position);
+				// Cause blocker to get knocked back
+				attacker.GetComponent<Fighter> ().ReceiveKnockbackByBlock ((attacker.position - myTransform.position).normalized, 0.3f);
+				ReceiveBlockingFlinch (0.5f);
+			} else {
+				// TODO Add sound effect
+				ReceiveBrokenBlockFlinch (3.0f);
+			}
 		} else {
 			lastHitTime = Time.time;
 			health.AdjustHealth (attack.damage);

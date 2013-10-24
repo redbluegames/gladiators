@@ -40,9 +40,17 @@ public class Stamina : MonoBehaviour {
 	/*
 	 * Check if the entity has any amount of stamina.
 	 */
-	public bool HasStamina ()
+	public bool HasAnyStamina ()
 	{
 		return curStamina > NO_STAMINA;
+	}
+	
+	/*
+	 * Check if the entity has at least as much stamina as the provided amount.
+	 */
+	public bool HasStamina (float amount)
+	{
+		return curStamina >= amount;
 	}
 
 	/*
