@@ -412,7 +412,9 @@ public class Fighter : MonoBehaviour
 		if (Time.time - lastDodgeTime >= dodgeTime) {
 			characterState = CharacterState.Idle;
 		} else {
-			Dodge (dodgeDirection);
+			float dodgeStamPerSec = dodgeStamina / dodgeTime;
+			stamina.UseStamina (dodgeStamPerSec * Time.deltaTime);
+			Move (dodgeDirection, dodgeSpeed);
 		}
 	}
 	
@@ -426,11 +428,6 @@ public class Fighter : MonoBehaviour
 			dodgeDirection = direction;
 			characterState = CharacterState.Dodging;
 			lastDodgeTime = Time.time;
-		}
-		if (IsDodging ()) {
-			float dodgeStamPerSec = dodgeStamina / dodgeTime;
-			stamina.UseStamina (dodgeStamPerSec * Time.deltaTime);
-			Move (dodgeDirection, dodgeSpeed);
 		}
 	}
 	
