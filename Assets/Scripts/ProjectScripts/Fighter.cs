@@ -180,9 +180,9 @@ public class Fighter : MonoBehaviour
 		TryDebugs ();
 
 		// Animation sector
-		if (IsIdle () || IsMoving () || IsFlinching () || IsKnockedBack ()) {
+		if (IsFlinching () || IsKnockedBack () || IsKnockedBackByBlock()) {
 			// Interrupt or stop attack animation
-			//animation.Play (attackIdle.name, PlayMode.StopAll);
+			animation.Play (attackIdle.name, PlayMode.StopAll);
 		} else if (IsAttacking ()) {
 			if (attackState == AttackState.WindUp) {
 				animation.CrossFade (currentAttack.windup.name, currentAttack.windupTime);
