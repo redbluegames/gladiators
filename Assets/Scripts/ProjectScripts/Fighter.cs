@@ -631,6 +631,11 @@ public class Fighter : MonoBehaviour
 		}
 	}
 	
+	/*
+	 * Reduce stamina by a formula depending on the damage of the incoming attack and
+	 * return whether or not the block succeeded. Failed blocks should result in the
+	 * player entering a broken block state (serious stun).
+	 */
 	bool CalculateBlockSuccess (Attack attack)
 	{
 		float staminaRequired = -attack.damage;
@@ -717,7 +722,7 @@ public class Fighter : MonoBehaviour
 				attacker.GetComponent<Fighter> ().ReceiveKnockbackByBlock ((attacker.position - myTransform.position).normalized, 0.3f);
 				ReceiveBlockingFlinch (0.5f);
 			} else {
-				// TODO Add sound effect
+				SoundManager.Instance.PlayClipAtPoint (SoundManager.Instance.shieldBreak, myTransform.position);
 				ReceiveBrokenBlockFlinch (3.0f);
 			}
 		} else {
