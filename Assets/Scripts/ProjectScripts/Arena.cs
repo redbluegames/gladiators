@@ -10,7 +10,6 @@ public class Arena : Singleton<Arena>
 	// This might belong in the wave class mentioned below
 	public int waveTimeAllowed = 60;
 	public float waveTimeLeft;
-	float waveStartTime;
 	
 	// TODO Let's make a new class for waves that allows a wave to be composed of
 	// any number of any type of enemy;
@@ -59,7 +58,6 @@ public class Arena : Singleton<Arena>
 		}
 		SpawnWave ();
 		curWave++;
-		waveStartTime = Time.time;
 		if (curWave > waveComp.Length - 1) {
 			Debug.LogWarning ("Wave composition for CurWave not defined. Skipping StartNextWave.");
 			IsRunning = false;
