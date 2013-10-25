@@ -5,11 +5,13 @@ using System.Collections.Generic;
 public class FighterAI : IController
 {
 	Fighter fighter;
+	Stamina stamina;
 	Attack nextAttack;
 	
 	void Awake ()
 	{
 		fighter = gameObject.GetComponent<Fighter> ();
+		stamina = gameObject.GetComponent<Stamina> ();
 	}
 	
 	/*
@@ -42,11 +44,15 @@ public class FighterAI : IController
 			nextAttack = GetNextAttack ();
 		}
 		// Use the attack, or else walk up to the target if not in range
+		// If enemy doesn't have half it's stamina, it will back up.
 		if (nextAttack != null && IsTargetInRange (nextAttack)) {
 			fighter.SwingWeapon (nextAttack);
 			nextAttack = null;
-		} else {
+		} else if (stamina.HasAnyStamina ()){
 			Vector3 moveDirection = fighterTarget.position - transform.position;
+			fighter.Run (moveDirection);
+		} else {
+			Vector3 moveDirection = transform.position - fighterTarget.position;
 			fighter.Run (moveDirection);
 		}
 	}

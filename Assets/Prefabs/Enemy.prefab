@@ -31,6 +31,7 @@ GameObject:
   - 114: {fileID: 11400000}
   - 114: {fileID: 11400004}
   - 111: {fileID: 11100000}
+  - 114: {fileID: 11400010}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -623,8 +624,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef1fb2b7514f9a14683772135e2bad13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 1000
-  curHealth: 1000
+  maxHealth: 100
+  curHealth: 100
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -655,6 +656,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gizmoSize: .800000012
   gizmoColor: {r: 1, g: .921568632, b: .0156862754, a: 1}
+--- !u!114 &11400010
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e10d6bcc1ef22943a568da4c064242c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxStamina: 50
+  curStamina: 50
+  cooldown: 3
 --- !u!143 &14300000
 CharacterController:
   m_ObjectHideFlags: 1

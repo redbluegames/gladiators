@@ -11,7 +11,7 @@ public class IsometricCameraController : MonoBehaviour
 	public int yOffset = 11;
 	public int zOffset = 0;
 
-	public int xRotation = 90;
+	public int xRotation = 0;
 	public int yRotation = 0;
 	public int zRotation = 0;
  

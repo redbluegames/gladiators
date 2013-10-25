@@ -100,7 +100,7 @@ public class Fighter : MonoBehaviour
 	Vector3 moveDirection;
 	float gravity = -20.0f;
 	float verticalSpeed = 0.0f;
-	float damping = 10.0f;
+	float damping = 25.0f;
 	CollisionFlags collisionFlags;
 
 	// Timers
@@ -377,7 +377,6 @@ public class Fighter : MonoBehaviour
 	{
 		if (IsIdle () || IsMoving ()) {
 			LoseTarget ();
-			CheckForStamina ();
 			if (stamina.HasAnyStamina ()) {
 				characterState = CharacterState.Moving;
 				stamina.UseStamina (sprintStamPerSec * Time.deltaTime);
@@ -435,9 +434,10 @@ public class Fighter : MonoBehaviour
 
 	public void SwingWeapon(Attack attack)
 	{
-		if (IsIdle () || IsMoving ()) {
+		if (stamina.HasAnyStamina() && (IsIdle () || IsMoving ())) {
+			float staminaRequired = (-attack.damage) / 3; // Ultimately we should have a prop for this.
+			stamina.UseStamina (staminaRequired);
 			characterState = CharacterState.Attacking;
-
 			currentAttack = attack;
 			attackState = AttackState.WindUp;
 			lastSwingTime = Time.time;
@@ -464,7 +464,6 @@ public class Fighter : MonoBehaviour
 	 */
 	public void Dodge (Vector3 direction)
 	{
-		CheckForStamina ();
 		if (stamina.HasAnyStamina () && (IsMoving () || IsIdle ())) {
 			currentDodgeDirection = direction;
 			characterState = CharacterState.Dodging;
@@ -564,7 +563,7 @@ public class Fighter : MonoBehaviour
 	public void Block ()
 	{
 		if (IsIdle () || IsMoving () || IsAttacking ()) {
-			SoundManager.Instance.PlayClipAtPoint (SoundManager.Instance.shield0, myTransform.position);
+			SoundManager.PlayClipAtPoint (SoundManager.Instance.shield0, myTransform.position);
 			animation.Play (blockWindUp.name, PlayMode.StopAll);
 			animation.PlayQueued (blockIdle.name, QueueMode.CompleteOthers);
 			characterState = CharacterState.Blocking;
@@ -578,7 +577,7 @@ public class Fighter : MonoBehaviour
 	{
 		characterState = CharacterState.Idle;
 		animation.Play (blockWindDown.name, PlayMode.StopAll);
-		SoundManager.Instance.PlayClipAtPoint (SoundManager.Instance.shieldDown0, myTransform.position);
+		SoundManager.PlayClipAtPoint (SoundManager.Instance.shieldDown0, myTransform.position);
 	}
 	
 	/*
@@ -620,18 +619,6 @@ public class Fighter : MonoBehaviour
 	}
 	
 	/*
-	 * Null-protect stamina related skills in case an entity uses an ability without
-	 * attaching a stamina script.
-	 */
-	void CheckForStamina ()
-	{
-		if (stamina == null) {
-			Debug.LogWarning (string.Format ("Object %s used stamina ability without attaching Stamina script.", 
-				gameObject.name));
-		}
-	}
-	
-	/*
 	 * Reduce stamina by a formula depending on the damage of the incoming attack and
 	 * return whether or not the block succeeded. Failed blocks should result in the
 	 * player entering a broken block state (serious stun).
@@ -639,7 +626,6 @@ public class Fighter : MonoBehaviour
 	bool CalculateBlockSuccess (Attack attack)
 	{
 		float staminaRequired = -attack.damage;
-		CheckForStamina ();
 		if (stamina.HasStamina (staminaRequired)) {
 			stamina.UseStamina (staminaRequired);
 			return true;
@@ -717,15 +703,16 @@ public class Fighter : MonoBehaviour
 		// Handle blocked hits first
 		if (IsBlocking ()) {
 			if (CalculateBlockSuccess (attack)) {
-				SoundManager.Instance.PlayClipAtPoint (SoundManager.Instance.blocked0, myTransform.position);
+				SoundManager.PlayClipAtPoint (SoundManager.Instance.blocked0, myTransform.position);
 				// Cause blocker to get knocked back
 				attacker.GetComponent<Fighter> ().ReceiveKnockbackByBlock ((attacker.position - myTransform.position).normalized, 0.3f);
 				ReceiveBlockingFlinch (0.5f);
 			} else {
-				SoundManager.Instance.PlayClipAtPoint (SoundManager.Instance.shieldBreak, myTransform.position);
+				SoundManager.PlayClipAtPoint (SoundManager.Instance.shieldBreak, myTransform.position);
 				ReceiveBrokenBlockFlinch (3.0f);
 			}
 		} else {
+			SoundManager.PlayClipAtPoint (SoundManager.Instance.swingHit0, myTransform.position);
 			lastHitTime = Time.time;
 			health.AdjustHealth (attack.damage);
 		}
