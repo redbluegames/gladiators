@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class AttackDatabaseManager : EditorWindow
 {
-	AttackDatabase attackDatabase;
+	AttackManager attackManager;
 	
 	string newAttackName = string.Empty;
 	float newAttackRange = 0.0f;
@@ -34,7 +34,7 @@ public class AttackDatabaseManager : EditorWindow
 	
 	void Awake ()
 	{
-		attackDatabase = GameObject.Find (ObjectNames.MAANAGERS).GetComponent<AttackDatabase> ();
+		attackManager = GameObject.Find (ObjectNames.MAANAGERS).GetComponent<AttackManager> ();
 	}
 	
 	void OnGUI ()
@@ -42,15 +42,20 @@ public class AttackDatabaseManager : EditorWindow
 		newAttackName = EditorGUILayout.TextField ("Name: ", newAttackName);
 		newAttackDamage = EditorGUILayout.FloatField ("Damage: ", newAttackDamage);
 		newAttackRange = EditorGUILayout.FloatField ("Range: ", newAttackRange);
-		
+
 		if (GUILayout.Button ("Add New Attack"))
 		{
 			CleanupEmptyAttacks ();
+		
+			// Validate
+			if (newAttackName == string.Empty) {
+				Debug.LogWarning ("Attack Name must be provided.");
+				return;
+			}
+
 			Attack newAttack = (Attack) ScriptableObject.CreateInstance<Attack> ();
 			newAttack.name = newAttackName;
-			Debug.Log (attackDatabase.name);
-			attackDatabase.attackList.Add (newAttack);
-			attackDatabase.FindAttack (newAttack.name);
+			attackManager.AddAttack (newAttack);
 			WriteAttacksToFile ();
 		}
 		if (GUILayout.Button ("Refresh"))
@@ -68,7 +73,7 @@ public class AttackDatabaseManager : EditorWindow
 		System.IO.File.WriteAllText (path, createText);
 		const string keywords = "\tpublic static int";
 		int attackId = 0;
-		foreach (Attack attack in attackDatabase.attackList) {
+		foreach (Attack attack in attackManager.attackList) {
 			string attackLine = string.Format ("{0} {1} = {2};\n", keywords, 
 				attack.name.ToUpper ().Replace (' ', '_'), attackId);
 			System.IO.File.AppendAllText (path, attackLine);
@@ -82,7 +87,7 @@ public class AttackDatabaseManager : EditorWindow
 	{
 		List<int> attacksToRemove = new List<int> ();
 		int i = 0;
-		foreach (Attack attack in attackDatabase.attackList) {
+		foreach (Attack attack in attackManager.attackList) {
 			if (attack == null) {
 				attacksToRemove.Add (i);
 			}
@@ -93,7 +98,7 @@ public class AttackDatabaseManager : EditorWindow
 		// will move the remaining elements forward by one index.
 		int numRemoved = 0;
 		foreach (int index in attacksToRemove) {
-			attackDatabase.attackList.RemoveAt (index - numRemoved);
+			attackManager.attackList.RemoveAt (index - numRemoved);
 			numRemoved++;
 		}
 	}

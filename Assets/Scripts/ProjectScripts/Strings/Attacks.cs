@@ -3,5 +3,5 @@ using System.Collections;
 
 public class Attacks
 {
-	public static int SECOND = 0;
+	public static int FIRSTATTACK = 0;
 }
