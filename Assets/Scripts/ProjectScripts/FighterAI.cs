@@ -74,7 +74,10 @@ public class FighterAI : IController
 	void FindTarget ()
 	{
 		if (fighter.GetTarget () == null) {
-			fighter.LockOnTarget (GameObject.FindGameObjectWithTag (Tags.PLAYER).transform);
+			GameObject player = GameObject.FindGameObjectWithTag (Tags.PLAYER);
+			if (player != null) {
+				fighter.LockOnTarget (player.transform);
+			}
 		}
 	}
 }

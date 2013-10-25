@@ -17,7 +17,9 @@ public class Arena : Singleton<Arena>
 	public int[] waveComp = {2,4,6,8,10,12,14,16,18,20};
 
 	public bool IsRunning {get; private set;}
-
+	
+	public UICenterText arenaText;
+	
 	// guarantee this will be always a singleton only - can't use the constructor!
 	protected Arena ()
 	{
@@ -39,10 +41,16 @@ public class Arena : Singleton<Arena>
 		if(!IsRunning) {
 			return;
 		}
-
+		if (!PlayersAlive ()) {
+			arenaText.DisplayMessage ("Game Over!", Mathf.Infinity);
+			return;
+		}
 		TickTimer ();
 		if (IsTimeUp ()) {
 			StartNextWave ();
+		} else if (AllEnemiesKilled () && waveTimeLeft > 3.0f) {
+			arenaText.DisplayMessage ("All enemies killed. Skipping to next wave.", 3.0f);
+			waveTimeLeft = 3.0f;
 		}
 	}
 	
@@ -51,6 +59,7 @@ public class Arena : Singleton<Arena>
 	 */
 	public void StartNextWave ()
 	{
+		arenaText.DisplayMessage ("Incoming Wave!", 2.5f);
 		if(waveComp.Length == 0)
 		{
 			IsRunning = false;
@@ -91,6 +100,20 @@ public class Arena : Singleton<Arena>
 	bool IsTimeUp ()
 	{
 		return waveTimeLeft <= 0;
+	}
+	
+	bool AllEnemiesKilled ()
+	{
+		return GetActiveEnemyCount () == 0;
+	}
+	
+	/*
+	 * Return true if any player is alive.
+	 */
+	bool PlayersAlive ()
+	{
+		GameObject player = GameObject.FindGameObjectWithTag (Tags.PLAYER);
+		return player != null;
 	}
 	
 	/*
