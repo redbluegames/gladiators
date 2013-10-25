@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[System.Serializable]
 public class Attack : ScriptableObject
 {
+	int id;
 	public float range;
 	public float windupTime;
 	public float winddownTime;
