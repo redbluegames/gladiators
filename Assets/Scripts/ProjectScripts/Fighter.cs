@@ -387,13 +387,21 @@ public class Fighter : MonoBehaviour
 	void SetAttackActive (bool isActive)
 	{
 		if (attackCaster != null) {
-			//attackCaster.SetActive (isActive);
 			if (isActive) {
 				attackCaster.Begin (currentAttack);
 			} else {
 				attackCaster.End ();
 			}
 		}
+	}
+
+	/*
+	 * Cancels and cleans up after an active attack.
+	 */
+	void CancelAttack ()
+	{
+		swingTrail.renderer.enabled = false;
+		SetAttackActive (false);
 	}
 	/*
 	 * Try to make the character swing its weapon. If it's in the process
@@ -436,13 +444,17 @@ public class Fighter : MonoBehaviour
 	 */
 	public void Dodge (Vector3 direction)
 	{
-		if (stamina.HasAnyStamina () && (IsMoving () || IsIdle ())) {
-			currentDodgeDirection = direction;
-			characterState = CharacterState.Dodging;
-			lastDodgeTime = Time.time;
+		if (stamina.HasAnyStamina () && (IsMoving () || IsIdle () || IsAttacking ())) {
+			if (IsAttacking ()) {
+				CancelAttack ();
+			}
 			if (IsBlocking) {
 				UnBlock ();
 			}
+			currentDodgeDirection = direction;
+			characterState = CharacterState.Dodging;
+			lastDodgeTime = Time.time;
+
 		}
 	}
 	
@@ -463,8 +475,12 @@ public class Fighter : MonoBehaviour
 	 */
 	public void ReceiveFlinch (float duration)
 	{
+		if (IsAttacking ()) {
+			CancelAttack ();
+		}
 		characterState = CharacterState.Flinching;
 		attackState = AttackState.None;
+
 		lastFlinchTime = Time.time;
 		currentFlinchDuration = duration;
 	}
@@ -491,6 +507,9 @@ public class Fighter : MonoBehaviour
 	 */
 	void ReceiveKnockback (Vector3 direction, float duration)
 	{
+		if (IsAttacking ()) {
+			CancelAttack ();
+		}
 		characterState = CharacterState.Knockedback;
 		attackState = AttackState.None;
 		lastKnockbackTime = Time.time;
@@ -503,6 +522,9 @@ public class Fighter : MonoBehaviour
 	 */
 	void ReceiveKnockbackByBlock (Vector3 direction, float duration)
 	{
+		if (IsAttacking ()) {
+			CancelAttack ();
+		}
 		characterState = CharacterState.KnockedbackByBlock;
 		attackState = AttackState.None;
 		lastKnockbackTime = Time.time;
@@ -518,7 +540,8 @@ public class Fighter : MonoBehaviour
 		UnBlock ();
 		characterState = CharacterState.BrokenBlockFlinch;
 		lastFlinchTime = Time.time;
-		currentFlinchDuration = duration;	}
+		currentFlinchDuration = duration;
+	}
 	
 	/*
 	 * Set the fighter in Blocking state. Play animations and sounds.

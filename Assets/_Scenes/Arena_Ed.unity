@@ -1405,11 +1405,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curWave: 0
   spawnPoint: {fileID: 893254426}
-  spawnRange: 10
+  spawnRange: 5
   waveTimeAllowed: 10
   waveTimeLeft: 0
   enemyPrefab: {fileID: 100002, guid: 05ec9b1a5891b9945a3d6bff4ef2d534, type: 2}
-  waveComp: 
+  waveComp: 01000000
   arenaText: {fileID: 266127468}
 --- !u!114 &893254425
 MonoBehaviour:
@@ -1430,7 +1430,7 @@ Transform:
   m_PrefabInternal: {fileID: 1475170361}
   m_GameObject: {fileID: 893254421}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2430,7 +2430,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 9b4c39fcf2f7a2347bba736d69dd0224, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 9b4c39fcf2f7a2347bba736d69dd0224, type: 2}
       propertyPath: m_LocalPosition.z
@@ -2472,6 +2472,10 @@ Prefab:
       propertyPath: arenaText
       value: 
       objectReference: {fileID: 266127468}
+    - target: {fileID: 11400002, guid: 9b4c39fcf2f7a2347bba736d69dd0224, type: 2}
+      propertyPath: waveComp.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9b4c39fcf2f7a2347bba736d69dd0224, type: 2}
   m_RootGameObject: {fileID: 893254421}

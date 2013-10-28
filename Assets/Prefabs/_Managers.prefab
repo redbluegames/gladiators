@@ -58,7 +58,7 @@ MonoBehaviour:
   waveTimeAllowed: 10
   waveTimeLeft: 0
   enemyPrefab: {fileID: 100002, guid: 05ec9b1a5891b9945a3d6bff4ef2d534, type: 2}
-  waveComp: 0500000000000000000000000000000000000000
+  waveComp: 02000000
   arenaText: {fileID: 0}
 --- !u!114 &11400004
 MonoBehaviour:
