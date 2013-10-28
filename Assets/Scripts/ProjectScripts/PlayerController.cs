@@ -77,10 +77,13 @@ public class PlayerController : IController
 		vertical = RBInput.GetAxisRawForPlayer (InputStrings.VERTICAL, PlayerIndex, playerDevice);
 		
 		Vector3 direction = new Vector3 (horizontal, 0.0f, vertical);
-		if (RBInput.GetButtonForPlayer (InputStrings.SPRINT, PlayerIndex, playerDevice)) {
-			fighter.Sprint (direction);
-		} else {
-			fighter.Run (direction);
+		
+		if (direction != Vector3.zero) {
+			if (RBInput.GetButtonForPlayer (InputStrings.SPRINT, PlayerIndex, playerDevice)) {
+				fighter.Sprint (direction);
+			} else {
+				fighter.Run (direction);
+			}
 		}
 	}
 	
@@ -122,13 +125,13 @@ public class PlayerController : IController
 			}
 		}
 		bool test = Input.GetKeyDown (KeyCode.Backspace);
-			if (test) {
-				int i = 0;
-			while (i < 1000)
-			{
-				Debug.Log ("Yes or no:" + RBRandom.PercentageChance(24.5f).ToString ());
+		if (test) {
+			int i = 0;
+			while (i < 1000) {
+				Debug.Log ("Yes or no:" + RBRandom.PercentageChance (24.5f).ToString ());
 				i++;
-			}}
+			}
+		}
 	}
 
 	void TryDodge ()
@@ -155,7 +158,7 @@ public class PlayerController : IController
 			fighter.Block ();
 		} else if (RBInput.GetAxisForPlayer (InputStrings.BLOCK, PlayerIndex, playerDevice) == 0 ||
 			RBInput.GetButtonUpForPlayer (InputStrings.BLOCK, PlayerIndex, playerDevice)) {
-			if (fighter.IsBlocking ()) {
+			if (fighter.IsBlocking) {
 				fighter.UnBlock ();
 			}
 		}

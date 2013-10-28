@@ -11,12 +11,13 @@ public class Fighter : MonoBehaviour
 	public Stamina stamina;
 	public Health health;
 	public bool isHuman;
+
+	public bool IsBlocking { get; private set; }
 	
 	// Animations
-	public AnimationClip attackIdle;
+	public AnimationClip idle;
 	public AnimationClip blockIdle;
-	public AnimationClip blockWindUp;
-	public AnimationClip blockWindDown;
+	public AnimationClip blockBreak;
 	public TrailRenderer swingTrail;
 
 	// Attacks
@@ -119,11 +120,11 @@ public class Fighter : MonoBehaviour
 		// Initialize attacks
 		attacks = new Attack[Enum.GetNames (typeof(AttackType)).Length];
 		if (isHuman) {
-			attacks[(int)AttackType.Weak] = AttackManager.Instance.GetAttack (Attacks.PLAYER_WEAK);
-			attacks[(int)AttackType.Strong] = AttackManager.Instance.GetAttack (Attacks.PLAYER_STRONG);
+			attacks [(int)AttackType.Weak] = AttackManager.Instance.GetAttack (Attacks.PLAYER_WEAK);
+			attacks [(int)AttackType.Strong] = AttackManager.Instance.GetAttack (Attacks.PLAYER_STRONG);
 		} else {
-			attacks[(int)AttackType.Weak] = AttackManager.Instance.GetAttack (Attacks.ENEMY_WEAK);
-			attacks[(int)AttackType.Strong] = AttackManager.Instance.GetAttack (Attacks.ENEMY_STRONG);
+			attacks [(int)AttackType.Weak] = AttackManager.Instance.GetAttack (Attacks.ENEMY_WEAK);
+			attacks [(int)AttackType.Strong] = AttackManager.Instance.GetAttack (Attacks.ENEMY_STRONG);
 		}
 	}
 
@@ -141,9 +142,24 @@ public class Fighter : MonoBehaviour
 		TryDebugs ();
 
 		// Animation sector
-		if (IsFlinching () || IsInMoveReaction ()) {
+		if (IsIdle () || IsMoving ()) {
+			if (IsBlocking) {
+				animation.CrossFade (blockIdle.name, 0.1f);
+			} else {
+				animation.Play (idle.name, PlayMode.StopAll);
+			}
+		} else if (IsDodging ()) {
+			animation.Play (idle.name, PlayMode.StopAll);
+		} else if (IsInMoveReaction ()) {
 			// Interrupt or stop attack animation
-			animation.Play (attackIdle.name, PlayMode.StopAll);
+			animation.Play (idle.name, PlayMode.StopAll);
+		} else if (IsInFlinchReaction ()) {
+			// Interrupt or stop attack animation
+			if (characterState == CharacterState.BrokenBlockFlinch) {
+				animation.CrossFade (blockBreak.name, 0.0f);
+			} else {
+				animation.Play (idle.name, PlayMode.StopAll);
+			}
 		} else if (IsAttacking ()) {
 			if (attackState == AttackState.WindUp) {
 				animation.CrossFade (currentAttack.windup.name, currentAttack.windupTime);
@@ -157,7 +173,7 @@ public class Fighter : MonoBehaviour
 					swingTrail.renderer.enabled = false;
 				}
 				animation.Play (currentAttack.winddown.name, PlayMode.StopAll);
-				animation.PlayQueued (attackIdle.name, QueueMode.PlayNow);
+				animation.PlayQueued (idle.name, QueueMode.PlayNow);
 			}
 		}
 
@@ -189,14 +205,6 @@ public class Fighter : MonoBehaviour
 	bool IsIdle ()
 	{
 		return characterState == CharacterState.Idle;
-	}
-	
-	/*
-	 * Return true if the character is in blocking state;
-	 */
-	public bool IsBlocking ()
-	{
-		return characterState == CharacterState.Blocking;
 	}
 	
 	/*
@@ -326,7 +334,11 @@ public class Fighter : MonoBehaviour
 	{
 		if (IsIdle () || IsMoving ()) {
 			characterState = CharacterState.Moving;
-			Move (direction, movespeed);
+			float movescale = 1.0f;
+			if (IsBlocking) {
+				movescale = 0.5f;
+			}
+			Move (direction, movespeed * movescale);
 		}
 	}
 	
@@ -392,9 +404,9 @@ public class Fighter : MonoBehaviour
 		SwingWeapon (attacks [(int)attackType]);
 	}
 
-	public void SwingWeapon(Attack attack)
+	public void SwingWeapon (Attack attack)
 	{
-		if (stamina.HasAnyStamina() && (IsIdle () || IsMoving ())) {
+		if (stamina.HasAnyStamina () && (IsIdle () || IsMoving ())) {
 			float staminaRequired = (-attack.damage) / 3; // Ultimately we should have a prop for this.
 			stamina.UseStamina (staminaRequired);
 			characterState = CharacterState.Attacking;
@@ -428,6 +440,9 @@ public class Fighter : MonoBehaviour
 			currentDodgeDirection = direction;
 			characterState = CharacterState.Dodging;
 			lastDodgeTime = Time.time;
+			if (IsBlocking) {
+				UnBlock ();
+			}
 		}
 	}
 	
@@ -464,7 +479,7 @@ public class Fighter : MonoBehaviour
 		float timeInKnockbackState = Time.time - lastKnockbackTime;
 		if (timeInKnockbackState >= currentMoveReactionDuration) {
 			characterState = CharacterState.Idle;
-		} else if (timeInKnockbackState < (KNOCKBACK_MOVE_PORTION * currentMoveReactionDuration) ){
+		} else if (timeInKnockbackState < (KNOCKBACK_MOVE_PORTION * currentMoveReactionDuration)) {
 			Move (currentMoveReactionDirection, dodgeSpeed);
 		}
 	}
@@ -496,37 +511,27 @@ public class Fighter : MonoBehaviour
 	}
 	
 	/*
-	 * Successful blocks cause a flinch of a provided duration.
-	 */
-	void ReceiveBlockingFlinch (float duration)
-	{
-		characterState = CharacterState.BlockingFlinch;
-		animation.Play (blockWindDown.name, PlayMode.StopAll);
-		lastFlinchTime = Time.time;
-		currentFlinchDuration = duration;
-	}
-	
-	/*
 	 * Blocks that are broken cause a big flinch.
 	 */
 	void ReceiveBrokenBlockFlinch (float duration)
 	{
+		UnBlock ();
 		characterState = CharacterState.BrokenBlockFlinch;
-		animation.Play (blockWindDown.name, PlayMode.StopAll);
 		lastFlinchTime = Time.time;
-		currentFlinchDuration = duration;
-	}
+		currentFlinchDuration = duration;	}
 	
 	/*
 	 * Set the fighter in Blocking state. Play animations and sounds.
 	 */
 	public void Block ()
 	{
+		if (IsBlocking) {
+			return;
+		}
+		
 		if (IsIdle () || IsMoving () || IsAttacking ()) {
 			SoundManager.PlayClipAtPoint (SoundManager.Instance.shield0, myTransform.position);
-			animation.Play (blockWindUp.name, PlayMode.StopAll);
-			animation.PlayQueued (blockIdle.name, QueueMode.CompleteOthers);
-			characterState = CharacterState.Blocking;
+			IsBlocking = true;
 		}
 	}
 	
@@ -535,9 +540,7 @@ public class Fighter : MonoBehaviour
 	 */
 	public void UnBlock ()
 	{
-		characterState = CharacterState.Idle;
-		animation.Play (blockWindDown.name, PlayMode.StopAll);
-		SoundManager.PlayClipAtPoint (SoundManager.Instance.shieldDown0, myTransform.position);
+		IsBlocking = false;
 	}
 	
 	/*
@@ -573,7 +576,7 @@ public class Fighter : MonoBehaviour
 	/*
 	 * Return a reference to the fighter's attacks
 	 */
-	public Attack[] GetAttacks()
+	public Attack[] GetAttacks ()
 	{
 		return attacks;
 	}
@@ -583,7 +586,7 @@ public class Fighter : MonoBehaviour
 	 * return whether or not the block succeeded. Failed blocks should result in the
 	 * player entering a broken block state (serious stun).
 	 */
-	bool CalculateBlockSuccess (Attack attack)
+	bool CheckBlockStamina (Attack attack)
 	{
 		float staminaRequired = -attack.damage;
 		if (stamina.HasStamina (staminaRequired)) {
@@ -661,27 +664,26 @@ public class Fighter : MonoBehaviour
 	public void TakeHit (Attack attack, Transform attacker)
 	{
 		// Handle blocked hits first
-		if (IsBlocking ()) {
-			if (CalculateBlockSuccess (attack)) {
+		if (IsBlocking) {
+			if (CheckBlockStamina (attack)) {
 				SoundManager.PlayClipAtPoint (SoundManager.Instance.blocked0, myTransform.position);
-				// Cause blocker to get knocked back
+				// Cause attacker to get knocked back
 				attacker.GetComponent<Fighter> ().ReceiveKnockbackByBlock ((attacker.position - myTransform.position).normalized, 0.3f);
-				ReceiveBlockingFlinch (0.5f);
 			} else {
 				SoundManager.PlayClipAtPoint (SoundManager.Instance.shieldBreak, myTransform.position);
-				ReceiveBrokenBlockFlinch (3.0f);
+				ReceiveBrokenBlockFlinch (2.0f);
 			}
 		} else {
 			SoundManager.PlayClipAtPoint (SoundManager.Instance.swingHit0, myTransform.position);
 			lastHitTime = Time.time;
 			health.AdjustHealth (attack.damage);
-		}
-		// Handle reaction type of successful hits
-		if (attack.reactionType == Attack.ReactionType.Knockback) {
-			// Knock back in the opposite direction of the attacker.
-			ReceiveKnockback ((myTransform.position - attacker.position).normalized, attack.knockbackDuration);
-		} else if (attack.reactionType == Attack.ReactionType.Flinch) {
-			ReceiveFlinch (attack.flinchDuration);
+			// Handle reaction type of successful hits
+			if (attack.reactionType == Attack.ReactionType.Knockback) {
+				// Knock back in the opposite direction of the attacker.
+				ReceiveKnockback ((myTransform.position - attacker.position).normalized, attack.knockbackDuration);
+			} else if (attack.reactionType == Attack.ReactionType.Flinch) {
+				ReceiveFlinch (attack.flinchDuration);
+			}
 		}
 	}
 
