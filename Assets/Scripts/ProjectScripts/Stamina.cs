@@ -1,19 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Stamina : MonoBehaviour {
+[RequireComponent (typeof(Fighter))]
+
+public class Stamina : MonoBehaviour
+{
 	
 	public int maxStamina = 100;
 	public float curStamina;
-	public float cooldown = 3.0f; // Can be private once tweaked
-
+	public float cooldown = 1.0f; // Can be private once tweaked
+	public float regenTime = 5.0f;
 	float lastUsedTime;
-	float regenTime = 5.0f;
-	
+	Fighter myFighter;
 	const int NO_STAMINA = 0;
 
 	void Awake ()
 	{
+		myFighter = (Fighter)transform.root.GetComponent<Fighter> ();
 		lastUsedTime = Time.time;
 		curStamina = maxStamina;
 	}
@@ -75,7 +78,13 @@ public class Stamina : MonoBehaviour {
 	{
 		float timeSinceLastUsed = Time.time - lastUsedTime;
 		if (timeSinceLastUsed >= cooldown) {
-			float adj = Mathf.Min (maxStamina-curStamina, (maxStamina/regenTime * Time.deltaTime));
+			float remainingStamina = maxStamina - curStamina;
+			float amountToRegen = maxStamina / regenTime * Time.deltaTime;
+			if (myFighter.IsBlocking) {
+				float blockRechargeRate = 0.4f;
+				amountToRegen *= blockRechargeRate;
+			}
+			float adj = Mathf.Min (remainingStamina, amountToRegen);
 			if (adj > 0) {
 				AdjustStamina (adj);
 			}

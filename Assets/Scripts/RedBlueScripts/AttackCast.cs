@@ -48,7 +48,7 @@ public class AttackCast : MonoBehaviour
 	 */
 	public void Begin (Attack attack)
 	{
-		Debug.Log("BEGIN CALLED");
+		Debug.Log ("BEGIN CALLED");
 		gameObject.SetActive (true);
 		attackInfo = attack;
 	}
@@ -182,10 +182,13 @@ public class AttackCast : MonoBehaviour
 		Fighter myFighter = (Fighter)transform.root.gameObject.GetComponent<Fighter> ();
 
 		if (hitFighter != null) {
-			hitFighter.TakeHit (attackInfo, transform.root);
-		}
-		if (myFighter != null) {
-			myFighter.NotifyAttackHit ();
+			if (myFighter != null) {
+				// No friendly fire, for now
+				if (hitFighter.team != myFighter.team) {
+					hitFighter.TakeHit (attackInfo, transform.root);
+					myFighter.NotifyAttackHit ();
+				}
+			}
 		}
 		Debug.Log ("Hit! Object: " + hitGameObject.name);
 	}

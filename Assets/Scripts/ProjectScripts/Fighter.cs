@@ -4,13 +4,13 @@ using System.Collections;
 
 public class Fighter : MonoBehaviour
 {
-	public IController controller;
+	IController controller;
 	public float movespeed; //TODO Rename me runspeed;
 	public float sprintspeed;
 	public Transform target;
-	public Stamina stamina;
-	public Health health;
-	public bool isHuman;
+	Stamina stamina;
+	Health health;
+	bool isHuman = false;
 
 	public bool IsBlocking { get; private set; }
 	
@@ -21,8 +21,17 @@ public class Fighter : MonoBehaviour
 	public TrailRenderer swingTrail;
 
 	// Attacks
-	public Attack[] attacks;
-	public Attack currentAttack;
+	Attack[] attacks;
+	Attack currentAttack;
+
+	// The Team the fighter is on
+	public enum Team
+	{
+		Neutral = 0,
+		GoodGuys = 1,
+		BadGuys = 2
+	}
+	public Team team;
 
 	public enum AttackType
 	{
@@ -172,8 +181,7 @@ public class Fighter : MonoBehaviour
 				if (swingTrail != null) {
 					swingTrail.renderer.enabled = false;
 				}
-				animation.Play (currentAttack.winddown.name, PlayMode.StopAll);
-				animation.PlayQueued (idle.name, QueueMode.PlayNow);
+				animation.CrossFade (currentAttack.winddown.name, currentAttack.winddownTime);
 			}
 		}
 
@@ -400,9 +408,19 @@ public class Fighter : MonoBehaviour
 	 */
 	void CancelAttack ()
 	{
+		attackState = AttackState.None;
 		swingTrail.renderer.enabled = false;
 		SetAttackActive (false);
 	}
+
+	/*
+	 * Sets the fighter as a human or AI
+	 */
+	public void SetHuman (bool human)
+	{
+		isHuman = human;
+	}
+
 	/*
 	 * Try to make the character swing its weapon. If it's in the process
 	 * of swinging or swing is on cooldown, it won't do anything.
@@ -479,7 +497,6 @@ public class Fighter : MonoBehaviour
 			CancelAttack ();
 		}
 		characterState = CharacterState.Flinching;
-		attackState = AttackState.None;
 
 		lastFlinchTime = Time.time;
 		currentFlinchDuration = duration;
@@ -511,7 +528,6 @@ public class Fighter : MonoBehaviour
 			CancelAttack ();
 		}
 		characterState = CharacterState.Knockedback;
-		attackState = AttackState.None;
 		lastKnockbackTime = Time.time;
 		currentMoveReactionDirection = direction;
 		currentMoveReactionDuration = duration;
@@ -526,7 +542,6 @@ public class Fighter : MonoBehaviour
 			CancelAttack ();
 		}
 		characterState = CharacterState.KnockedbackByBlock;
-		attackState = AttackState.None;
 		lastKnockbackTime = Time.time;
 		currentMoveReactionDirection = direction;
 		currentMoveReactionDuration = duration;
@@ -551,10 +566,14 @@ public class Fighter : MonoBehaviour
 		if (IsBlocking) {
 			return;
 		}
-		
+
 		if (IsIdle () || IsMoving () || IsAttacking ()) {
 			SoundManager.PlayClipAtPoint (SoundManager.Instance.shield0, myTransform.position);
 			IsBlocking = true;
+			if (IsAttacking ()) {
+				characterState = CharacterState.Idle;
+				CancelAttack ();
+			}
 		}
 	}
 	
@@ -682,7 +701,7 @@ public class Fighter : MonoBehaviour
 	
 	/*
 	 * Resolve a hit and perform the appropriate reaction. This may mean
-	 * taking damage or it may mean resolving a block. 
+	 * taking damage or it may mean resolving a block.
 	 */
 	public void TakeHit (Attack attack, Transform attacker)
 	{

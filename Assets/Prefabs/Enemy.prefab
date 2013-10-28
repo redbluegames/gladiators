@@ -575,19 +575,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a87441b3bc1fba479154c5969fba067, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 0}
   movespeed: 3
   sprintspeed: 6
   target: {fileID: 0}
   stamina: {fileID: 0}
   health: {fileID: 0}
-  isHuman: 0
   idle: {fileID: 7400000, guid: 72eb18d4c62b54d13b0cbcca34d47b8f, type: 2}
   blockIdle: {fileID: 0}
   blockBreak: {fileID: 0}
   swingTrail: {fileID: 0}
-  attacks: []
-  currentAttack: {fileID: 0}
+  team: 2
   sprintStamPerSec: 30
   nativeColor: {r: .897058845, g: .20447658, b: .20447658, a: 0}
 --- !u!114 &11400004

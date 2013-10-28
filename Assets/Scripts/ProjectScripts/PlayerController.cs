@@ -177,7 +177,7 @@ public class PlayerController : IController
 
 		PlayerIndex = index;
 		playerDevice = device;
-		fighter.isHuman = true;
+		fighter.SetHuman(true);
 	}
 
 	/*

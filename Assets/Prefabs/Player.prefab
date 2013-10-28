@@ -14,8 +14,8 @@ GameObject:
   - 114: {fileID: 11400002}
   - 114: {fileID: 11400004}
   - 114: {fileID: 11400006}
-  - 114: {fileID: 11400000}
   - 111: {fileID: 11100000}
+  - 114: {fileID: 11400000}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -630,6 +630,7 @@ Animation:
   - {fileID: 7400000, guid: 624582d7c5b82c34389dc48b74ab0fc1, type: 2}
   - {fileID: 7400000, guid: 24318a3e94365ef4b9131558114de053, type: 2}
   - {fileID: 7400000, guid: cf01a7a463a451d4faf6e71d69349a08, type: 2}
+  - {fileID: 7400000, guid: 158b62398d39d43ca8d0fb717554dc4e, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
@@ -650,7 +651,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxStamina: 100
   curStamina: 100
-  cooldown: 3
+  cooldown: .200000003
+  regenTime: 3
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -674,19 +676,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a87441b3bc1fba479154c5969fba067, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 0}
   movespeed: 6
   sprintspeed: 12
   target: {fileID: 0}
-  stamina: {fileID: 0}
-  health: {fileID: 0}
-  isHuman: 0
   idle: {fileID: 7400000, guid: 72eb18d4c62b54d13b0cbcca34d47b8f, type: 2}
   blockIdle: {fileID: 7400000, guid: 24318a3e94365ef4b9131558114de053, type: 2}
   blockBreak: {fileID: 7400000, guid: cf01a7a463a451d4faf6e71d69349a08, type: 2}
   swingTrail: {fileID: 0}
-  attacks: []
-  currentAttack: {fileID: 0}
+  team: 1
   sprintStamPerSec: 30
   nativeColor: {r: .204476625, g: .437436044, b: .897058845, a: 0}
 --- !u!114 &11400006
