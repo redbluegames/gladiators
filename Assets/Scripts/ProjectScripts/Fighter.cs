@@ -22,6 +22,8 @@ public class Fighter : MonoBehaviour
 
 	// Attacks
 	Attack[] attacks;
+	Attack[] blockingAttacks;
+	Attack[] currentAttackStance;
 	Attack currentAttack;
 
 	// The Team the fighter is on
@@ -125,20 +127,23 @@ public class Fighter : MonoBehaviour
 				swingTrail.renderer.enabled = false;
 			}
 		}
-
-		// Initialize attacks
-		attacks = new Attack[Enum.GetNames (typeof(AttackType)).Length];
-		if (isHuman) {
-			attacks [(int)AttackType.Weak] = AttackManager.Instance.GetAttack (Attacks.PLAYER_WEAK);
-			attacks [(int)AttackType.Strong] = AttackManager.Instance.GetAttack (Attacks.PLAYER_STRONG);
-		} else {
-			attacks [(int)AttackType.Weak] = AttackManager.Instance.GetAttack (Attacks.ENEMY_WEAK);
-			attacks [(int)AttackType.Strong] = AttackManager.Instance.GetAttack (Attacks.ENEMY_STRONG);
-		}
 	}
 
 	void Start ()
 	{
+		// Initialize attacks
+		attacks = new Attack[Enum.GetNames (typeof(AttackType)).Length];
+		blockingAttacks = new Attack[Enum.GetNames (typeof(AttackType)).Length];
+		if (isHuman) {
+			attacks [(int)AttackType.Weak] = AttackManager.Instance.GetAttack (Attacks.PLAYER_WEAK2);
+			attacks [(int)AttackType.Strong] = AttackManager.Instance.GetAttack (Attacks.PLAYER_STRONG);
+			blockingAttacks [(int)AttackType.Weak] = AttackManager.Instance.GetAttack (Attacks.PLAYER_WEAK);
+			blockingAttacks [(int)AttackType.Strong] = AttackManager.Instance.GetAttack (Attacks.PLAYER_BLOCKING_STRONG);
+		} else {
+			attacks [(int)AttackType.Weak] = AttackManager.Instance.GetAttack (Attacks.ENEMY_WEAK);
+			attacks [(int)AttackType.Strong] = AttackManager.Instance.GetAttack (Attacks.ENEMY_STRONG);
+		}
+		currentAttackStance = attacks;
 	}
 
 	void Update ()
@@ -181,7 +186,7 @@ public class Fighter : MonoBehaviour
 				if (swingTrail != null) {
 					swingTrail.renderer.enabled = false;
 				}
-				animation.CrossFade (currentAttack.winddown.name, currentAttack.winddownTime);
+				// No animation plays during winddown, so that he poses on the last frame of the attack.
 			}
 		}
 
@@ -427,7 +432,7 @@ public class Fighter : MonoBehaviour
 	 */
 	public void SwingWeapon (AttackType attackType)
 	{
-		SwingWeapon (attacks [(int)attackType]);
+		SwingWeapon (currentAttackStance [(int)attackType]);
 	}
 
 	public void SwingWeapon (Attack attack)
@@ -570,6 +575,7 @@ public class Fighter : MonoBehaviour
 		if (IsIdle () || IsMoving () || IsAttacking ()) {
 			SoundManager.PlayClipAtPoint (SoundManager.Instance.shield0, myTransform.position);
 			IsBlocking = true;
+			currentAttackStance = blockingAttacks;
 			if (IsAttacking ()) {
 				characterState = CharacterState.Idle;
 				CancelAttack ();
@@ -582,6 +588,7 @@ public class Fighter : MonoBehaviour
 	 */
 	public void UnBlock ()
 	{
+		currentAttackStance = attacks;
 		IsBlocking = false;
 	}
 	
