@@ -23,7 +23,9 @@ public class IsometricCameraController : MonoBehaviour
 	{
 		// Set the offset this camera uses when following its target
 		Vector3 positionOffset = new Vector3(xOffset, yOffset, zOffset);
-		transform.position = target.transform.position + positionOffset;
+		if (target != null) {
+			transform.position = target.transform.position + positionOffset;
+		}
 
 		// Set the rotation this camera uses when following its target
 		// NOTE: This only needs to be handled on update so that the rotation reflects public

@@ -38,11 +38,11 @@ public class Arena : Singleton<Arena>
 	
 	void Update ()
 	{
-		if(!IsRunning) {
-			return;
-		}
 		if (!PlayersAlive ()) {
 			arenaText.DisplayMessage ("Game Over!", Mathf.Infinity);
+			return;
+		}
+		if(!IsRunning) {
 			return;
 		}
 		TickTimer ();
