@@ -2,15 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class AttackManager : MonoBehaviour
+public class AttackManager : Singleton<AttackManager>
 {
-	public List<Attack> attackList;
+	public List<Attack> attackList = new List<Attack> ();
 	
-	void Start ()
-	{
-		attackList = new List<Attack> ();
-	}
-
 	public int Count ()
 	{
 		return attackList.Count;

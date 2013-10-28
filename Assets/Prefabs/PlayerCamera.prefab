@@ -86,6 +86,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   viewPortIndex: 0
+  xOffset: 0
+  yOffset: 11
+  zOffset: 0
+  xRotation: 90
+  yRotation: 0
+  zRotation: 0
 --- !u!124 &12400000
 Behaviour:
   m_ObjectHideFlags: 1

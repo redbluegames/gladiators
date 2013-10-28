@@ -5,18 +5,16 @@ using System.Collections;
 public class Attack : ScriptableObject
 {
 	int id;
+	public int damage;
 	public float range;
+	public ReactionType reactionType;
+	public float flinchDuration;
+	public float knockbackDuration;
 	public float windupTime;
 	public float winddownTime;
 	public AnimationClip swing;
 	public AnimationClip windup;
 	public AnimationClip winddown;
-	public int damage;
-	public float flinchDuration;
-	public float knockbackDuration;
-	public bool causeKnockback;
-	public bool causeFlinch;
-	public ReactionType reactionType;
 	
 	public enum ReactionType {
 		None,

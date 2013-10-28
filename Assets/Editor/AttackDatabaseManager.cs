@@ -17,8 +17,6 @@ public class AttackDatabaseManager : EditorWindow
 	AnimationClip newAttackWinddown = null;
 	float newAttackFlinchDuration = 0.0f;
 	float newAttackKnockbackDuration = 0.0f;
-	bool newAttackCauseKnockback = false;
-	bool newAttackCauseFlinch = false;
 	Attack.ReactionType newAttackReactionType = Attack.ReactionType.None;
 
 	[MenuItem("RedBlue Tools/Attack Database Manager")]
@@ -30,30 +28,25 @@ public class AttackDatabaseManager : EditorWindow
 	
 	void Awake ()
 	{
-		attackManager = GameObject.Find (ObjectNames.MAANAGERS).GetComponent<AttackManager> ();
 	}
 	
 	void OnGUI ()
 	{
+		if (attackManager == null) {
+			attackManager = GameObject.Find (ObjectNames.MAANAGERS).GetComponent<AttackManager> ();
+		}
 		newAttackName = EditorGUILayout.TextField ("Name: ", newAttackName);
 		newAttackDamage = EditorGUILayout.IntField ("Damage: ", newAttackDamage);
 		newAttackRange = EditorGUILayout.FloatField ("Range: ", newAttackRange);
 		newAttackReactionType = (Attack.ReactionType) EditorGUILayout.EnumPopup ("Reaction Type: ", newAttackReactionType);
-		// TODO Refactor this once we remove the pointless "causeX" bool from Attack
 		if (newAttackReactionType == Attack.ReactionType.Flinch) {
-			newAttackCauseFlinch =  EditorGUILayout.Toggle ("Causes Flinch: ", newAttackCauseFlinch);
 			newAttackFlinchDuration = EditorGUILayout.FloatField ("Flinch Duration: ", newAttackFlinchDuration);
-			newAttackCauseKnockback = false;
 			newAttackKnockbackDuration = 0.0f;
 		} else if (newAttackReactionType == Attack.ReactionType.Knockback) {
-			newAttackCauseKnockback = EditorGUILayout.Toggle ("Causes Knockback: ", newAttackCauseKnockback);
 			newAttackKnockbackDuration = EditorGUILayout.FloatField ("Knockback Duration: ", newAttackKnockbackDuration);
-			newAttackCauseFlinch = false;
 			newAttackFlinchDuration = 0.0f;
 		} else {
-			newAttackCauseKnockback = false;
 			newAttackKnockbackDuration = 0.0f;
-			newAttackCauseFlinch = false;
 			newAttackFlinchDuration = 0.0f;
 		}
 		newAttackWindupTime = EditorGUILayout.FloatField ("Windup Time: ", newAttackWindupTime);
@@ -85,8 +78,6 @@ public class AttackDatabaseManager : EditorWindow
 			newAttack.winddown = newAttackWinddown;
 			newAttack.flinchDuration = newAttackFlinchDuration;
 			newAttack.knockbackDuration = newAttackKnockbackDuration;
-			newAttack.causeFlinch = newAttackCauseFlinch;
-			newAttack.causeKnockback = newAttackCauseKnockback;
 			newAttack.reactionType = newAttackReactionType;
 			newAttack.winddownTime = newAttackWinddownTime;
 			newAttack.windupTime = newAttackWindupTime;

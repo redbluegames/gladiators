@@ -8,8 +8,8 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400000}
-  - 114: {fileID: 11400002}
   - 114: {fileID: 11400000}
+  - 114: {fileID: 11400002}
   - 114: {fileID: 11400004}
   - 114: {fileID: 11400006}
   m_Layer: 0
@@ -38,17 +38,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a810c00d893d234f9818689e51d7c08, type: 3}
+  m_Script: {fileID: 11500000, guid: 4c27ad98f49e09b41a61bef7a03bcb5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curWave: 0
-  spawnPoint: {fileID: 0}
-  spawnRange: 10
-  waveTimeAllowed: 60
-  waveTimeLeft: 0
-  enemyPrefab: {fileID: 100002, guid: 05ec9b1a5891b9945a3d6bff4ef2d534, type: 2}
-  waveComp: 020000000400000006000000080000000a0000000c0000000e000000100000001200000014000000
-  arenaText: {fileID: 0}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -57,9 +49,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c27ad98f49e09b41a61bef7a03bcb5b, type: 3}
+  m_Script: {fileID: 11500000, guid: 3a810c00d893d234f9818689e51d7c08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  curWave: 0
+  spawnPoint: {fileID: 0}
+  spawnRange: 10
+  waveTimeAllowed: 10
+  waveTimeLeft: 0
+  enemyPrefab: {fileID: 100002, guid: 05ec9b1a5891b9945a3d6bff4ef2d534, type: 2}
+  waveComp: 020000000400000006000000080000000a0000000c0000000e000000100000001200000014000000
+  arenaText: {fileID: 0}
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -88,7 +88,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32bba45cae92fec4880b1f3cd89345e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackList: []
+  attackList:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

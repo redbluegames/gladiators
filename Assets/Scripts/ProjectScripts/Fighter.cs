@@ -10,37 +10,14 @@ public class Fighter : MonoBehaviour
 	public Transform target;
 	public Stamina stamina;
 	public Health health;
+	public bool isHuman;
 	
 	// Animations
 	public AnimationClip attackIdle;
-	public AnimationClip attackWindUp;
-	public AnimationClip attackWindDown;
 	public AnimationClip blockIdle;
 	public AnimationClip blockWindUp;
 	public AnimationClip blockWindDown;
 	public TrailRenderer swingTrail;
-
-	// TODO: Create Scriptable objects for these attacks
-	public float attackWeak_Range;
-	public float attackWeak_WindupTime;
-	public float attackWeak_WinddownTime;
-	public AnimationClip attackWeak_Swing;
-	public AnimationClip attackWeak_Windup;
-	public AnimationClip attackWeak_Winddown;
-	public int attackWeak_Damage;
-	public float attackWeak_FlinchDuration;
-	public float attackWeak_KnockbackDuration;
-	public Attack.ReactionType attackWeak_ReactionType;
-	public float attackStrong_Range;
-	public float attackStrong_WindupTime;
-	public float attackStrong_WinddownTime;
-	public AnimationClip attackStrong_Swing;
-	public AnimationClip attackStrong_Windup;
-	public AnimationClip attackStrong_Winddown;
-	public int attackStrong_Damage;
-	public float attackStrong_FlinchDuration;
-	public float attackStrong_KnockbackDuration;
-	public Attack.ReactionType attackStrong_ReactionType;
 
 	// Attacks
 	public Attack[] attacks;
@@ -141,30 +118,13 @@ public class Fighter : MonoBehaviour
 
 		// Initialize attacks
 		attacks = new Attack[Enum.GetNames (typeof(AttackType)).Length];
-		Attack weakAttack = (Attack)ScriptableObject.CreateInstance (typeof(Attack));
-		weakAttack.range = attackWeak_Range;
-		weakAttack.damage = attackWeak_Damage;
-		weakAttack.swing = attackWeak_Swing;
-		weakAttack.windupTime = attackWeak_WindupTime;
-		weakAttack.windup = attackWeak_Windup;
-		weakAttack.winddown = attackWeak_Winddown;
-		weakAttack.winddownTime = attackWeak_WinddownTime;
-		weakAttack.reactionType = attackWeak_ReactionType;
-		weakAttack.flinchDuration = attackWeak_FlinchDuration;
-		weakAttack.knockbackDuration = attackStrong_KnockbackDuration;
-		attacks [(int)AttackType.Weak] = weakAttack;
-		Attack strongAttack = (Attack)ScriptableObject.CreateInstance (typeof(Attack));
-		strongAttack.range = attackStrong_Range;
-		strongAttack.damage = attackStrong_Damage;
-		strongAttack.swing = attackStrong_Swing;
-		strongAttack.windupTime = attackStrong_WindupTime;
-		strongAttack.windup = attackStrong_Windup;
-		strongAttack.winddown = attackStrong_Winddown;
-		strongAttack.winddownTime = attackStrong_WinddownTime;
-		strongAttack.reactionType = attackStrong_ReactionType;
-		strongAttack.flinchDuration = attackStrong_FlinchDuration;
-		strongAttack.knockbackDuration = attackStrong_KnockbackDuration;
-		attacks [(int)AttackType.Strong] = strongAttack;
+		if (isHuman) {
+			attacks[(int)AttackType.Weak] = AttackManager.Instance.GetAttack (Attacks.PLAYER_WEAK);
+			attacks[(int)AttackType.Strong] = AttackManager.Instance.GetAttack (Attacks.PLAYER_STRONG);
+		} else {
+			attacks[(int)AttackType.Weak] = AttackManager.Instance.GetAttack (Attacks.ENEMY_WEAK);
+			attacks[(int)AttackType.Strong] = AttackManager.Instance.GetAttack (Attacks.ENEMY_STRONG);
+		}
 	}
 
 	void Start ()
