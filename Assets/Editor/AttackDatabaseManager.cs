@@ -9,22 +9,18 @@ public class AttackDatabaseManager : EditorWindow
 	
 	string newAttackName = string.Empty;
 	float newAttackRange = 0.0f;
-	float newAttackDamage = 0.0f;
-	AnimationClip animation;
-	/*
-	public float range;
-	public float windupTime;
-	public float winddownTime;
-	public AnimationClip swing;
-	public AnimationClip windup;
-	public AnimationClip winddown;
-	public int damage;
-	public float flinchDuration;
-	public float knockbackDuration;
-	public bool causeKnockback;
-	public bool causeFlinch;
-	public ReactionType reactionType;
-	*/
+	int newAttackDamage = 0;
+	float newAttackWindupTime = 0.0f;
+	float newAttackWinddownTime = 0.0f;
+	AnimationClip newAttackSwing = null;
+	AnimationClip newAttackWindup = null;
+	AnimationClip newAttackWinddown = null;
+	float newAttackFlinchDuration = 0.0f;
+	float newAttackKnockbackDuration = 0.0f;
+	bool newAttackCauseKnockback = false;
+	bool newAttackCauseFlinch = false;
+	Attack.ReactionType newAttackReactionType = Attack.ReactionType.None;
+
 	[MenuItem("RedBlue Tools/Attack Database Manager")]
 	static void Init ()
 	{
@@ -40,21 +36,60 @@ public class AttackDatabaseManager : EditorWindow
 	void OnGUI ()
 	{
 		newAttackName = EditorGUILayout.TextField ("Name: ", newAttackName);
-		newAttackDamage = EditorGUILayout.FloatField ("Damage: ", newAttackDamage);
+		newAttackDamage = EditorGUILayout.IntField ("Damage: ", newAttackDamage);
 		newAttackRange = EditorGUILayout.FloatField ("Range: ", newAttackRange);
-
+		newAttackReactionType = (Attack.ReactionType) EditorGUILayout.EnumPopup ("Reaction Type: ", newAttackReactionType);
+		// TODO Refactor this once we remove the pointless "causeX" bool from Attack
+		if (newAttackReactionType == Attack.ReactionType.Flinch) {
+			newAttackCauseFlinch =  EditorGUILayout.Toggle ("Causes Flinch: ", newAttackCauseFlinch);
+			newAttackFlinchDuration = EditorGUILayout.FloatField ("Flinch Duration: ", newAttackFlinchDuration);
+			newAttackCauseKnockback = false;
+			newAttackKnockbackDuration = 0.0f;
+		} else if (newAttackReactionType == Attack.ReactionType.Knockback) {
+			newAttackCauseKnockback = EditorGUILayout.Toggle ("Causes Knockback: ", newAttackCauseKnockback);
+			newAttackKnockbackDuration = EditorGUILayout.FloatField ("Knockback Duration: ", newAttackKnockbackDuration);
+			newAttackCauseFlinch = false;
+			newAttackFlinchDuration = 0.0f;
+		} else {
+			newAttackCauseKnockback = false;
+			newAttackKnockbackDuration = 0.0f;
+			newAttackCauseFlinch = false;
+			newAttackFlinchDuration = 0.0f;
+		}
+		newAttackWindupTime = EditorGUILayout.FloatField ("Windup Time: ", newAttackWindupTime);
+		newAttackWinddownTime = EditorGUILayout.FloatField ("Winddown Time: ", newAttackWinddownTime);
+		
+		newAttackSwing = (AnimationClip) EditorGUILayout.ObjectField ("Swing Animation: ", newAttackSwing,
+			typeof (AnimationClip), false);
+		newAttackWindup = (AnimationClip) EditorGUILayout.ObjectField ("Windup Animation: ", newAttackWindup,
+			typeof (AnimationClip), false);
+		newAttackWinddown = (AnimationClip) EditorGUILayout.ObjectField ("Winddown Animation: ", newAttackWinddown,
+			typeof (AnimationClip), false);
+		
 		if (GUILayout.Button ("Add New Attack"))
 		{
 			CleanupEmptyAttacks ();
 		
-			// Validate
+			// Validate our GUI form
 			if (newAttackName == string.Empty) {
 				Debug.LogWarning ("Attack Name must be provided.");
 				return;
 			}
-
+			
 			Attack newAttack = (Attack) ScriptableObject.CreateInstance<Attack> ();
 			newAttack.name = newAttackName;
+			newAttack.damage = newAttackDamage;
+			newAttack.range = newAttackRange;
+			newAttack.swing = newAttackSwing;
+			newAttack.windup = newAttackWindup;
+			newAttack.winddown = newAttackWinddown;
+			newAttack.flinchDuration = newAttackFlinchDuration;
+			newAttack.knockbackDuration = newAttackKnockbackDuration;
+			newAttack.causeFlinch = newAttackCauseFlinch;
+			newAttack.causeKnockback = newAttackCauseKnockback;
+			newAttack.reactionType = newAttackReactionType;
+			newAttack.winddownTime = newAttackWinddownTime;
+			newAttack.windupTime = newAttackWindupTime;
 			attackManager.AddAttack (newAttack);
 			WriteAttacksToFile ();
 		}
