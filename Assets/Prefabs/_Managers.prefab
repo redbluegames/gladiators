@@ -26,7 +26,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.77954841, y: 2.06163311, z: 6.10255623}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -53,12 +53,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curWave: 0
-  spawnPoint: {fileID: 0}
-  spawnRange: 10
+  spawnPoint: {fileID: 400000}
+  spawnRange: 5
   waveTimeAllowed: 10
   waveTimeLeft: 0
   enemyPrefab: {fileID: 100002, guid: 05ec9b1a5891b9945a3d6bff4ef2d534, type: 2}
-  waveComp: 020000000400000006000000080000000a0000000c0000000e000000100000001200000014000000
+  waveComp: 0500000000000000000000000000000000000000
   arenaText: {fileID: 0}
 --- !u!114 &11400004
 MonoBehaviour:

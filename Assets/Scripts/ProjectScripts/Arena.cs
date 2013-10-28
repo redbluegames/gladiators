@@ -83,8 +83,8 @@ public class Arena : Singleton<Arena>
 	{
 		for (int i = 0; i < waveComp[curWave]; i++) {
 			float randX = Random.Range (-spawnRange, spawnRange);
-			float randY = Random.Range (-spawnRange, spawnRange);
-			Vector3 randomDistance = new Vector3 (randX, 0, randY);
+			float randZ = Random.Range (-spawnRange, spawnRange);
+			Vector3 randomDistance = new Vector3 (randX, 0, randZ);
 			Instantiate (enemyPrefab, (spawnPoint.position + randomDistance), spawnPoint.rotation);
 		}
 	}
