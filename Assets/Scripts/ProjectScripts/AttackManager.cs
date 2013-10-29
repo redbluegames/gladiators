@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class AttackManager : Singleton<AttackManager>
+public class AttackManager : MonoBehaviour
 {
 	public List<Attack> attackList = new List<Attack> ();
 

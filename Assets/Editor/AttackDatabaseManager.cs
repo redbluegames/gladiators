@@ -6,14 +6,15 @@ using System.IO;
 
 public class AttackDatabaseManager : EditorWindow
 {
+	AttackManager attackManager;
 	const string ATTACK_CSV = "Attacks";
-	readonly string[] columnNames = {"Name", "Damage", "Range", "Reaction Type", "Flinch Duration", "Knockback Duration",
-		"Windup Time","Winddown Time","Swing Animation","Windup Animation","Winddown Animation"};
+	readonly string[] columnNames = {"Name", "Damage", "Range", "Stamina", "Reaction Type", "Flinch Duration", "Knockback Duration",
+		"Windup Time", "Winddown Time", "Swing Animation", "Windup Animation", "Winddown Animation", "Sound Effect"};
 
 	[MenuItem("RedBlue Tools/Import Attacks CSV")]
 	static void Init ()
 	{
-		AttackDatabaseManager window = (AttackDatabaseManager) EditorWindow.CreateInstance (typeof (AttackDatabaseManager));
+		AttackDatabaseManager window = (AttackDatabaseManager)EditorWindow.CreateInstance (typeof(AttackDatabaseManager));
 		window.Show ();
 	}
 	
@@ -31,17 +32,22 @@ public class AttackDatabaseManager : EditorWindow
 	 */
 	void ImportAttacks ()
 	{
-		TextAsset attackCsv = (TextAsset) Resources.Load (ATTACK_CSV, typeof (TextAsset));
+		attackManager = (AttackManager)GameObject.Find (ObjectNames.MAANAGERS).GetComponent <AttackManager> ();
+		if (attackManager == null) {
+			Debug.LogError ("Attack Manager could not be found");
+			return;
+		}
+		TextAsset attackCsv = (TextAsset)Resources.Load (ATTACK_CSV, typeof(TextAsset));
 		if (attackCsv == null) {
 			Debug.LogError (string.Format ("Attack file {0} failed to load correctly.", ATTACK_CSV));
 			return;
 		}
-		AttackManager.Instance.ClearAttacks ();
+		attackManager.ClearAttacks ();
 		string[] lineArray = attackCsv.text.Split ("\n" [0]);
 		VerifyHeaderLine (lineArray [0]);
 		for (int i = 1; i < lineArray.Length; i++) {
 			Attack newAttack = SerializeAttackLine (lineArray [i]);
-			AttackManager.Instance.AddAttack (newAttack);
+			attackManager.AddAttack (newAttack);
 		}
 		WriteAttacksToStringFile ();
 	}
@@ -79,14 +85,16 @@ public class AttackDatabaseManager : EditorWindow
 		newAttack.name = fieldArray [0];
 		newAttack.damage = int.Parse (fieldArray [1]);
 		newAttack.range = float.Parse (fieldArray [2]);
-		newAttack.reactionType = SerializeReactionType (fieldArray [3]);
-		newAttack.flinchDuration = float.Parse (fieldArray [4]);
-		newAttack.knockbackDuration = float.Parse (fieldArray [5]);
-		newAttack.windupTime = float.Parse (fieldArray [6]);
-		newAttack.winddownTime = float.Parse (fieldArray [7]);
-		newAttack.swing = LoadClipFromString (fieldArray [8]);
-		newAttack.windup = LoadClipFromString (fieldArray [9]);
-		newAttack.winddown = LoadClipFromString (fieldArray [10]);
+		newAttack.stamina = float.Parse (fieldArray [3]);
+		newAttack.reactionType = SerializeReactionType (fieldArray [4]);
+		newAttack.flinchDuration = float.Parse (fieldArray [5]);
+		newAttack.knockbackDuration = float.Parse (fieldArray [6]);
+		newAttack.windupTime = float.Parse (fieldArray [7]);
+		newAttack.winddownTime = float.Parse (fieldArray [8]);
+		newAttack.swing = LoadClipFromString (fieldArray [9]);
+		newAttack.windup = LoadClipFromString (fieldArray [10]);
+		newAttack.winddown = LoadClipFromString (fieldArray [11]);
+		newAttack.soundEffect = LoadAudioFromString (fieldArray [12]);
 		return newAttack;
 	}
 	
@@ -101,7 +109,7 @@ public class AttackDatabaseManager : EditorWindow
 		System.IO.File.WriteAllText (path, createText);
 		const string keywords = "\tpublic static int";
 		int attackId = 0;
-		foreach (Attack attack in AttackManager.Instance.attackList) {
+		foreach (Attack attack in attackManager.attackList) {
 			string attackLine = string.Format ("{0} {1} = {2};\n", keywords, 
 				attack.name.ToUpper ().Replace (' ', '_'), attackId);
 			System.IO.File.AppendAllText (path, attackLine);
@@ -134,6 +142,13 @@ public class AttackDatabaseManager : EditorWindow
 	{
 		// Note this is not the most efficient time to load new animations as 
 		// EVERY single attack animation will be loaded when we run the game.
-		return (AnimationClip) Resources.Load (clipname, typeof(AnimationClip));
+		return (AnimationClip)Resources.Load (clipname, typeof(AnimationClip));
+	}
+	
+	AudioClip LoadAudioFromString (string clipname)
+	{
+		// Note this is not the most efficient time to load new sounds as 
+		// EVERY single attack sound will be loaded when we run the game.
+		return (AudioClip)Resources.Load (clipname, typeof(AudioClip));
 	}
 }

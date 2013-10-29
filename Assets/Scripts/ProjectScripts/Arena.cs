@@ -42,6 +42,9 @@ public class Arena : Singleton<Arena>
 			arenaText.DisplayMessage ("Game Over!", Mathf.Infinity);
 			return;
 		}
+		if (GetActiveEnemyCount () == 0 && !IsRunning) {
+			arenaText.DisplayMessage ("You Win!", Mathf.Infinity);
+		}
 		if(!IsRunning) {
 			return;
 		}
@@ -68,7 +71,6 @@ public class Arena : Singleton<Arena>
 		SpawnWave ();
 		curWave++;
 		if (curWave > waveComp.Length - 1) {
-			Debug.LogWarning ("Wave composition for CurWave not defined. Skipping StartNextWave.");
 			IsRunning = false;
 			return;
 		}

@@ -127,13 +127,14 @@ public class Fighter : MonoBehaviour
 		}
 
 		// Initialize attacks
+		AttackManager attackManager = (AttackManager)GameObject.Find (ObjectNames.MAANAGERS).GetComponent <AttackManager> ();
 		attacks = new Attack[Enum.GetNames (typeof(AttackType)).Length];
 		if (isHuman) {
-			attacks [(int)AttackType.Weak] = AttackManager.Instance.GetAttack (Attacks.PLAYER_WEAK);
-			attacks [(int)AttackType.Strong] = AttackManager.Instance.GetAttack (Attacks.PLAYER_STRONG);
+			attacks [(int)AttackType.Weak] = attackManager.GetAttack (Attacks.PLAYER_WEAK);
+			attacks [(int)AttackType.Strong] = attackManager.GetAttack (Attacks.PLAYER_STRONG);
 		} else {
-			attacks [(int)AttackType.Weak] = AttackManager.Instance.GetAttack (Attacks.ENEMY_WEAK);
-			attacks [(int)AttackType.Strong] = AttackManager.Instance.GetAttack (Attacks.ENEMY_STRONG);
+			attacks [(int)AttackType.Weak] = attackManager.GetAttack (Attacks.ENEMY_WEAK);
+			attacks [(int)AttackType.Strong] = attackManager.GetAttack (Attacks.ENEMY_STRONG);
 		}
 	}
 
@@ -433,8 +434,7 @@ public class Fighter : MonoBehaviour
 	public void SwingWeapon (Attack attack)
 	{
 		if (stamina.HasAnyStamina () && (IsIdle () || IsMoving ())) {
-			float staminaRequired = (-attack.damage) / 3; // Ultimately we should have a prop for this.
-			stamina.UseStamina (staminaRequired);
+			stamina.UseStamina (attack.stamina);
 			characterState = CharacterState.Attacking;
 			currentAttack = attack;
 			attackState = AttackState.WindUp;
@@ -630,12 +630,11 @@ public class Fighter : MonoBehaviour
 	 */
 	bool CheckBlockStamina (Attack attack)
 	{
-		float staminaRequired = -attack.damage;
-		if (stamina.HasStamina (staminaRequired)) {
-			stamina.UseStamina (staminaRequired);
+		if (stamina.HasStamina (attack.stamina)) {
+			stamina.UseStamina (attack.stamina);
 			return true;
 		} else {
-			stamina.UseStamina (staminaRequired);
+			stamina.UseStamina (attack.stamina);
 			return false;
 		}
 	}
@@ -718,7 +717,7 @@ public class Fighter : MonoBehaviour
 		} else {
 			SoundManager.PlayClipAtPoint (SoundManager.Instance.swingHit0, myTransform.position);
 			lastHitTime = Time.time;
-			health.AdjustHealth (attack.damage);
+			health.AdjustHealth (-attack.damage);
 			// Handle reaction type of successful hits
 			if (attack.reactionType == Attack.ReactionType.Knockback) {
 				// Knock back in the opposite direction of the attacker.
