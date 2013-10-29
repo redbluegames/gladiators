@@ -205,7 +205,7 @@ public class Fighter : MonoBehaviour
 	/*
 	 * Plays the specified sound clip as a one shot sound
 	 */
-	void PlaySound(AudioClip clip)
+	void PlayAttackSound(AudioClip clip)
 	{
 		attackAndBlockChannel.PlayOneShot(clip);
 	}
@@ -606,7 +606,7 @@ public class Fighter : MonoBehaviour
 		}
 
 		if (IsIdle () || IsMoving ()) {
-			PlaySound (shieldUpSound);
+			PlayAttackSound (shieldUpSound);
 			IsBlocking = true;
 			currentAttackStance = blockingAttacks;
 			if (IsAttacking ()) {
@@ -747,11 +747,11 @@ public class Fighter : MonoBehaviour
 		// Handle blocked hits first
 		if (IsBlocking) {
 			if (CheckBlockStamina (attack)) {
-				PlaySound (blockSound);
+				PlayAttackSound (blockSound);
 				// Cause attacker to get knocked back
 				attacker.GetComponent<Fighter> ().ReceiveKnockbackByBlock ((attacker.position - myTransform.position).normalized, 0.3f);
 			} else {
-				PlaySound (shieldBreakSound);
+				PlayAttackSound (shieldBreakSound);
 				ReceiveBrokenBlockFlinch (2.0f);
 			}
 		} else {

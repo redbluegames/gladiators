@@ -370,7 +370,7 @@ AnimationClip:
     script: {fileID: 0}
   m_Events:
   - time: 0
-    functionName: PlaySound
+    functionName: PlayAttackSound
     data: 
     objectReferenceParameter: {fileID: 8300000, guid: bb42b49447681478f809c9a90a2b4103,
       type: 3}
