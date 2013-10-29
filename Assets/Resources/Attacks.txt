@@ -1,0 +1,5 @@
+Name,Damage,Range,Reaction Type,Flinch Duration,Knockback Duration,Windup Time,Winddown Time,Swing Animation,Windup Animation,Winddown Animation
+Player Weak,10,5,None,0.2,0,0.1,0.1,attack2_swing,attack_windup,attack_winddown
+Player Strong,50,5,Knockback,0,0.3,0.5,0.2,attack_swing,attack_windup,attack_winddown
+Enemy Weak,10,3.5,Knockback,0.2,0,0.1,0.1,attack2_swing,attack_windup,attack_winddown
+Enemy Strong,50,3.5,Knockback,0,0.3,0.5,0.2,attack_swing,attack_windup,attack_winddown

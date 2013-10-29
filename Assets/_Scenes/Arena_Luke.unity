@@ -507,6 +507,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gizmoSize: .5
   gizmoColor: {r: 1, g: .921568632, b: .0156862754, a: 1}
+--- !u!114 &233371255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a1376768529e46efa5a1c4f4e3b109a, type: 3}
+  m_Name: Player Strong
+  m_EditorClassIdentifier: 
+  damage: 50
+  range: 5
+  reactionType: 2
+  flinchDuration: 0
+  knockbackDuration: .300000012
+  windupTime: .5
+  winddownTime: .200000003
+  swing: {fileID: 7400000, guid: ded330501f2a04d6d8c5050f5590cd4e, type: 2}
+  windup: {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
+  winddown: {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
 --- !u!1 &319552696
 GameObject:
   m_ObjectHideFlags: 0
@@ -556,6 +577,48 @@ MonoBehaviour:
   mClipping: 0
   mClipRange: {x: 0, y: 0, z: 0, w: 0}
   mClipSoftness: {x: 40, y: 40}
+--- !u!114 &341507262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a1376768529e46efa5a1c4f4e3b109a, type: 3}
+  m_Name: Enemy Strong
+  m_EditorClassIdentifier: 
+  damage: 50
+  range: 3.5
+  reactionType: 2
+  flinchDuration: 0
+  knockbackDuration: .300000012
+  windupTime: .5
+  winddownTime: .200000003
+  swing: {fileID: 7400000, guid: ded330501f2a04d6d8c5050f5590cd4e, type: 2}
+  windup: {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
+  winddown: {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
+--- !u!114 &391264763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a1376768529e46efa5a1c4f4e3b109a, type: 3}
+  m_Name: Enemy Weak
+  m_EditorClassIdentifier: 
+  damage: 10
+  range: 3.5
+  reactionType: 2
+  flinchDuration: .200000003
+  knockbackDuration: 0
+  windupTime: .100000001
+  winddownTime: .100000001
+  swing: {fileID: 7400000, guid: c3f3af8f0c04c4aa0a0cd367a923ac0d, type: 2}
+  windup: {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
+  winddown: {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
 --- !u!1 &430612368
 GameObject:
   m_ObjectHideFlags: 0
@@ -651,7 +714,7 @@ Transform:
   m_GameObject: {fileID: 439775747}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: .00740740728, y: .00740740728, z: .00740740728}
+  m_LocalScale: {x: .00732600736, y: .00732600736, z: .00732600736}
   m_Children:
   - {fileID: 1354561226}
   m_Father: {fileID: 0}
@@ -668,7 +731,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   automatic: 1
-  manualHeight: 270
+  manualHeight: 273
 --- !u!114 &439775750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -781,48 +844,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 1271673665}
   m_GameObject: {fileID: 484679271}
   m_Mesh: {fileID: 4300000, guid: f0c9a8495447646e6b1a237157c7db9a, type: 3}
---- !u!114 &604579803
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a1376768529e46efa5a1c4f4e3b109a, type: 3}
-  m_Name: player strong
-  m_EditorClassIdentifier: 
-  damage: -50
-  range: 5
-  reactionType: 2
-  flinchDuration: 0
-  knockbackDuration: .300000012
-  windupTime: .5
-  winddownTime: .200000003
-  swing: {fileID: 7400000, guid: ded330501f2a04d6d8c5050f5590cd4e, type: 2}
-  windup: {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
-  winddown: {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
---- !u!114 &611498587
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a1376768529e46efa5a1c4f4e3b109a, type: 3}
-  m_Name: enemy strong
-  m_EditorClassIdentifier: 
-  damage: -50
-  range: 3.5
-  reactionType: 2
-  flinchDuration: 0
-  knockbackDuration: .300000012
-  windupTime: .5
-  winddownTime: .200000003
-  swing: {fileID: 7400000, guid: ded330501f2a04d6d8c5050f5590cd4e, type: 2}
-  windup: {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
-  winddown: {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
 --- !u!1 &663722083
 GameObject:
   m_ObjectHideFlags: 0
@@ -927,7 +948,7 @@ Transform:
   m_PrefabInternal: {fileID: 1847857106}
   m_GameObject: {fileID: 802193150}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.49999997, y: .5, z: 0}
+  m_LocalPosition: {x: -1, y: 0, z: 0}
   m_LocalScale: {x: 1.00007999, y: 1.00007999, z: 1.00007999}
   m_Children:
   - {fileID: 57828436}
@@ -973,7 +994,7 @@ Transform:
   m_PrefabInternal: {fileID: 1847857106}
   m_GameObject: {fileID: 938754447}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.49999997, y: 135.5, z: 0}
+  m_LocalPosition: {x: -1, y: 137.000015, z: 0}
   m_LocalScale: {x: 1.00005245, y: 1.00005245, z: 1.00005245}
   m_Children:
   - {fileID: 319552697}
@@ -1051,6 +1072,27 @@ MeshFilter:
   m_PrefabInternal: {fileID: 1271673665}
   m_GameObject: {fileID: 945463566}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &954828212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a1376768529e46efa5a1c4f4e3b109a, type: 3}
+  m_Name: Player Weak
+  m_EditorClassIdentifier: 
+  damage: 10
+  range: 5
+  reactionType: 0
+  flinchDuration: .200000003
+  knockbackDuration: 0
+  windupTime: .100000001
+  winddownTime: .100000001
+  swing: {fileID: 7400000, guid: c3f3af8f0c04c4aa0a0cd367a923ac0d, type: 2}
+  windup: {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
+  winddown: {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
 --- !u!1 &975616781
 GameObject:
   m_ObjectHideFlags: 0
@@ -1403,6 +1445,27 @@ MeshFilter:
   m_PrefabInternal: {fileID: 1271673665}
   m_GameObject: {fileID: 1079692479}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1084006117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a1376768529e46efa5a1c4f4e3b109a, type: 3}
+  m_Name: Player Weak
+  m_EditorClassIdentifier: 
+  damage: 10
+  range: 0
+  reactionType: 0
+  flinchDuration: 0
+  knockbackDuration: 0
+  windupTime: 0
+  winddownTime: 0
+  swing: {fileID: 0}
+  windup: {fileID: 0}
+  winddown: {fileID: 0}
 --- !u!1 &1250154844
 GameObject:
   m_ObjectHideFlags: 0
@@ -1956,31 +2019,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackList:
-  - {fileID: 1487779197}
-  - {fileID: 1854468956}
-  - {fileID: 604579803}
-  - {fileID: 611498587}
---- !u!114 &1487779197
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a1376768529e46efa5a1c4f4e3b109a, type: 3}
-  m_Name: player weak
-  m_EditorClassIdentifier: 
-  damage: -10
-  range: 5
-  reactionType: 1
-  flinchDuration: .200000003
-  knockbackDuration: 0
-  windupTime: .100000001
-  winddownTime: .100000001
-  swing: {fileID: 7400000, guid: c3f3af8f0c04c4aa0a0cd367a923ac0d, type: 2}
-  windup: {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
-  winddown: {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
+  - {fileID: 954828212}
+  - {fileID: 233371255}
+  - {fileID: 391264763}
+  - {fileID: 341507262}
 --- !u!1 &1497576155
 GameObject:
   m_ObjectHideFlags: 0
@@ -2084,6 +2126,10 @@ Prefab:
       propertyPath: waveComp.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11400006, guid: 9b4c39fcf2f7a2347bba736d69dd0224, type: 2}
+      propertyPath: attackList.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 9b4c39fcf2f7a2347bba736d69dd0224, type: 2}
       propertyPath: m_LocalPosition.x
       value: 1.77954841
@@ -2123,19 +2169,23 @@ Prefab:
     - target: {fileID: 11400006, guid: 9b4c39fcf2f7a2347bba736d69dd0224, type: 2}
       propertyPath: attackList.Array.data[0]
       value: 
-      objectReference: {fileID: 1487779197}
+      objectReference: {fileID: 1599743967}
     - target: {fileID: 11400006, guid: 9b4c39fcf2f7a2347bba736d69dd0224, type: 2}
       propertyPath: attackList.Array.data[1]
       value: 
-      objectReference: {fileID: 1854468956}
+      objectReference: {fileID: 1084006117}
     - target: {fileID: 11400006, guid: 9b4c39fcf2f7a2347bba736d69dd0224, type: 2}
       propertyPath: attackList.Array.data[2]
       value: 
-      objectReference: {fileID: 604579803}
+      objectReference: {fileID: 2063273592}
     - target: {fileID: 11400006, guid: 9b4c39fcf2f7a2347bba736d69dd0224, type: 2}
       propertyPath: attackList.Array.data[3]
       value: 
-      objectReference: {fileID: 611498587}
+      objectReference: {fileID: 1825915881}
+    - target: {fileID: 11400006, guid: 9b4c39fcf2f7a2347bba736d69dd0224, type: 2}
+      propertyPath: attackCsv
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9b4c39fcf2f7a2347bba736d69dd0224, type: 2}
   m_RootGameObject: {fileID: 1390360874}
@@ -2181,6 +2231,27 @@ Prefab:
   m_RootGameObject: {fileID: 1962522903}
   m_IsPrefabParent: 0
   m_IsExploded: 1
+--- !u!114 &1599743967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a1376768529e46efa5a1c4f4e3b109a, type: 3}
+  m_Name: Enemy Strong
+  m_EditorClassIdentifier: 
+  damage: 50
+  range: 0
+  reactionType: 0
+  flinchDuration: 0
+  knockbackDuration: 0
+  windupTime: 0
+  winddownTime: 0
+  swing: {fileID: 0}
+  windup: {fileID: 0}
+  winddown: {fileID: 0}
 --- !u!1 &1623833676
 GameObject:
   m_ObjectHideFlags: 0
@@ -2355,7 +2426,7 @@ Transform:
   m_PrefabInternal: {fileID: 1847857106}
   m_GameObject: {fileID: 1697428073}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 464.500031, y: 135.5, z: 0}
+  m_LocalPosition: {x: 420, y: 137.000015, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 975616782}
@@ -2562,6 +2633,27 @@ MeshFilter:
   m_PrefabInternal: {fileID: 1548813142}
   m_GameObject: {fileID: 1797583772}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1825915881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a1376768529e46efa5a1c4f4e3b109a, type: 3}
+  m_Name: Enemy Weak
+  m_EditorClassIdentifier: 
+  damage: 10
+  range: 0
+  reactionType: 0
+  flinchDuration: 0
+  knockbackDuration: 0
+  windupTime: 0
+  winddownTime: 0
+  swing: {fileID: 0}
+  windup: {fileID: 0}
+  winddown: {fileID: 0}
 --- !u!1001 &1833083010
 Prefab:
   m_ObjectHideFlags: 0
@@ -2699,66 +2791,45 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400010, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
       propertyPath: m_LocalScale.x
-      value: .00740740728
+      value: .00732600736
       objectReference: {fileID: 0}
     - target: {fileID: 400010, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
       propertyPath: m_LocalScale.y
-      value: .00740740728
+      value: .00732600736
       objectReference: {fileID: 0}
     - target: {fileID: 400010, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
       propertyPath: m_LocalScale.z
-      value: .00740740728
+      value: .00732600736
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
       propertyPath: m_LocalPosition.y
-      value: .5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400032, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 135.5
+      value: 137.000015
       objectReference: {fileID: 0}
     - target: {fileID: 400022, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 464.500031
+      value: 420
       objectReference: {fileID: 0}
     - target: {fileID: 400022, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 135.5
+      value: 137.000015
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -.49999997
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 400032, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -.49999997
+      value: -1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
   m_RootGameObject: {fileID: 439775747}
   m_IsPrefabParent: 0
   m_IsExploded: 1
---- !u!114 &1854468956
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a1376768529e46efa5a1c4f4e3b109a, type: 3}
-  m_Name: enemy weak
-  m_EditorClassIdentifier: 
-  damage: -10
-  range: 3.29999995
-  reactionType: 1
-  flinchDuration: .200000003
-  knockbackDuration: 0
-  windupTime: .100000001
-  winddownTime: .100000001
-  swing: {fileID: 7400000, guid: c3f3af8f0c04c4aa0a0cd367a923ac0d, type: 2}
-  windup: {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
-  winddown: {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
 --- !u!1 &1942220987
 GameObject:
   m_ObjectHideFlags: 0
@@ -2976,3 +3047,24 @@ MeshFilter:
   m_PrefabInternal: {fileID: 1548813142}
   m_GameObject: {fileID: 2012751834}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &2063273592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a1376768529e46efa5a1c4f4e3b109a, type: 3}
+  m_Name: Player Strong
+  m_EditorClassIdentifier: 
+  damage: 50
+  range: 0
+  reactionType: 0
+  flinchDuration: 0
+  knockbackDuration: 0
+  windupTime: 0
+  winddownTime: 0
+  swing: {fileID: 0}
+  windup: {fileID: 0}
+  winddown: {fileID: 0}
