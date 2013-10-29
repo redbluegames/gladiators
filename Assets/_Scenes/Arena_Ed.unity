@@ -387,6 +387,7 @@ Animation:
   - {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
   - {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
   - {fileID: 7400000, guid: c3f3af8f0c04c4aa0a0cd367a923ac0d, type: 2}
+  - {fileID: 7400000, guid: 1df5dec3f9aba4f12b121ba65ddadc47, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
@@ -856,7 +857,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   automatic: 1
-  manualHeight: 404
+  manualHeight: 341
 --- !u!4 &266127467
 Transform:
   m_ObjectHideFlags: 0
@@ -865,7 +866,7 @@ Transform:
   m_GameObject: {fileID: 266127462}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 100, z: 0}
-  m_LocalScale: {x: .00495049497, y: .00495049497, z: .00495049497}
+  m_LocalScale: {x: .00586510263, y: .00586510263, z: .00586510263}
   m_Children:
   - {fileID: 987179267}
   m_Father: {fileID: 0}
@@ -935,7 +936,7 @@ Transform:
   m_PrefabInternal: {fileID: 1521864586}
   m_GameObject: {fileID: 398548038}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -.499511719, z: 0}
   m_LocalScale: {x: 1.00007999, y: 1.00007999, z: 1.00007999}
   m_Children:
   - {fileID: 1935659664}
@@ -1181,7 +1182,7 @@ Transform:
   m_PrefabInternal: {fileID: 1521864586}
   m_GameObject: {fileID: 656147982}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 428, y: 202, z: 0}
+  m_LocalPosition: {x: 428, y: 170.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1906493431}
@@ -1625,6 +1626,10 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 11100000, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
+      propertyPath: m_Animations.Array.size
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1713,6 +1718,10 @@ Prefab:
       propertyPath: m_LocalPosition.z
       value: -.5
       objectReference: {fileID: 0}
+    - target: {fileID: 11100000, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
+      propertyPath: m_Animations.Array.data[9]
+      value: 
+      objectReference: {fileID: 7400000, guid: 1df5dec3f9aba4f12b121ba65ddadc47, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3d8f4162e5996244f95d173d4ca16b34, type: 2}
   m_RootGameObject: {fileID: 1524968259}
@@ -2156,8 +2165,8 @@ MonoBehaviour:
   reactionType: 1
   flinchDuration: .200000003
   knockbackDuration: 0
-  windupTime: .100000001
-  winddownTime: .100000001
+  windupTime: .400000006
+  winddownTime: .400000006
   swing: {fileID: 7400000, guid: c3f3af8f0c04c4aa0a0cd367a923ac0d, type: 2}
   windup: {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
   winddown: {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
@@ -2705,7 +2714,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -.499511719
       objectReference: {fileID: 0}
     - target: {fileID: 400022, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
       propertyPath: m_LocalPosition.x
@@ -2713,19 +2722,19 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400022, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 202
+      value: 170.5
       objectReference: {fileID: 0}
     - target: {fileID: 400010, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
       propertyPath: m_LocalScale.x
-      value: .00495049497
+      value: .00586510263
       objectReference: {fileID: 0}
     - target: {fileID: 400010, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
       propertyPath: m_LocalScale.y
-      value: .00495049497
+      value: .00586510263
       objectReference: {fileID: 0}
     - target: {fileID: 400010, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
       propertyPath: m_LocalScale.z
-      value: .00495049497
+      value: .00586510263
       objectReference: {fileID: 0}
     - target: {fileID: 11400004, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
       propertyPath: health
@@ -2741,7 +2750,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400032, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 202
+      value: 170.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
@@ -2912,6 +2921,7 @@ Animation:
   - {fileID: 7400000, guid: 24318a3e94365ef4b9131558114de053, type: 2}
   - {fileID: 7400000, guid: cf01a7a463a451d4faf6e71d69349a08, type: 2}
   - {fileID: 7400000, guid: 158b62398d39d43ca8d0fb717554dc4e, type: 2}
+  - {fileID: 7400000, guid: 1df5dec3f9aba4f12b121ba65ddadc47, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
@@ -3153,14 +3163,14 @@ MonoBehaviour:
   m_Name: enemy_strong
   m_EditorClassIdentifier: 
   damage: -50
-  range: 2.79999995
+  range: 4
   reactionType: 2
   flinchDuration: 0
   knockbackDuration: .300000012
-  windupTime: .5
-  winddownTime: .5
+  windupTime: .600000024
+  winddownTime: .600000024
   swing: {fileID: 7400000, guid: ded330501f2a04d6d8c5050f5590cd4e, type: 2}
-  windup: {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
+  windup: {fileID: 7400000, guid: 1df5dec3f9aba4f12b121ba65ddadc47, type: 2}
   winddown: {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
 --- !u!1 &1831366234
 GameObject:
@@ -3466,7 +3476,7 @@ Transform:
   m_PrefabInternal: {fileID: 1521864586}
   m_GameObject: {fileID: 1987926345}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 202, z: 0}
+  m_LocalPosition: {x: 0, y: 170.5, z: 0}
   m_LocalScale: {x: 1.00005245, y: 1.00005245, z: 1.00005245}
   m_Children:
   - {fileID: 190628389}

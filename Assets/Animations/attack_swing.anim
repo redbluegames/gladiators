@@ -368,4 +368,18 @@ AnimationClip:
     path: Hand_R
     classID: 4
     script: {fileID: 0}
-  m_Events: []
+  m_Events:
+  - time: .0166666675
+    functionName: SetAttackMovement
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 10
+    intParameter: 0
+    messageOptions: 0
+  - time: .0833333358
+    functionName: SetAttackMovement
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0

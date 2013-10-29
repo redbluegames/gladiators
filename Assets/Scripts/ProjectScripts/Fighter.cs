@@ -54,9 +54,7 @@ public class Fighter : MonoBehaviour
 	Vector3 currentMoveReactionDirection;
 	// How much of the knockback is the target moving?
 	const float KNOCKBACK_MOVE_PORTION = 0.35f; 
-	
-	// Store expected swing time
-	float swingTime;
+
 
 	// Character state
 	enum CharacterState
@@ -84,6 +82,10 @@ public class Fighter : MonoBehaviour
 		WindDown
 	}
 	AttackState attackState;
+
+	// Store variables for attack tracking
+	float swingTime;
+	float forcedAttackMoveSpeed;
 
 	// Character control members
 	Vector3 moveDirection;
@@ -339,7 +341,15 @@ public class Fighter : MonoBehaviour
 					Quaternion.LookRotation (movementXZ), Time.deltaTime * damping);
 		}
 	}
-	
+
+	/*
+	 * Assigns movement to the character, which is applied in the attack state update
+	 */
+	public void SetAttackMovement(float speed)
+	{
+		forcedAttackMoveSpeed = speed;
+	}
+
 	/*
 	 * Walk the fighter in a given direction.
 	 */
@@ -371,13 +381,18 @@ public class Fighter : MonoBehaviour
 			}
 		}
 	}
-	
+
 	/*
 	 * Check that enough time has passed after character swung to call the
 	 * swing "complete". Once it is, restore the character state to normal.
 	 */
 	void UpdateAttackState ()
 	{
+		if(forcedAttackMoveSpeed > 0)
+		{
+			Move (transform.TransformDirection(Vector3.forward), forcedAttackMoveSpeed);
+		}
+
 		float attackCompleteTime = lastSwingTime + currentAttack.windupTime + swingTime +
 			currentAttack.winddownTime;
 		float swingCompleteTime = lastSwingTime + currentAttack.windupTime + swingTime;
@@ -413,6 +428,8 @@ public class Fighter : MonoBehaviour
 	 */
 	void CancelAttack ()
 	{
+		// Clear any unfinished forced attack move speed
+		forcedAttackMoveSpeed = 0;
 		attackState = AttackState.None;
 		swingTrail.renderer.enabled = false;
 		SetAttackActive (false);
@@ -447,7 +464,7 @@ public class Fighter : MonoBehaviour
 			swingTime = currentAttack.swing.length;
 		}
 	}
-	
+
 	/*
 	 * Resolve the dodge roll once it's complete.
 	 */

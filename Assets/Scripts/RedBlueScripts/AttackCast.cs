@@ -62,7 +62,7 @@ public class AttackCast : MonoBehaviour
 	}
 
 	// Update is called once per frame
-	void Update ()
+	void LateUpdate ()
 	{
 		Vector3 direction = (transform.position - lastFramePosition).normalized;
 		float distance = Vector3.Distance (lastFramePosition, transform.position);

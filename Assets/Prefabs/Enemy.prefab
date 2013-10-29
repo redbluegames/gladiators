@@ -546,6 +546,7 @@ Animation:
   - {fileID: 7400000, guid: 30b4a92be8d114986b93fc4d766ee800, type: 2}
   - {fileID: 7400000, guid: 0b8c968313ece48679310eadd67adcdd, type: 2}
   - {fileID: 7400000, guid: c3f3af8f0c04c4aa0a0cd367a923ac0d, type: 2}
+  - {fileID: 7400000, guid: 1df5dec3f9aba4f12b121ba65ddadc47, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
@@ -578,8 +579,6 @@ MonoBehaviour:
   movespeed: 3
   sprintspeed: 6
   target: {fileID: 0}
-  stamina: {fileID: 0}
-  health: {fileID: 0}
   idle: {fileID: 7400000, guid: 72eb18d4c62b54d13b0cbcca34d47b8f, type: 2}
   blockIdle: {fileID: 0}
   blockBreak: {fileID: 0}
@@ -644,6 +643,7 @@ MonoBehaviour:
   maxStamina: 50
   curStamina: 50
   cooldown: 3
+  regenTime: 5
 --- !u!143 &14300000
 CharacterController:
   m_ObjectHideFlags: 1
