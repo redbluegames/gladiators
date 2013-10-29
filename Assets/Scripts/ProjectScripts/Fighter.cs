@@ -467,7 +467,7 @@ public class Fighter : MonoBehaviour
 	 */
 	public void Dodge (Vector3 direction)
 	{
-		if (stamina.HasAnyStamina () && (IsMoving () || IsIdle () || IsAttacking ())) {
+		if (stamina.HasAnyStamina () && (IsMoving () || IsIdle ())) {
 			if (IsAttacking ()) {
 				CancelAttack ();
 			}
@@ -572,7 +572,7 @@ public class Fighter : MonoBehaviour
 			return;
 		}
 
-		if (IsIdle () || IsMoving () || IsAttacking ()) {
+		if (IsIdle () || IsMoving ()) {
 			SoundManager.PlayClipAtPoint (SoundManager.Instance.shield0, myTransform.position);
 			IsBlocking = true;
 			currentAttackStance = blockingAttacks;
@@ -591,7 +591,7 @@ public class Fighter : MonoBehaviour
 		currentAttackStance = attacks;
 		IsBlocking = false;
 	}
-	
+
 	/*
 	 * Set the Fighter target to the provided Transform and start staring it down.
 	 */
