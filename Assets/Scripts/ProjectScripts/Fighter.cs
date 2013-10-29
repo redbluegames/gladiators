@@ -49,7 +49,7 @@ public class Fighter : MonoBehaviour
 
 	// Dodge
 	float dodgeSpeed = 20.0f;
-	float dodgeTime = 0.25f;
+	float dodgeTime = 0.15f;
 	float dodgeStamina = 20.0f;
 	Vector3 currentDodgeDirection;
 	public float sprintStamPerSec = 30.0f;
@@ -749,7 +749,7 @@ public class Fighter : MonoBehaviour
 			if (CheckBlockStamina (attack)) {
 				PlayAttackSound (blockSound);
 				// Cause attacker to get knocked back
-				attacker.GetComponent<Fighter> ().ReceiveKnockbackByBlock ((attacker.position - myTransform.position).normalized, 0.3f);
+				attacker.GetComponent<Fighter> ().ReceiveKnockbackByBlock ((attacker.position - myTransform.position).normalized, 0.15f);
 			} else {
 				PlayAttackSound (shieldBreakSound);
 				ReceiveBrokenBlockFlinch (2.0f);
