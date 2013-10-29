@@ -10,10 +10,12 @@ public class Fighter : MonoBehaviour
 	public Transform target;
 	Stamina stamina;
 	Health health;
+	Bandages bandages;
 	bool isHuman = false;
 
 	public bool IsBlocking { get; private set; }
-	
+	public bool IsBandaging { get; private set; }
+
 	// Animations
 	public AnimationClip idle;
 	public AnimationClip blockIdle;
@@ -123,6 +125,7 @@ public class Fighter : MonoBehaviour
 		}
 		stamina = GetComponent<Stamina> ();
 		health = GetComponent<Health> ();
+		bandages = GetComponent<Bandages> ();
 		if (swingTrail == null) {
 			swingTrail = GetComponentInChildren<TrailRenderer> ();
 			if (swingTrail != null) {
@@ -356,7 +359,7 @@ public class Fighter : MonoBehaviour
 	 */
 	public void Run (Vector3 direction)
 	{
-		if (IsIdle () || IsMoving ()) {
+		if ((IsIdle () || IsMoving ()) && (!IsBandaging)) {
 			characterState = CharacterState.Moving;
 			float movescale = 1.0f;
 			if (IsBlocking) {
@@ -371,7 +374,7 @@ public class Fighter : MonoBehaviour
 	 */
 	public void Sprint (Vector3 direction)
 	{
-		if (IsIdle () || IsMoving ()) {
+		if ((IsIdle () || IsMoving ()) && (!IsBandaging)) {
 			LoseTarget ();
 			if (stamina.HasAnyStamina ()) {
 				characterState = CharacterState.Moving;
@@ -608,6 +611,22 @@ public class Fighter : MonoBehaviour
 		currentAttackStance = attacks;
 		IsBlocking = false;
 	}
+	
+	public void Bandage ()
+	{
+		if (bandages.HasBandages ()) {
+			IsBandaging = true;
+			if (bandages.ApplyBandages (Time.deltaTime)) {
+				health.Heal (bandages.healAmount);
+			}
+		}
+	}
+	
+	public void InterruptBandage ()
+	{
+		IsBandaging = false;
+		bandages.StopBandaging ();
+	}
 
 	/*
 	 * Set the Fighter target to the provided Transform and start staring it down.
@@ -741,7 +760,7 @@ public class Fighter : MonoBehaviour
 		} else {
 			SoundManager.PlayClipAtPoint (SoundManager.Instance.swingHit0, myTransform.position);
 			lastHitTime = Time.time;
-			health.AdjustHealth (-attack.damage);
+			health.TakeDamage (attack.damage);
 			// Handle reaction type of successful hits
 			if (attack.reactionType == Attack.ReactionType.Knockback) {
 				// Knock back in the opposite direction of the attacker.

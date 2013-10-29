@@ -169,6 +169,11 @@ public class PlayerController : IController
 	 */
 	void TryDebugs ()
 	{
+		if (RBInput.GetButtonForPlayer (InputStrings.SPRINT, PlayerIndex, playerDevice)) {
+			fighter.Bandage ();
+		} else {
+			fighter.InterruptBandage ();
+		}
 	}
 
 	public void BindPlayer (int index, InputDevice device)
