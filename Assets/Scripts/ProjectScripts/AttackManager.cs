@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class AttackManager : Singleton<AttackManager>
 {
 	public List<Attack> attackList = new List<Attack> ();
-	
+
 	public int Count ()
 	{
 		return attackList.Count;
@@ -19,5 +19,10 @@ public class AttackManager : Singleton<AttackManager>
 	public void AddAttack (Attack attack)
 	{
 		attackList.Add (attack);
+	}
+	
+	public void ClearAttacks ()
+	{
+		attackList.Clear ();
 	}
 }
