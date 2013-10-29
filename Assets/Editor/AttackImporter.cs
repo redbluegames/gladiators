@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
-public class AttackDatabaseManager : EditorWindow
+public class AttackImporter : EditorWindow
 {
 	AttackManager attackManager;
 	const string ATTACK_CSV = "Attacks";
@@ -14,7 +14,7 @@ public class AttackDatabaseManager : EditorWindow
 	[MenuItem("RedBlue Tools/Import Attacks CSV")]
 	static void Init ()
 	{
-		AttackDatabaseManager window = (AttackDatabaseManager)EditorWindow.CreateInstance (typeof(AttackDatabaseManager));
+		AttackImporter window = (AttackImporter)EditorWindow.CreateInstance (typeof(AttackImporter));
 		window.Show ();
 	}
 	
