@@ -397,4 +397,12 @@ AnimationClip:
     path: Hand_R
     classID: 4
     script: {fileID: 0}
-  m_Events: []
+  m_Events:
+  - time: 0
+    functionName: PlaySound
+    data: 
+    objectReferenceParameter: {fileID: 8300000, guid: 74e5e81aef07c41fdb4d7e9907fd840a,
+      type: 3}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0

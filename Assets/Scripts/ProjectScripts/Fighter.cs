@@ -13,12 +13,18 @@ public class Fighter : MonoBehaviour
 	bool isHuman = false;
 
 	public bool IsBlocking { get; private set; }
-	
+
 	// Animations
 	public AnimationClip idle;
+	public TrailRenderer swingTrail;
 	public AnimationClip blockIdle;
 	public AnimationClip blockBreak;
-	public TrailRenderer swingTrail;
+
+	public AudioClip blockSound;
+	public AudioClip shieldUpSound;
+	public AudioClip shieldBreakSound;
+	public AudioClip takeHitSound;
+	public AudioSource attackAndBlockChannel;
 
 	// Attacks
 	Attack[] attacks;
@@ -194,6 +200,14 @@ public class Fighter : MonoBehaviour
 		}
 
 		RenderColor ();
+	}
+
+	/*
+	 * Plays the specified sound clip as a one shot sound
+	 */
+	void PlaySound(AudioClip clip)
+	{
+		attackAndBlockChannel.PlayOneShot(clip);
 	}
 
 	/*
@@ -429,6 +443,8 @@ public class Fighter : MonoBehaviour
 	 */
 	void CancelAttack ()
 	{
+		// Stop the existing attack sound
+		attackAndBlockChannel.Stop();
 		// Clear any unfinished forced attack move speed
 		forcedAttackMoveSpeed = 0;
 		attackState = AttackState.None;
@@ -590,7 +606,7 @@ public class Fighter : MonoBehaviour
 		}
 
 		if (IsIdle () || IsMoving ()) {
-			SoundManager.PlayClipAtPoint (SoundManager.Instance.shield0, myTransform.position);
+			PlaySound (shieldUpSound);
 			IsBlocking = true;
 			currentAttackStance = blockingAttacks;
 			if (IsAttacking ()) {
@@ -726,20 +742,24 @@ public class Fighter : MonoBehaviour
 	 * Resolve a hit and perform the appropriate reaction. This may mean
 	 * taking damage or it may mean resolving a block.
 	 */
-	public void TakeHit (Attack attack, Transform attacker)
+	public void TakeHit (RaycastHit hit, Attack attack, Transform attacker)
 	{
 		// Handle blocked hits first
 		if (IsBlocking) {
 			if (CheckBlockStamina (attack)) {
-				SoundManager.PlayClipAtPoint (SoundManager.Instance.blocked0, myTransform.position);
+				PlaySound (blockSound);
 				// Cause attacker to get knocked back
 				attacker.GetComponent<Fighter> ().ReceiveKnockbackByBlock ((attacker.position - myTransform.position).normalized, 0.3f);
 			} else {
-				SoundManager.PlayClipAtPoint (SoundManager.Instance.shieldBreak, myTransform.position);
+				PlaySound (shieldBreakSound);
 				ReceiveBrokenBlockFlinch (2.0f);
 			}
 		} else {
-			SoundManager.PlayClipAtPoint (SoundManager.Instance.swingHit0, myTransform.position);
+			// Play a new hit sound at the location. Must make minDistance the same as the
+			// attack channel so that it plays at the same volume. This is kind of weird...
+			AudioSource source = SoundManager.PlayClipAtPoint(takeHitSound, hit.point);
+			source.minDistance = attackAndBlockChannel.minDistance;
+
 			lastHitTime = Time.time;
 			health.AdjustHealth (-attack.damage);
 			// Handle reaction type of successful hits

@@ -354,6 +354,14 @@ AnimationClip:
     classID: 4
     script: {fileID: 0}
   m_Events:
+  - time: 0
+    functionName: PlaySound
+    data: 
+    objectReferenceParameter: {fileID: 8300000, guid: 437f62f7bc7ca46df8b8a69372d5489e,
+      type: 3}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: .0166666675
     functionName: SetAttackMovement
     data: 

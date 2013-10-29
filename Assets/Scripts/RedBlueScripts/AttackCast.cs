@@ -144,17 +144,8 @@ public class AttackCast : MonoBehaviour
 	}
 
 	/*
-	 * Send Hits to hit objects, from an array of colliders
-	 */
-	void ReportHits (Collider[] colliders)
-	{
-		foreach (Collider collider in colliders) {
-			OnHit (collider);
-		}
-	}
-
-	/*
-	 * Perform the OnHit function for all hit colliders
+	 * Apply the OnHit function to a specified Raycast hit. This should be made project-agnostic
+	 * at some point, so that AttackCasts can be a tool.
 	 */
 	void OnHit (RaycastHit hit)
 	{
@@ -167,15 +158,7 @@ public class AttackCast : MonoBehaviour
 			Debug.DrawRay (hit.point, hit.normal, Color.red, 0.5f);
 		}
 
-		OnHit (hit.collider);
-	}
-
-	/*
-	 * Do the OnHit for a specific collider
-	 */
-	void OnHit (Collider hitCollider)
-	{
-		GameObject hitGameObject = hitCollider.gameObject;
+		GameObject hitGameObject = hit.collider.gameObject;
 		ignoreObjects.Add (hitGameObject);
 
 		Fighter hitFighter = (Fighter)hitGameObject.GetComponent<Fighter> ();
@@ -185,7 +168,7 @@ public class AttackCast : MonoBehaviour
 			if (myFighter != null) {
 				// No friendly fire, for now
 				if (hitFighter.team != myFighter.team) {
-					hitFighter.TakeHit (attackInfo, transform.root);
+					hitFighter.TakeHit (hit, attackInfo, transform.root);
 					myFighter.NotifyAttackHit ();
 				}
 			}
