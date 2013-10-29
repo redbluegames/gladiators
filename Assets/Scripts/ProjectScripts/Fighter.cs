@@ -22,6 +22,8 @@ public class Fighter : MonoBehaviour
 
 	// Attacks
 	Attack[] attacks;
+	Attack[] blockingAttacks;
+	Attack[] currentAttackStance;
 	Attack currentAttack;
 
 	// The Team the fighter is on
@@ -52,9 +54,7 @@ public class Fighter : MonoBehaviour
 	Vector3 currentMoveReactionDirection;
 	// How much of the knockback is the target moving?
 	const float KNOCKBACK_MOVE_PORTION = 0.35f; 
-	
-	// Store expected swing time
-	float swingTime;
+
 
 	// Character state
 	enum CharacterState
@@ -82,6 +82,10 @@ public class Fighter : MonoBehaviour
 		WindDown
 	}
 	AttackState attackState;
+
+	// Store variables for attack tracking
+	float swingTime;
+	float forcedAttackMoveSpeed;
 
 	// Character control members
 	Vector3 moveDirection;
@@ -125,21 +129,24 @@ public class Fighter : MonoBehaviour
 				swingTrail.renderer.enabled = false;
 			}
 		}
-
-		// Initialize attacks
-		AttackManager attackManager = (AttackManager)GameObject.Find (ObjectNames.MAANAGERS).GetComponent <AttackManager> ();
-		attacks = new Attack[Enum.GetNames (typeof(AttackType)).Length];
-		if (isHuman) {
-			attacks [(int)AttackType.Weak] = attackManager.GetAttack (Attacks.PLAYER_WEAK);
-			attacks [(int)AttackType.Strong] = attackManager.GetAttack (Attacks.PLAYER_STRONG);
-		} else {
-			attacks [(int)AttackType.Weak] = attackManager.GetAttack (Attacks.ENEMY_WEAK);
-			attacks [(int)AttackType.Strong] = attackManager.GetAttack (Attacks.ENEMY_STRONG);
-		}
 	}
 
 	void Start ()
 	{
+		// Initialize attacks
+		AttackManager attackManager = (AttackManager)GameObject.Find (ObjectNames.MAANAGERS).GetComponent <AttackManager> ();
+		attacks = new Attack[Enum.GetNames (typeof(AttackType)).Length];
+		blockingAttacks = new Attack[Enum.GetNames (typeof(AttackType)).Length];
+		if (isHuman) {
+			attacks [(int)AttackType.Weak] = attackManager.GetAttack (Attacks.PLAYER_WEAK);
+			attacks [(int)AttackType.Strong] = attackManager.GetAttack (Attacks.PLAYER_STRONG);
+			blockingAttacks [(int)AttackType.Weak] = attackManager.GetAttack (Attacks.PLAYER_BLOCKING_WEAK);
+			blockingAttacks [(int)AttackType.Strong] = attackManager.GetAttack (Attacks.PLAYER_BLOCKING_STRONG);
+		} else {
+			attacks [(int)AttackType.Weak] = attackManager.GetAttack (Attacks.ENEMY_WEAK);
+			attacks [(int)AttackType.Strong] = attackManager.GetAttack (Attacks.ENEMY_STRONG);
+		}
+		currentAttackStance = attacks;
 	}
 
 	void Update ()
@@ -182,7 +189,7 @@ public class Fighter : MonoBehaviour
 				if (swingTrail != null) {
 					swingTrail.renderer.enabled = false;
 				}
-				animation.CrossFade (currentAttack.winddown.name, currentAttack.winddownTime);
+				// No animation plays during winddown, so that he poses on the last frame of the attack.
 			}
 		}
 
@@ -335,7 +342,15 @@ public class Fighter : MonoBehaviour
 					Quaternion.LookRotation (movementXZ), Time.deltaTime * damping);
 		}
 	}
-	
+
+	/*
+	 * Assigns movement to the character, which is applied in the attack state update
+	 */
+	public void SetAttackMovement(float speed)
+	{
+		forcedAttackMoveSpeed = speed;
+	}
+
 	/*
 	 * Walk the fighter in a given direction.
 	 */
@@ -367,13 +382,18 @@ public class Fighter : MonoBehaviour
 			}
 		}
 	}
-	
+
 	/*
 	 * Check that enough time has passed after character swung to call the
 	 * swing "complete". Once it is, restore the character state to normal.
 	 */
 	void UpdateAttackState ()
 	{
+		if(forcedAttackMoveSpeed > 0)
+		{
+			Move (transform.TransformDirection(Vector3.forward), forcedAttackMoveSpeed);
+		}
+
 		float attackCompleteTime = lastSwingTime + currentAttack.windupTime + swingTime +
 			currentAttack.winddownTime;
 		float swingCompleteTime = lastSwingTime + currentAttack.windupTime + swingTime;
@@ -409,6 +429,8 @@ public class Fighter : MonoBehaviour
 	 */
 	void CancelAttack ()
 	{
+		// Clear any unfinished forced attack move speed
+		forcedAttackMoveSpeed = 0;
 		attackState = AttackState.None;
 		swingTrail.renderer.enabled = false;
 		SetAttackActive (false);
@@ -428,7 +450,7 @@ public class Fighter : MonoBehaviour
 	 */
 	public void SwingWeapon (AttackType attackType)
 	{
-		SwingWeapon (attacks [(int)attackType]);
+		SwingWeapon (currentAttackStance [(int)attackType]);
 	}
 
 	public void SwingWeapon (Attack attack)
@@ -442,7 +464,7 @@ public class Fighter : MonoBehaviour
 			swingTime = currentAttack.swing.length;
 		}
 	}
-	
+
 	/*
 	 * Resolve the dodge roll once it's complete.
 	 */
@@ -462,7 +484,7 @@ public class Fighter : MonoBehaviour
 	 */
 	public void Dodge (Vector3 direction)
 	{
-		if (stamina.HasAnyStamina () && (IsMoving () || IsIdle () || IsAttacking ())) {
+		if (stamina.HasAnyStamina () && (IsMoving () || IsIdle ())) {
 			if (IsAttacking ()) {
 				CancelAttack ();
 			}
@@ -567,9 +589,10 @@ public class Fighter : MonoBehaviour
 			return;
 		}
 
-		if (IsIdle () || IsMoving () || IsAttacking ()) {
+		if (IsIdle () || IsMoving ()) {
 			SoundManager.PlayClipAtPoint (SoundManager.Instance.shield0, myTransform.position);
 			IsBlocking = true;
+			currentAttackStance = blockingAttacks;
 			if (IsAttacking ()) {
 				characterState = CharacterState.Idle;
 				CancelAttack ();
@@ -582,9 +605,10 @@ public class Fighter : MonoBehaviour
 	 */
 	public void UnBlock ()
 	{
+		currentAttackStance = attacks;
 		IsBlocking = false;
 	}
-	
+
 	/*
 	 * Set the Fighter target to the provided Transform and start staring it down.
 	 */
