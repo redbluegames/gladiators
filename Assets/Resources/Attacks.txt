@@ -1,7 +1,7 @@
 Name,Damage,Range,Stamina,Reaction Type,Flinch Duration,Knockback Duration,Windup Time,Winddown Time,Swing Animation,Windup Animation,Winddown Animation,Sound Effect
-Player Weak,10,5,20,Flinch,0.2,0,0.1,0.1,attack3_swing,attack_windup,attack_winddown,stub
-Player Strong,50,5,30,Knockback,0,0.3,0.5,0.2,attack_swing,attack_windup,attack_winddown,stub
-Enemy Weak,5,3.5,20,Flinch,0.2,0,0.4,0.4,attack2_swing,attack_windup,attack_winddown,stub
-Enemy Strong,20,4,30,Knockback,0,0.3,0.6,0.6,attack_swing,attack_windup_moveslow,attack_winddown,stub
-Player Blocking Weak,10,3.5,25,Flinch,0.2,0,0.2,0.2,attack2_swing,attack_windup,attack_winddown,stub
-Player Blocking Strong,20,3.5,35,Flinch,0.2,0,0.3,0.3,attack2_swing,attack_windup,attack_winddown,stub
+Player Weak,10,5,20,Flinch,0.2,0,0.1,0.1,attack_sweepsmall_swing,attack_windup,attack_winddown,stub
+Player Strong,50,5,30,Knockback,0,0.3,0.5,0.2,attack_sweepbig_swing,attack_windup,attack_winddown,stub
+Enemy Weak,5,3.5,20,Flinch,0.2,0,0.4,0.4,attack_stab_swing,attack_windup,attack_winddown,stub
+Enemy Strong,20,4,30,Knockback,0,0.3,0.6,0.6,attack_sweepbig_swing,attack_windup_moveslow,attack_winddown,stub
+Player Blocking Weak,10,3.5,25,Flinch,0.2,0,0.2,0.2,attack_stab_swing,attack_windup,attack_winddown,stub
+Player Blocking Strong,20,3.5,35,Flinch,0.2,0,0.3,0.3,attack_stab_swing,attack_windup,attack_winddown,stub
