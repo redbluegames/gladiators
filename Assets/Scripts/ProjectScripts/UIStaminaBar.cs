@@ -10,7 +10,7 @@ public class UIStaminaBar : MonoBehaviour
 	void Update ()
 	{
 		if (bar != null) {
-			bar.sliderValue = (float) stamina.curStamina / stamina.maxStamina;
+			bar.sliderValue = stamina.CalculateDisplayPercent ();
 		} else {
 			Debug.LogWarning ("Stamina Slider not set in editor. Attach slider to StaminaBar script in HUD.");
 		}

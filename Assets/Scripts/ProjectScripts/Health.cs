@@ -1,17 +1,32 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Health : MonoBehaviour {
-	
+public class Health : MonoBehaviour
+{
 	public int maxHealth = 100;
-	public int curHealth = 100;
-	
+	public float curHealth = 100.0f;
 	const int NO_HEALTH = 0;
 	
+	void Die ()
+	{
+		// play death animation
+		GameObject.Destroy (gameObject);
+	}
+	
+	public void TakeDamage (float damage)
+	{
+		AdjustHealth (-damage);
+	}
+	
+	public void Heal (float healthGain)
+	{
+		AdjustHealth (healthGain);
+	}
+
 	/*
 	 * Adjust object health by a provided amount.
 	 */
-	public void AdjustHealth (int adj)
+	protected void AdjustHealth (float adj)
 	{
 		curHealth += adj;
 		if (curHealth <= NO_HEALTH) {
@@ -22,10 +37,9 @@ public class Health : MonoBehaviour {
 			curHealth = maxHealth;
 		}
 	}
-	
-	void Die () 
+
+	public float CalculateDisplayPercent()
 	{
-		// play death animation
-		GameObject.Destroy (gameObject);
+		return curHealth / (float) maxHealth;
 	}
 }

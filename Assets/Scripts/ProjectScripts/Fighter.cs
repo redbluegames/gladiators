@@ -10,6 +10,7 @@ public class Fighter : MonoBehaviour
 	public Transform target;
 	Stamina stamina;
 	Health health;
+	Bandages bandages;
 	bool isHuman = false;
 
 	public bool IsBlocking { get; private set; }
@@ -75,7 +76,8 @@ public class Fighter : MonoBehaviour
 		BrokenBlockFlinch,
 		Flinching,
 		Knockedback,
-		KnockedbackByBlock
+		KnockedbackByBlock,
+		Bandaging
 	}
 	CharacterState characterState;
 
@@ -129,6 +131,7 @@ public class Fighter : MonoBehaviour
 		}
 		stamina = GetComponent<Stamina> ();
 		health = GetComponent<Health> ();
+		bandages = GetComponent<Bandages> ();
 		if (swingTrail == null) {
 			swingTrail = GetComponentInChildren<TrailRenderer> ();
 			if (swingTrail != null) {
@@ -293,6 +296,14 @@ public class Fighter : MonoBehaviour
 	bool IsKnockedBackByBlock ()
 	{
 		return characterState == CharacterState.KnockedbackByBlock;
+	}
+	
+	/*
+	 * Check if fighter is in bandaging state.
+	 */
+	public bool IsBandaging ()
+	{
+		return characterState == CharacterState.Bandaging;
 	}
 
 	/*
@@ -624,6 +635,24 @@ public class Fighter : MonoBehaviour
 		currentAttackStance = attacks;
 		IsBlocking = false;
 	}
+	
+	public void Bandage ()
+	{
+		if (bandages.HasBandages ()) {
+			characterState = CharacterState.Bandaging;
+			if (bandages.ApplyBandages (Time.deltaTime)) {
+				health.Heal (bandages.healAmount);
+			}
+		}
+	}
+	
+	public void InterruptBandage ()
+	{
+		if (IsBandaging ()) {
+			characterState = CharacterState.Idle;
+		}
+		bandages.StopBandaging ();
+	}
 
 	/*
 	 * Set the Fighter target to the provided Transform and start staring it down.
@@ -761,7 +790,8 @@ public class Fighter : MonoBehaviour
 			source.minDistance = attackAndBlockChannel.minDistance;
 
 			lastHitTime = Time.time;
-			health.AdjustHealth (-attack.damage);
+			health.TakeDamage (attack.damage);
+			InterruptBandage ();
 			// Handle reaction type of successful hits
 			if (attack.reactionType == Attack.ReactionType.Knockback) {
 				// Knock back in the opposite direction of the attacker.

@@ -39,6 +39,7 @@ public class PlayerController : IController
 			TrySwitchTarget ();
 			TryAttack ();
 			TryBlock ();
+			TryBandage ();
 			TryDebugs ();
 		}
 	}
@@ -161,6 +162,18 @@ public class PlayerController : IController
 			if (fighter.IsBlocking) {
 				fighter.UnBlock ();
 			}
+		}
+	}
+	
+	/*
+	 * Set the fighter to bandaging state and start bandaging.
+	 */
+	void TryBandage ()
+	{
+		if (RBInput.GetButtonForPlayer (InputStrings.BANDAGE, PlayerIndex, playerDevice)) {
+			fighter.Bandage ();
+		} else {
+			fighter.InterruptBandage ();
 		}
 	}
 

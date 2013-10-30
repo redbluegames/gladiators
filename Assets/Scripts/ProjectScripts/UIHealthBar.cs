@@ -10,7 +10,7 @@ public class UIHealthBar : MonoBehaviour
 	void Update ()
 	{
 		if (bar != null) {
-			bar.sliderValue = (float) health.curHealth / health.maxHealth;
+			bar.sliderValue = health.CalculateDisplayPercent();
 		} else {
 			Debug.LogWarning ("Health Slider not set in editor. Attach slider to HealthBar script in HUD.");
 		}

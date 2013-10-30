@@ -5,7 +5,6 @@ using System.Collections;
 
 public class Stamina : MonoBehaviour
 {
-	
 	public int maxStamina = 100;
 	public float curStamina;
 	public float cooldown = 1.0f; // Can be private once tweaked
@@ -57,20 +56,6 @@ public class Stamina : MonoBehaviour
 	}
 
 	/*
-	 * Adjust object stamina by a provided amount.
-	 */
-	void AdjustStamina (float adj)
-	{
-		curStamina += adj;
-		if (curStamina <= NO_STAMINA) {
-			curStamina = NO_STAMINA;
-		} else if (curStamina > maxStamina) {
-			Debug.LogWarning ("Stamina set above 100. Let's avoid this if user already was full stam.");
-			curStamina = maxStamina;
-		}
-	}
-
-	/*
 	 * Regen stamina provided cooldown is up. Make sure we don't over-regen beyond
 	 * the max amount. Also, ensure that we adjust for the framerate using deltaTime.
 	 */
@@ -89,5 +74,24 @@ public class Stamina : MonoBehaviour
 				AdjustStamina (adj);
 			}
 		}
+	}
+	
+	/*
+	 * Adjust object stamina by a provided amount.
+	 */
+	protected void AdjustStamina (float adj)
+	{
+		curStamina += adj;
+		if (curStamina <= NO_STAMINA) {
+			curStamina = NO_STAMINA;
+		} else if (curStamina > maxStamina) {
+			Debug.LogWarning ("Stamina set above 100. Let's avoid this if user already was full stam.");
+			curStamina = maxStamina;
+		}
+	}
+
+	public float CalculateDisplayPercent ()
+	{
+		return curStamina / (float) maxStamina;
 	}
 }
