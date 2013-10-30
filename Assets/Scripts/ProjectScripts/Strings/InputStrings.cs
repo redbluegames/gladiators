@@ -11,4 +11,5 @@ public static class InputStrings
 	public static string FIRE2 = "Fire2";
 	public static string BLOCK = "Block";
 	public static string DODGE = "Dodge";
+	public static string BANDAGE = "Bandage";
 }

@@ -39,6 +39,7 @@ public class PlayerController : IController
 			TrySwitchTarget ();
 			TryAttack ();
 			TryBlock ();
+			TryBandage ();
 			TryDebugs ();
 		}
 	}
@@ -163,17 +164,24 @@ public class PlayerController : IController
 			}
 		}
 	}
+	
+	/*
+	 * Set the fighter to bandaging state and start bandaging.
+	 */
+	void TryBandage ()
+	{
+		if (RBInput.GetButtonForPlayer (InputStrings.BANDAGE, PlayerIndex, playerDevice)) {
+			fighter.Bandage ();
+		} else {
+			fighter.InterruptBandage ();
+		}
+	}
 
 	/*
 	 * Reads input and handles action for all debug functions
 	 */
 	void TryDebugs ()
 	{
-		if (RBInput.GetButtonForPlayer (InputStrings.SPRINT, PlayerIndex, playerDevice)) {
-			fighter.Bandage ();
-		} else {
-			fighter.InterruptBandage ();
-		}
 	}
 
 	public void BindPlayer (int index, InputDevice device)

@@ -101,6 +101,22 @@ InputManager:
     axis: 0
     joyNum: 0
   - serializedVersion: 3
+    m_Name: Bandage_PC_P0
+    descriptiveName:
+    descriptiveNegativeName:
+    negativeButton:
+    positiveButton: e
+    altNegativeButton:
+    altPositiveButton:
+    gravity: 1000
+    dead: .00100000005
+    sensitivity: 1000
+    snap: 0
+    invert: 0
+    type: 0
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
     m_Name: Target_PC_P0
     descriptiveName: Switch targets
     descriptiveNegativeName:
@@ -229,6 +245,22 @@ InputManager:
     axis: 0
     joyNum: 0
   - serializedVersion: 3
+    m_Name: Bandage_PC_P1
+    descriptiveName:
+    descriptiveNegativeName:
+    negativeButton:
+    positiveButton: l
+    altNegativeButton:
+    altPositiveButton:
+    gravity: 1000
+    dead: .00100000005
+    sensitivity: 1000
+    snap: 0
+    invert: 0
+    type: 0
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
     m_Name: Target_PC_P1
     descriptiveName: Switch targets
     descriptiveNegativeName:
@@ -345,6 +377,22 @@ InputManager:
     descriptiveName:
     descriptiveNegativeName:
     negativeButton:
+    positiveButton: joystick button 0
+    altNegativeButton:
+    altPositiveButton: joystick button 16
+    gravity: 1000
+    dead: .00100000005
+    sensitivity: 1000
+    snap: 0
+    invert: 0
+    type: 0
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Sprint_XBox_P0
+    descriptiveName:
+    descriptiveNegativeName:
+    negativeButton:
     positiveButton: joystick button 1
     altNegativeButton:
     altPositiveButton: joystick button 17
@@ -357,7 +405,7 @@ InputManager:
     axis: 0
     joyNum: 0
   - serializedVersion: 3
-    m_Name: Sprint_XBox_P0
+    m_Name: Bandage_XBox_P0
     descriptiveName:
     descriptiveNegativeName:
     negativeButton:
