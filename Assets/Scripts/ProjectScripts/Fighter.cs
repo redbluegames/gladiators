@@ -791,7 +791,9 @@ public class Fighter : MonoBehaviour
 
 			lastHitTime = Time.time;
 			health.TakeDamage (attack.damage);
-			InterruptBandage ();
+			if (bandages != null) {
+				InterruptBandage ();
+			}
 			// Handle reaction type of successful hits
 			if (attack.reactionType == Attack.ReactionType.Knockback) {
 				// Knock back in the opposite direction of the attacker.

@@ -16,6 +16,7 @@ GameObject:
   - 114: {fileID: 11400006}
   - 114: {fileID: 11400000}
   - 111: {fileID: 11100000}
+  - 114: {fileID: 11400012}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -679,11 +680,15 @@ MonoBehaviour:
   movespeed: 6
   sprintspeed: 12
   target: {fileID: 0}
-  bandageCount: 3
   idle: {fileID: 7400000, guid: 72eb18d4c62b54d13b0cbcca34d47b8f, type: 2}
+  swingTrail: {fileID: 0}
   blockIdle: {fileID: 7400000, guid: 24318a3e94365ef4b9131558114de053, type: 2}
   blockBreak: {fileID: 7400000, guid: cf01a7a463a451d4faf6e71d69349a08, type: 2}
-  swingTrail: {fileID: 0}
+  blockSound: {fileID: 8300000, guid: 9426813ea58fd86479986905dd31ed24, type: 3}
+  shieldUpSound: {fileID: 8300000, guid: 2fef9763e85ac9148b142e8e6d1b7105, type: 3}
+  shieldBreakSound: {fileID: 8300000, guid: 0d551e6a9e6fb2b4e9bd91524a32465b, type: 3}
+  takeHitSound: {fileID: 8300000, guid: 821f60eb613b02944a649d7bfdedcc88, type: 3}
+  attackAndBlockChannel: {fileID: 0}
   team: 1
   sprintStamPerSec: 30
   nativeColor: {r: .204476625, g: .437436044, b: .897058845, a: 0}
@@ -730,6 +735,20 @@ MonoBehaviour:
     m_Bits: 4294967295
   debugShowCasts: 0
   debugShowHits: 0
+--- !u!114 &11400012
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b07c53622b10884eaa286c6bcdf90aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxBandages: 3
+  bandageCount: 3
+  healAmount: 25
 --- !u!143 &14300000
 CharacterController:
   m_ObjectHideFlags: 1
