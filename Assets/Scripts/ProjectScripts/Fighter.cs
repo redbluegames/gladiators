@@ -14,7 +14,6 @@ public class Fighter : MonoBehaviour
 	bool isHuman = false;
 
 	public bool IsBlocking { get; private set; }
-	public bool IsBandaging { get; private set; }
 
 	// Animations
 	public AnimationClip idle;
@@ -71,7 +70,8 @@ public class Fighter : MonoBehaviour
 		BrokenBlockFlinch,
 		Flinching,
 		Knockedback,
-		KnockedbackByBlock
+		KnockedbackByBlock,
+		Bandaging
 	}
 	CharacterState characterState;
 
@@ -283,6 +283,14 @@ public class Fighter : MonoBehaviour
 	{
 		return characterState == CharacterState.KnockedbackByBlock;
 	}
+	
+	/*
+	 * Check if fighter is in bandaging state.
+	 */
+	public bool IsBandaging ()
+	{
+		return characterState == CharacterState.Bandaging;
+	}
 
 	/*
 	 * Any pending actions that need to finish up go here. For example, swinging
@@ -359,7 +367,7 @@ public class Fighter : MonoBehaviour
 	 */
 	public void Run (Vector3 direction)
 	{
-		if ((IsIdle () || IsMoving ()) && (!IsBandaging)) {
+		if (IsIdle () || IsMoving ()) {
 			characterState = CharacterState.Moving;
 			float movescale = 1.0f;
 			if (IsBlocking) {
@@ -374,7 +382,7 @@ public class Fighter : MonoBehaviour
 	 */
 	public void Sprint (Vector3 direction)
 	{
-		if ((IsIdle () || IsMoving ()) && (!IsBandaging)) {
+		if (IsIdle () || IsMoving ()) {
 			LoseTarget ();
 			if (stamina.HasAnyStamina ()) {
 				characterState = CharacterState.Moving;
@@ -615,7 +623,7 @@ public class Fighter : MonoBehaviour
 	public void Bandage ()
 	{
 		if (bandages.HasBandages ()) {
-			IsBandaging = true;
+			characterState = CharacterState.Bandaging;
 			if (bandages.ApplyBandages (Time.deltaTime)) {
 				health.Heal (bandages.healAmount);
 			}
@@ -624,7 +632,9 @@ public class Fighter : MonoBehaviour
 	
 	public void InterruptBandage ()
 	{
-		IsBandaging = false;
+		if (IsBandaging ()) {
+			characterState = CharacterState.Idle;
+		}
 		bandages.StopBandaging ();
 	}
 
@@ -761,6 +771,7 @@ public class Fighter : MonoBehaviour
 			SoundManager.PlayClipAtPoint (SoundManager.Instance.swingHit0, myTransform.position);
 			lastHitTime = Time.time;
 			health.TakeDamage (attack.damage);
+			InterruptBandage ();
 			// Handle reaction type of successful hits
 			if (attack.reactionType == Attack.ReactionType.Knockback) {
 				// Knock back in the opposite direction of the attacker.
