@@ -4,13 +4,12 @@
 SceneSettings:
   m_ObjectHideFlags: 0
   m_PVSData: 
-  m_QueryMode: 1
   m_PVSObjectsArray: []
   m_PVSPortalsArray: []
   m_OcclusionBakeSettings:
-    viewCellSize: 1
-    bakeMode: 2
-    memoryUsage: 10485760
+    smallestOccluder: 5
+    smallestHole: .25
+    backfaceThreshold: 100
 --- !u!104 &2
 RenderSettings:
   m_Fog: 0
@@ -23,6 +22,7 @@ RenderSettings:
   m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: .5
   m_FlareStrength: 1
+  m_FlareFadeSpeed: 3
   m_HaloTexture: {fileID: 0}
   m_SpotCookie: {fileID: 0}
   m_ObjectHideFlags: 0
@@ -122,6 +122,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!65 &4787422
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -191,6 +194,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!65 &14268932
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -260,6 +266,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!65 &47941906
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -453,7 +462,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9d0b5f3bbe925a408bd595c79d0bf63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mMat: {fileID: 0}
+  mMat: {fileID: 2100000, guid: e7ef61ebb5c25394c8706a7ea658349f, type: 2}
   mColor: {r: 1, g: 1, b: 1, a: 1}
   mPivot: 4
   mDepth: 2
@@ -514,6 +523,9 @@ TrailRenderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
   m_Time: .100000001
   m_StartWidth: 1
   m_EndWidth: 1
@@ -618,7 +630,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d33c6354b54fb847b16b36e1391868d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mMat: {fileID: 0}
+  mMat: {fileID: 2100000, guid: e7ef61ebb5c25394c8706a7ea658349f, type: 2}
   mColor: {r: .683823526, g: 0, b: 0, a: 1}
   mPivot: 3
   mDepth: 1
@@ -664,7 +676,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9d0b5f3bbe925a408bd595c79d0bf63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mMat: {fileID: 0}
+  mMat: {fileID: 2100000, guid: e7ef61ebb5c25394c8706a7ea658349f, type: 2}
   mColor: {r: .894424975, g: .933823526, b: .219723165, a: 1}
   mPivot: 4
   mDepth: 0
@@ -802,6 +814,34 @@ Prefab:
     - target: {fileID: 11400048, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
       propertyPath: mMat
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 400010, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
+      propertyPath: m_LocalScale.x
+      value: .0025839794
+      objectReference: {fileID: 0}
+    - target: {fileID: 400010, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
+      propertyPath: m_LocalScale.y
+      value: .0025839794
+      objectReference: {fileID: 0}
+    - target: {fileID: 400010, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
+      propertyPath: m_LocalScale.z
+      value: .0025839794
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: .5
+      objectReference: {fileID: 0}
+    - target: {fileID: 400032, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 387.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 400022, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 751
+      objectReference: {fileID: 0}
+    - target: {fileID: 400022, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 387.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 72db3f2dce9ec5e478bd15954fab34a9, type: 2}
@@ -1017,6 +1057,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!64 &430612370
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1077,7 +1120,7 @@ Transform:
   m_GameObject: {fileID: 439775747}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: .00472813239, y: .00472813239, z: .00472813239}
+  m_LocalScale: {x: .0025839794, y: .0025839794, z: .0025839794}
   m_Children:
   - {fileID: 1354561226}
   m_Father: {fileID: 0}
@@ -1094,7 +1137,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   automatic: 1
-  manualHeight: 423
+  manualHeight: 774
 --- !u!114 &439775750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1214,6 +1257,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &484679274
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1288,7 +1334,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d33c6354b54fb847b16b36e1391868d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mMat: {fileID: 0}
+  mMat: {fileID: 2100000, guid: e7ef61ebb5c25394c8706a7ea658349f, type: 2}
   mColor: {r: .161764681, g: .161764681, b: .161764681, a: 1}
   mPivot: 3
   mDepth: 0
@@ -1334,7 +1380,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9d0b5f3bbe925a408bd595c79d0bf63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mMat: {fileID: 0}
+  mMat: {fileID: 2100000, guid: e7ef61ebb5c25394c8706a7ea658349f, type: 2}
   mColor: {r: 1, g: 1, b: 1, a: 1}
   mPivot: 4
   mDepth: 0
@@ -1397,6 +1443,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!65 &664606622
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1517,7 +1566,7 @@ Transform:
   m_PrefabInternal: {fileID: 294254067}
   m_GameObject: {fileID: 802193150}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: .5, z: 0}
   m_LocalScale: {x: 1.00007999, y: 1.00007999, z: 1.00007999}
   m_Children:
   - {fileID: 57828436}
@@ -1612,6 +1661,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &933455588
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1643,7 +1695,7 @@ Transform:
   m_PrefabInternal: {fileID: 294254067}
   m_GameObject: {fileID: 938754447}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 212, z: 0}
+  m_LocalPosition: {x: 0, y: 387.5, z: 0}
   m_LocalScale: {x: 1.00005245, y: 1.00005245, z: 1.00005245}
   m_Children:
   - {fileID: 319552697}
@@ -1713,6 +1765,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &945463569
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1820,6 +1875,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!65 &980999242
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1889,6 +1947,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!65 &1004776766
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2032,9 +2093,6 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
-  m_UserAABB:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
 --- !u!114 &1079692482
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2139,6 +2197,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &1079692488
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2296,6 +2357,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!65 &1223044140
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2458,6 +2522,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!65 &1327752856
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2552,6 +2619,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
+  m_OcclusionCulling: 1
 --- !u!4 &1335224290
 Transform:
   m_ObjectHideFlags: 0
@@ -2660,6 +2728,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
+  m_OcclusionCulling: 1
 --- !u!4 &1354561226
 Transform:
   m_ObjectHideFlags: 0
@@ -2862,7 +2931,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d33c6354b54fb847b16b36e1391868d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mMat: {fileID: 0}
+  mMat: {fileID: 2100000, guid: e7ef61ebb5c25394c8706a7ea658349f, type: 2}
   mColor: {r: .161764681, g: .161764681, b: .161764681, a: 1}
   mPivot: 3
   mDepth: 0
@@ -2908,7 +2977,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d33c6354b54fb847b16b36e1391868d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mMat: {fileID: 0}
+  mMat: {fileID: 2100000, guid: e7ef61ebb5c25394c8706a7ea658349f, type: 2}
   mColor: {r: .161764681, g: .161764681, b: .161764681, a: 1}
   mPivot: 3
   mDepth: 0
@@ -3024,7 +3093,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9d0b5f3bbe925a408bd595c79d0bf63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mMat: {fileID: 0}
+  mMat: {fileID: 2100000, guid: e7ef61ebb5c25394c8706a7ea658349f, type: 2}
   mColor: {r: 1, g: 1, b: 1, a: 1}
   mPivot: 4
   mDepth: 1
@@ -3085,6 +3154,9 @@ TrailRenderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
   m_Time: .100000001
   m_StartWidth: 1
   m_EndWidth: 1
@@ -3129,7 +3201,7 @@ Transform:
   m_PrefabInternal: {fileID: 294254067}
   m_GameObject: {fileID: 1697428073}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 381.000031, y: 212, z: 0}
+  m_LocalPosition: {x: 751, y: 387.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 975616782}
@@ -3200,6 +3272,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!65 &1709892939
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3249,7 +3324,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d33c6354b54fb847b16b36e1391868d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mMat: {fileID: 0}
+  mMat: {fileID: 2100000, guid: e7ef61ebb5c25394c8706a7ea658349f, type: 2}
   mColor: {r: .052586209, g: .448529422, b: 0, a: 1}
   mPivot: 3
   mDepth: 1
@@ -3400,9 +3475,6 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
-  m_UserAABB:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
 --- !u!114 &1781963217
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3490,6 +3562,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &1781963222
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3546,6 +3621,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!65 &1797583775
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3671,6 +3749,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!65 &1942220990
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3819,6 +3900,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!65 &2012751837
 BoxCollider:
   m_ObjectHideFlags: 0
